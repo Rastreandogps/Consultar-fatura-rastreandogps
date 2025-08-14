@@ -20,7 +20,10 @@
       --white: #fff; --blue: #0ea5e9; --green: #22c55e; --ring: rgba(14,165,233,.25);
       --ml-yellow: #fee600; --ml-ink: #2b2b2b; --whatsapp: #25d366;
       --primary: #0ea5e9; --secondary: #22c55e; --dark: #0b1220;
-      --neon-yellow: rgba(255, 255, 0, 0.15); --neon-glow: 0 0 10px rgba(255, 255, 0, 0.7);
+      --neon-blue: rgba(14, 165, 233, 0.15); --neon-glow-blue: 0 0 10px rgba(14, 165, 233, 0.7);
+      --neon-green: rgba(34, 197, 94, 0.15); --neon-glow-green: 0 0 10px rgba(34, 197, 94, 0.7);
+      --neon-purple: rgba(168, 85, 247, 0.15); --neon-glow-purple: 0 0 10px rgba(168, 85, 247, 0.7);
+      --neon-pink: rgba(236, 72, 153, 0.15); --neon-glow-pink: 0 0 10px rgba(236, 72, 153, 0.7);
     }
     * { box-sizing: border-box; margin: 0; padding: 0 }
     html { scroll-behavior: smooth }
@@ -183,9 +186,22 @@
     }
     .feature-card {
       background: var(--card); border-radius: 16px; padding: 32px;
-      border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease;
+      position: relative; overflow: hidden;
     }
-    .feature-card:hover { transform: translateY(-5px) }
+    .feature-card::before {
+      content: ''; position: absolute; inset: 0; z-index: -1;
+      background: var(--neon-blue); border-radius: 16px;
+      box-shadow: var(--neon-glow-blue); opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .feature-card:hover { 
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.2);
+    }
+    .feature-card:hover::before {
+      opacity: 1;
+    }
     .feature-icon {
       width: 56px; height: 56px; border-radius: 12px; display: flex;
       align-items: center; justify-content: center; margin-bottom: 20px;
@@ -196,21 +212,74 @@
     .feature-desc { color: var(--muted); font-size: 16px }
     
     /* How It Works Section */
-    .steps-container { max-width: 800px; margin: 0 auto }
+    .steps-container { max-width: 800px; margin: 0 auto; position: relative }
     .step {
       display: flex; gap: 24px; padding: 24px 0; position: relative;
-      border-left: 1px dashed rgba(255, 255, 255, 0.1);
+      border-left: 2px solid rgba(255, 255, 255, 0.1);
     }
     .step:last-child { border-left: none }
     .step-number {
-      width: 48px; height: 48px; border-radius: 50%; background: var(--card);
+      width: 60px; height: 60px; border-radius: 50%; background: var(--card);
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      font-weight: 700; color: var(--primary); border: 1px solid rgba(255, 255, 255, 0.1);
-      position: absolute; left: -24px; top: 24px;
+      font-weight: 800; font-size: 24px; color: white;
+      position: absolute; left: -30px; top: 24px;
+      z-index: 2;
     }
-    .step-content { margin-left: 40px }
-    .step-title { font-size: 20px; margin-bottom: 8px; color: white }
-    .step-desc { color: var(--muted) }
+    .step:nth-child(1) .step-number {
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
+    }
+    .step:nth-child(2) .step-number {
+      background: linear-gradient(135deg, var(--secondary), #10b981);
+      box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
+    }
+    .step:nth-child(3) .step-number {
+      background: linear-gradient(135deg, #a855f7, #8b5cf6);
+      box-shadow: 0 5px 15px rgba(168, 85, 247, 0.4);
+    }
+    .step:nth-child(4) .step-number {
+      background: linear-gradient(135deg, #ec4899, #d946ef);
+      box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4);
+    }
+    .step-content { 
+      margin-left: 60px; 
+      padding: 30px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      transition: all 0.3s ease;
+    }
+    .step:hover .step-content {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateX(5px);
+    }
+    .step-title { 
+      font-size: 22px; margin-bottom: 12px; color: white;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .step:nth-child(1) .step-title::before {
+      content: ''; display: inline-block;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--primary);
+    }
+    .step:nth-child(2) .step-title::before {
+      content: ''; display: inline-block;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--secondary);
+    }
+    .step:nth-child(3) .step-title::before {
+      content: ''; display: inline-block;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #a855f7;
+    }
+    .step:nth-child(4) .step-title::before {
+      content: ''; display: inline-block;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #ec4899;
+    }
+    .step-desc { 
+      color: var(--muted); 
+      padding-left: 22px;
+    }
     
     /* Recovery Carousel Section */
     .recovery-section {
@@ -228,12 +297,13 @@
       gap: 24px; margin-top: 40px;
     }
     .tip-card {
-      background: var(--neon-yellow); border-radius: 16px; padding: 24px;
-      border: 1px solid rgba(255, 255, 0, 0.3); box-shadow: var(--neon-glow);
+      background: var(--neon-blue); border-radius: 16px; padding: 24px;
+      border: 1px solid rgba(14, 165, 233, 0.3); box-shadow: var(--neon-glow-blue);
       transition: all 0.3s ease;
     }
     .tip-card:hover {
-      box-shadow: 0 0 15px rgba(255, 255, 0, 0.8);
+      box-shadow: 0 0 15px rgba(14, 165, 233, 0.8);
+      transform: translateY(-5px);
     }
     .tip-card h3 { margin-bottom: 12px; color: white }
     .tip-card ul { padding-left: 20px; color: var(--muted) }
@@ -446,6 +516,16 @@
       .whatsapp-button img {
         width: 26px; height: 26px;
       }
+      .step-content {
+        margin-left: 40px;
+        padding: 20px;
+      }
+      .step-number {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+        left: -24px;
+      }
     }
     @media (max-width: 480px) {
       .topbar-container { flex-direction: column; gap: 12px }
@@ -453,7 +533,7 @@
       .hero { padding: 80px 0 40px }
       .hero-subtitle { font-size: 16px }
       .section { padding: 40px 0 }
-      .step { flex-direction: column; gap: 12px }
+      .step { flex-direction: column; gap: 12px; border-left: none }
       .step-number { position: static; margin-bottom: 12px }
       .step-content { margin-left: 0 }
       .carousel-control {
@@ -501,9 +581,6 @@
           </div>
           <div class="badge">
             <i class="fas fa-tools"></i> Instalação Fácil
-          </div>
-          <div class="badge">
-            <i class="fas fa-headset"></i> Suporte 24h em casos de emergência
           </div>
         </div>
       </div>
@@ -679,7 +756,7 @@
             <i class="fas fa-headset"></i>
           </div>
           <h3 class="feature-title">Suporte Especializado</h3>
-          <p class="feature-desc">Nossa equipe está disponível 24h em casos de emergência para ajudar com qualquer dúvida ou problema.</p>
+          <p class="feature-desc">Nossa equipe está disponível para ajudar com qualquer dúvida ou problema.</p>
         </div>
         
         <div class="feature-card">

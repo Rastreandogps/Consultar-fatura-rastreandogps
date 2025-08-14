@@ -265,25 +265,45 @@
     }
     .footer-copy { color: var(--muted); font-size: 14px }
     
-    /* Floating CTA */
-    .floating-cta {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      z-index: 100; display: flex; gap: 12px; background: var(--card);
-      padding: 12px 20px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1); align-items: center;
+    /* App Download Buttons */
+    .app-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 40px 0;
     }
-    .floating-cta-text { font-weight: 600; font-size: 14px }
-    
-    /* WhatsApp Button */
-    .whatsapp-button {
-      position: fixed; right: 24px; bottom: 24px; width: 60px; height: 60px;
-      background: var(--whatsapp); color: white; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3); z-index: 100;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .app-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      min-width: 200px;
     }
-    .whatsapp-button:hover {
-      transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 40px rgba(37, 211, 102, 0.4);
+    .app-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .app-button i {
+      font-size: 24px;
+    }
+    .app-button-android i {
+      color: #3ddc84; /* Android green */
+    }
+    .app-button-ios i {
+      color: #007aff; /* iOS blue */
+    }
+    .app-button-web i {
+      color: var(--primary);
     }
     
     /* Responsive */
@@ -301,6 +321,14 @@
       .btn { width: 100%; max-width: 300px }
       .section { padding: 50px 0 }
       .pricing-card { padding: 30px }
+      .app-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      .app-button {
+        width: 100%;
+        max-width: 300px;
+      }
     }
     @media (max-width: 480px) {
       .topbar-container { flex-direction: column; gap: 12px }
@@ -311,7 +339,6 @@
       .step { flex-direction: column; gap: 12px }
       .step-number { position: static; margin-bottom: 12px }
       .step-content { margin-left: 0 }
-      .floating-cta { width: calc(100% - 40px); justify-content: center }
     }
   </style>
 </head>
@@ -323,7 +350,7 @@
         <img src="./assets/logo.png" alt="Rastreando GPS" />
         <span>Rastreando GPS</span>
       </a>
-      <a class="btn btn-ml" href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" target="_blank" rel="noopener">
+      <a class="btn btn-ml" href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" target="_blank" rel="noopener" style="padding: 12px 20px; font-size: 14px;">
         <i class="fas fa-shopping-cart"></i> COMPRAR AGORA
       </a>
     </div>
@@ -633,6 +660,40 @@
           <div class="faq-answer">Sim, você pode criar logins adicionais para familiares ou funcionários, com diferentes níveis de acesso conforme sua necessidade.</div>
         </div>
       </div>
+
+      <!-- App Download Buttons -->
+      <div class="app-buttons">
+        <a href="https://play.google.com/store/apps/details?id=com.rastreandogpsrastreamento.br" class="app-button app-button-android" target="_blank" rel="noopener">
+          <i class="fab fa-google-play"></i>
+          <span>Baixar para Android</span>
+        </a>
+        <a href="https://apps.apple.com/br/app/rastreando-gps/id1642112039" class="app-button app-button-ios" target="_blank" rel="noopener">
+          <i class="fab fa-apple"></i>
+          <span>Baixar para iPhone</span>
+        </a>
+        <a href="https://rastreamento.ong.br/index.php" class="app-button app-button-web" target="_blank" rel="noopener">
+          <i class="fas fa-desktop"></i>
+          <span>Acesse pelo Computador</span>
+        </a>
+      </div>
+
+      <!-- Company Info -->
+      <div style="margin-top: 60px; background: var(--card); padding: 24px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h3 style="text-align: center; margin-bottom: 20px; color: white;">Rastreando GPS</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; color: var(--muted);">
+          <div>
+            <p><strong>CNPJ:</strong> 29.488.621/0001-48</p>
+            <p><strong>Contato:</strong> (21) 96931-2625 | (21) 98088-6087</p>
+          </div>
+          <div>
+            <p><strong>E-mail:</strong> rastreandogpsbr@gmail.com</p>
+            <p><strong>Atendimento:</strong> Estado do Rio de Janeiro</p>
+          </div>
+        </div>
+        <p style="margin-top: 20px; color: var(--muted); text-align: center;">
+          <strong>Serviços:</strong> Rastreamento veicular com e sem bloqueio há mais de 6 anos no mercado, especializada em monitoramento veicular de alta qualidade através de aplicativo e web.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -690,14 +751,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- Floating CTA -->
-  <div class="floating-cta">
-    <p class="floating-cta-text">Proteja seu veículo agora mesmo</p>
-    <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" class="btn btn-ml btn-sm" target="_blank" rel="noopener">
-      COMPRAR
-    </a>
-  </div>
 
   <!-- WhatsApp Button -->
   <a href="https://wa.me/5521969312625" class="whatsapp-button" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">

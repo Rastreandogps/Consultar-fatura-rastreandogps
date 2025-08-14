@@ -3,180 +3,796 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rastreando GPS — Compre seu rastreador 4G e instale na sua cidade</title>
-  <meta name="description" content="Compre seu rastreador 4G pelo Mercado Livre, instale na sua cidade e use o app Rastreando GPS. Fácil e rápido.">
+  <title>Rastreador 4G com Bloqueio — Instale você mesmo e tenha segurança 24h</title>
+  <meta name="description" content="Compre seu rastreador 4G com bloqueio pelo Mercado Livre, instale você mesmo em minutos e controle seu veículo pelo app. Chip Vivo incluso e suporte especializado.">
+  <meta property="og:title" content="Rastreador 4G com Bloqueio — Instale você mesmo">
+  <meta property="og:description" content="Controle seu veículo 24h pelo app com bloqueio remoto. Instalação fácil e rápida.">
+  <meta property="og:image" content="./assets/hero.jpg">
+  <meta property="og:url" content="https://seusite.com">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <style>
-    :root{
-      --bg:#0b1220; --ink:#0d3c61; --muted:#94a3b8; --card:#0f172a;
-      --white:#fff; --blue:#0ea5e9; --green:#22c55e; --ring:rgba(14,165,233,.25);
-      --ml-yellow:#fff159; --ml-ink:#2b2b2b;
+    :root {
+      --bg: #0b1220; --ink: #0d3c61; --muted: #94a3b8; --card: #0f172a;
+      --white: #fff; --blue: #0ea5e9; --green: #22c55e; --ring: rgba(14,165,233,.25);
+      --ml-yellow: #fee600; --ml-ink: #2b2b2b; --whatsapp: #25d366;
+      --primary: #0ea5e9; --secondary: #22c55e; --dark: #0b1220;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      color:var(--white); background:linear-gradient(180deg,#050913,#0b1525 60%,#0b1220);
-      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    html { scroll-behavior: smooth }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--white); background: linear-gradient(180deg, #050913, #0b1525 60%, #0b1220);
+      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+      line-height: 1.5;
     }
-    .container{width:min(1100px,92vw); margin:0 auto; padding:24px}
-    .row{display:flex; align-items:center; justify-content:space-between; gap:16px}
-    .grid-2{display:grid; grid-template-columns:1.2fr .9fr; gap:32px}
-    .center{text-align:center}
-
-    /* topo */
-    .topbar{
-      position:sticky; top:0; z-index:50; backdrop-filter:saturate(1.3) blur(8px);
-      background:rgba(11,18,32,.6); border-bottom:1px solid rgba(255,255,255,.06)
+    .container { width: min(1200px, 92vw); margin: 0 auto; padding: 0 20px }
+    .section { padding: 80px 0; scroll-margin-top: 80px }
+    .section-title { font-size: clamp(28px, 5vw, 42px); margin-bottom: 24px; line-height: 1.2 }
+    .text-center { text-align: center }
+    .gradient-text { background: linear-gradient(90deg, var(--secondary), var(--primary)); 
+      -webkit-background-clip: text; background-clip: text; color: transparent }
+    
+    /* Topbar */
+    .topbar {
+      position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(1.3) blur(8px);
+      background: rgba(11, 18, 32, 0.8); border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 16px 0;
     }
-    .brand{display:flex; align-items:center; gap:10px; color:#fff; text-decoration:none; font-weight:800}
-    .brand img{width:32px; height:32px; border-radius:8px}
-
-    .header-left{display:flex; align-items:center; gap:14px}
-    .ml-header-btn{
-      display:inline-flex; align-items:center; gap:8px;
-      background:var(--ml-yellow); color:var(--ml-ink); text-decoration:none;
-      font-weight:900; padding:10px 14px; border-radius:12px; white-space:nowrap;
-      border:1px solid rgba(0,0,0,.08); box-shadow:0 6px 20px rgba(0,0,0,.25);
-      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    .topbar-container { display: flex; align-items: center; justify-content: space-between; gap: 16px }
+    .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-weight: 700; font-size: 18px }
+    .brand img { width: 36px; height: 36px; border-radius: 8px }
+    
+    /* Botões */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 24px; border-radius: 12px; font-weight: 700; text-decoration: none;
+      transition: all 0.2s ease; white-space: nowrap; border: none; cursor: pointer;
     }
-    .ml-header-btn:hover{transform:translateY(-1px); box-shadow:0 10px 28px rgba(0,0,0,.35); filter:saturate(1.05)}
-    .ml-header-btn small{font-weight:700; opacity:.9}
-
-    .nav a{color:#cbd5e1; text-decoration:none; margin-left:18px}
-    .nav a:hover{color:#fff}
-
-    /* botões gerais */
-    .btn{display:inline-block; padding:14px 18px; border-radius:14px; background:linear-gradient(90deg,#22c55e,#0ea5e9);
-      color:#08101c; font-weight:800; text-decoration:none; box-shadow:0 10px 30px var(--ring)}
-    .btn--ghost{background:transparent; border:1px solid rgba(255,255,255,.2); color:#fff}
-    .btn--sm{padding:10px 14px; font-weight:700}
-
-    /* hero */
-    .hero{padding:64px 0 20px}
-    .hero__copy h1{font-size:clamp(28px,6vw,48px); line-height:1.05; margin:0 0 12px}
-    .grad{background:linear-gradient(90deg,#22c55e,#0ea5e9); -webkit-background-clip:text; background-clip:text; color:transparent}
-    .hero__copy p{color:#cbd5e1; font-size:18px}
-    .cta{display:flex; gap:12px; margin-top:16px; flex-wrap:wrap}
-    .badges{display:flex; flex-wrap:wrap; gap:10px; padding:0; margin:18px 0 0}
-    .badges li{list-style:none; font-size:12px; padding:8px 10px; border:1px solid rgba(255,255,255,.1); border-radius:999px; color:#cbd5e1}
-    .hero__media img{width:100%; height:auto; border-radius:18px; box-shadow:0 20px 40px rgba(0,0,0,.45)}
-
-    /* seções básicas usadas aqui */
-    section{scroll-margin-top:80px}
-    h2{font-size:clamp(24px,4.5vw,36px); margin:0 0 10px}
-
-    /* rodapé */
-    .footer{border-top:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.02)}
-    .footer p{color:#9fb3c8; font-size:14px}
-
-    /* botão flutuante WhatsApp */
-    .whats{
-      position:fixed; right:18px; bottom:18px; width:56px; height:56px; display:grid; place-items:center;
-      background:#25d366; color:#08230f; border-radius:999px; text-decoration:none; box-shadow:0 10px 30px rgba(0,0,0,.35);
-      transition:transform .2s ease, box-shadow .2s ease; z-index:60;
+    .btn-primary {
+      background: var(--primary); color: white; box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
     }
-    .whats:hover{transform:translateY(-2px); box-shadow:0 16px 40px rgba(0,0,0,.45)}
-
-    /* responsivo */
-    @media (max-width: 920px){
-      .grid-2{grid-template-columns:1fr; gap:20px}
-      .nav{display:none}
-      .hero{padding-top:28px}
-      .ml-header-btn{padding:9px 12px; font-size:14px}
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(14, 165, 233, 0.4) }
+    .btn-secondary {
+      background: var(--secondary); color: white; box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+    }
+    .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(34, 197, 94, 0.4) }
+    .btn-ml {
+      background: var(--ml-yellow); color: var(--ml-ink); font-weight: 800;
+      box-shadow: 0 4px 20px rgba(254, 230, 0, 0.3);
+    }
+    .btn-ml:hover { 
+      background: var(--ml-yellow); transform: translateY(-2px); 
+      box-shadow: 0 6px 25px rgba(254, 230, 0, 0.4) 
+    }
+    .btn-whatsapp {
+      background: var(--whatsapp); color: white; font-weight: 700;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+    }
+    .btn-whatsapp:hover { 
+      background: var(--whatsapp); transform: translateY(-2px); 
+      box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4) 
+    }
+    .btn-ghost {
+      background: transparent; color: white; border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .btn-ghost:hover { background: rgba(255, 255, 255, 0.05) }
+    
+    /* Hero Section */
+    .hero {
+      padding: 100px 0 60px; position: relative; overflow: hidden;
+    }
+    .hero-container {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+    }
+    .hero-content { position: relative; z-index: 2 }
+    .hero-title {
+      font-size: clamp(32px, 6vw, 52px); font-weight: 800; line-height: 1.1;
+      margin-bottom: 20px; color: white;
+    }
+    .hero-subtitle {
+      font-size: 18px; color: var(--muted); margin-bottom: 32px; max-width: 500px;
+    }
+    .hero-buttons { display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap }
+    .hero-badges {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px;
+    }
+    .badge {
+      display: flex; align-items: center; gap: 8px; padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.05); border-radius: 50px;
+      font-size: 14px; color: var(--muted); border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .hero-image {
+      position: relative; z-index: 1; border-radius: 16px; overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    .hero-image img { width: 100%; height: auto; display: block }
+    
+    /* Features Section */
+    .features { background: rgba(255, 255, 255, 0.02) }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; margin-top: 40px;
+    }
+    .feature-card {
+      background: var(--card); border-radius: 16px; padding: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.3s ease;
+    }
+    .feature-card:hover { transform: translateY(-5px) }
+    .feature-icon {
+      width: 56px; height: 56px; border-radius: 12px; display: flex;
+      align-items: center; justify-content: center; margin-bottom: 20px;
+      background: rgba(14, 165, 233, 0.1); color: var(--primary);
+      font-size: 24px;
+    }
+    .feature-title { font-size: 20px; margin-bottom: 12px; color: white }
+    .feature-desc { color: var(--muted); font-size: 16px }
+    
+    /* How It Works Section */
+    .steps-container { max-width: 800px; margin: 0 auto }
+    .step {
+      display: flex; gap: 24px; padding: 24px 0; position: relative;
+      border-left: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    .step:last-child { border-left: none }
+    .step-number {
+      width: 48px; height: 48px; border-radius: 50%; background: var(--card);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-weight: 700; color: var(--primary); border: 1px solid rgba(255, 255, 255, 0.1);
+      position: absolute; left: -24px; top: 24px;
+    }
+    .step-content { margin-left: 40px }
+    .step-title { font-size: 20px; margin-bottom: 8px; color: white }
+    .step-desc { color: var(--muted) }
+    
+    /* Installation Tips */
+    .tips-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px; margin-top: 40px;
+    }
+    .tip-card {
+      background: var(--card); border-radius: 16px; padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .tip-card h3 { margin-bottom: 12px; color: white }
+    .tip-card ul { padding-left: 20px; color: var(--muted) }
+    .tip-card li { margin-bottom: 8px }
+    
+    /* Pricing Section */
+    .pricing-card {
+      background: var(--card); border-radius: 16px; padding: 40px;
+      max-width: 500px; margin: 0 auto; text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1); position: relative;
+      overflow: hidden;
+    }
+    .pricing-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 4px; background: linear-gradient(90deg, var(--secondary), var(--primary));
+    }
+    .pricing-price {
+      font-size: 48px; font-weight: 800; margin: 20px 0;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .pricing-features {
+      margin: 32px 0; text-align: left; color: var(--muted);
+    }
+    .pricing-features li {
+      margin-bottom: 12px; padding-left: 24px; position: relative;
+    }
+    .pricing-features li::before {
+      content: '✓'; position: absolute; left: 0;
+      color: var(--secondary); font-weight: bold;
+    }
+    
+    /* Testimonials */
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px; margin-top: 40px;
+    }
+    .testimonial-card {
+      background: var(--card); border-radius: 16px; padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .testimonial-text {
+      font-style: italic; margin-bottom: 16px; color: var(--muted);
+      position: relative; padding-left: 20px;
+    }
+    .testimonial-text::before {
+      content: '"'; position: absolute; left: 0; top: -10px;
+      font-size: 40px; color: rgba(255, 255, 255, 0.1);
+    }
+    .testimonial-author {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .author-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1); display: flex;
+      align-items: center; justify-content: center;
+    }
+    .author-name { font-weight: 600; color: white }
+    .author-role { font-size: 14px; color: var(--muted) }
+    
+    /* FAQ Section */
+    .faq-container { max-width: 800px; margin: 0 auto }
+    .faq-item {
+      margin-bottom: 16px; border-radius: 8px; overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .faq-question {
+      padding: 16px 20px; background: var(--card); cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      font-weight: 600; color: white;
+    }
+    .faq-question::after {
+      content: '+'; font-size: 20px; transition: transform 0.3s ease;
+    }
+    .faq-question.active::after { transform: rotate(45deg) }
+    .faq-answer {
+      padding: 0 20px; max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      background: rgba(255, 255, 255, 0.02); color: var(--muted);
+    }
+    .faq-answer.open {
+      padding: 16px 20px; max-height: 500px;
+    }
+    
+    /* Footer */
+    .footer {
+      background: rgba(255, 255, 255, 0.02); border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 60px 0 30px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px; margin-bottom: 40px;
+    }
+    .footer-logo { margin-bottom: 20px }
+    .footer-title {
+      font-size: 18px; margin-bottom: 20px; color: white;
+    }
+    .footer-links { list-style: none }
+    .footer-links li { margin-bottom: 12px }
+    .footer-links a {
+      color: var(--muted); text-decoration: none; transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: white }
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 30px;
+      display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px;
+    }
+    .footer-copy { color: var(--muted); font-size: 14px }
+    
+    /* Floating CTA */
+    .floating-cta {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 100; display: flex; gap: 12px; background: var(--card);
+      padding: 12px 20px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1); align-items: center;
+    }
+    .floating-cta-text { font-weight: 600; font-size: 14px }
+    
+    /* WhatsApp Button */
+    .whatsapp-button {
+      position: fixed; right: 24px; bottom: 24px; width: 60px; height: 60px;
+      background: var(--whatsapp); color: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3); z-index: 100;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .whatsapp-button:hover {
+      transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 40px rgba(37, 211, 102, 0.4);
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-container { grid-template-columns: 1fr }
+      .hero-content { order: 1; text-align: center }
+      .hero-image { order: 2; max-width: 600px; margin: 0 auto }
+      .hero-buttons { justify-content: center }
+      .hero-badges { justify-content: center }
+      .section { padding: 60px 0 }
+    }
+    @media (max-width: 768px) {
+      .hero-title { font-size: clamp(28px, 6vw, 40px) }
+      .hero-buttons { flex-direction: column; align-items: center }
+      .btn { width: 100%; max-width: 300px }
+      .section { padding: 50px 0 }
+      .pricing-card { padding: 30px }
+    }
+    @media (max-width: 480px) {
+      .topbar-container { flex-direction: column; gap: 12px }
+      .brand { font-size: 16px }
+      .hero { padding: 80px 0 40px }
+      .hero-subtitle { font-size: 16px }
+      .section { padding: 40px 0 }
+      .step { flex-direction: column; gap: 12px }
+      .step-number { position: static; margin-bottom: 12px }
+      .step-content { margin-left: 0 }
+      .floating-cta { width: calc(100% - 40px); justify-content: center }
     }
   </style>
 </head>
 <body>
-  <!-- Cabeçalho -->
+  <!-- Topbar -->
   <header class="topbar">
-    <div class="container row">
-      <div class="header-left">
-        <a class="brand" href="#topo">
-          <img src="./assets/logo.png" alt="Rastreando GPS" />
-          <span>Rastreando GPS</span>
-        </a>
-        <!-- BOTÃO AMARELO MERCADO LIVRE AO LADO DA LOGO -->
-        <a class="ml-header-btn" href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" target="_blank" rel="noopener" aria-label="Comprar rastreador 4G no Mercado Livre">
-          COMPRAR EQUIPAMENTO 4G
-        </a>
-      </div>
-
-      <nav class="nav">
-        <a href="#como-funciona">Como funciona</a>
-        <a href="#beneficios">Benefícios</a>
-        <a href="#kit">O que vem</a>
-        <a href="#faq">FAQ</a>
-        <a class="btn btn--sm btn--ghost" href="https://wa.me/5521969312625" target="_blank" rel="noopener">WhatsApp</a>
-      </nav>
+    <div class="container topbar-container">
+      <a class="brand" href="#">
+        <img src="./assets/logo.png" alt="Rastreando GPS" />
+        <span>Rastreando GPS</span>
+      </a>
+      <a class="btn btn-ml" href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" target="_blank" rel="noopener">
+        <i class="fas fa-shopping-cart"></i> COMPRAR AGORA
+      </a>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section id="topo" class="hero">
-    <div class="container grid-2">
-      <div class="hero__copy">
-        <h1>Compre seu <span class="grad">rastreador 4G</span> e instale na sua cidade</h1>
-        <p>Você compra pelo <strong>Mercado Livre</strong>, instala com um técnico local e usa o nosso <strong>app oficial</strong> para ver seu veículo em tempo real.</p>
-        <div class="cta">
-          <!-- Botão principal para o anúncio -->
-          <a id="btn-ml" class="btn" href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" target="_blank" rel="noopener">
-            Comprar no Mercado Livre
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <h1 class="hero-title">Rastreador 4G com <span class="gradient-text">Bloqueio Remoto</span></h1>
+        <p class="hero-subtitle">Compre online, instale você mesmo em minutos e tenha controle total do seu veículo pelo app, 24 horas por dia.</p>
+        <div class="hero-buttons">
+          <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" class="btn btn-ml" target="_blank" rel="noopener">
+            <i class="fas fa-bolt"></i> COMPRAR NO MERCADO LIVRE
           </a>
-          <a class="btn btn--ghost" href="#como-funciona">Entenda em 1 minuto</a>
+          <a href="#contact" class="btn btn-whatsapp">
+            <i class="fab fa-whatsapp"></i> FALAR COM ATENDIMENTO
+          </a>
         </div>
-        <ul class="badges">
-          <li>4G Vivo</li>
-          <li>App iOS/Android</li>
-          <li>Instalação local</li>
-          <li>Suporte Brasil</li>
-        </ul>
+        <div class="hero-badges">
+          <div class="badge">
+            <i class="fas fa-shield-alt"></i> Bloqueio Remoto
+          </div>
+          <div class="badge">
+            <i class="fas fa-mobile-alt"></i> App iOS/Android
+          </div>
+          <div class="badge">
+            <i class="fas fa-tools"></i> Instalação Fácil
+          </div>
+          <div class="badge">
+            <i class="fas fa-headset"></i> Suporte 24h
+          </div>
+        </div>
       </div>
-      <div class="hero__media">
-        <!-- troque por ./assets/hero.jpg quando tiver -->
-        <img src="./assets/hero.jpg" alt="Rastreador e aplicativo">
+      <div class="hero-image">
+        <img src="./assets/hero.jpg" alt="Rastreador 4G com bloqueio remoto" loading="lazy">
       </div>
     </div>
   </section>
 
-  <!-- Rodapé -->
-  <footer class="footer">
-    <div class="container row">
-      <p>© <span id="year"></span> Rastreando GPS — CNPJ 29.488.621/0001-48</p>
-      <p><a class="link" href="https://wa.me/5521969312625">WhatsApp: (21) 96931-2625</a></p>
+  <!-- Features Section -->
+  <section class="section" id="features">
+    <div class="container">
+      <h2 class="section-title text-center">Por que escolher nosso <span class="gradient-text">rastreador 4G</span>?</h2>
+      <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
+        Tecnologia avançada com instalação simples que você mesmo pode fazer. Controle total do seu veículo na palma da sua mão.
+      </p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-lock"></i>
+          </div>
+          <h3 class="feature-title">Bloqueio Remoto</h3>
+          <p class="feature-desc">Bloqueie e desbloqueie seu veículo remotamente pelo aplicativo, a qualquer momento.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h3 class="feature-title">Localização em Tempo Real</h3>
+          <p class="feature-desc">Acompanhe a posição exata do seu veículo com atualizações em tempo real via 4G.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-sim-card"></i>
+          </div>
+          <h3 class="feature-title">Chip Vivo Incluso</h3>
+          <p class="feature-desc">Chip de conexão Vivo já incluso, sem necessidade de contratar plano separado.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <h3 class="feature-title">Login Exclusivo</h3>
+          <p class="feature-desc">Acesso seguro com login e senha exclusivos para você controlar quem acessa seu veículo.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h3 class="feature-title">Suporte Especializado</h3>
+          <p class="feature-desc">Nossa equipe está disponível 24h para ajudar com qualquer dúvida ou problema.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-wallet"></i>
+          </div>
+          <h3 class="feature-title">Sem Custos Ocultos</h3>
+          <p class="feature-desc">Mensalidade fixa sem taxas extras. Tudo incluso: app, suporte e chip Vivo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="section" id="how-it-works" style="background: rgba(255, 255, 255, 0.02)">
+    <div class="container">
+      <h2 class="section-title text-center">Como funciona em <span class="gradient-text">4 passos</span></h2>
+      <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
+        Instalação simples que você mesmo pode fazer em poucos minutos. Sem complicação!
+      </p>
+      
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3 class="step-title">Receba seu equipamento</h3>
+            <p class="step-desc">Após a compra no Mercado Livre, você receberá o rastreador 4G em casa com tudo necessário para instalação.</p>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3 class="step-title">Instale no veículo</h3>
+            <p class="step-desc">Conecte o rastreador na bateria do veículo seguindo nosso guia simples. Posicione corretamente as antenas.</p>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3 class="step-title">Ative com nosso suporte</h3>
+            <p class="step-desc">Nosso time fará a ativação remota e enviará seus dados de acesso ao aplicativo.</p>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3 class="step-title">Controle pelo app</h3>
+            <p class="step-desc">Baixe o app, faça login e tenha controle total: localização, histórico e bloqueio remoto.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation Tips -->
+  <section class="section" id="installation">
+    <div class="container">
+      <h2 class="section-title text-center">Dicas de <span class="gradient-text">Instalação</span></h2>
+      <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
+        Instale seu rastreador com segurança seguindo nossas recomendações.
+      </p>
+      
+      <div class="tips-grid">
+        <div class="tip-card">
+          <h3>Posicionamento Ideal</h3>
+          <ul>
+            <li>Instale em local escondido mas com boa recepção de sinal</li>
+            <li>Evite áreas de calor excessivo ou umidade</li>
+            <li>Posicione as antenas para cima</li>
+            <li>Mantenha distância de componentes eletrônicos</li>
+          </ul>
+        </div>
+        
+        <div class="tip-card">
+          <h3>Conexões Elétricas</h3>
+          <ul>
+            <li>Conecte o fio vermelho no positivo da bateria</li>
+            <li>Conecte o fio preto no negativo da bateria</li>
+            <li>Opcional: conecte o fio branco na ignição</li>
+            <li>Use conectores de qualidade e isole bem as emendas</li>
+          </ul>
+        </div>
+        
+        <div class="tip-card">
+          <h3>Quando chamar o suporte</h3>
+          <ul>
+            <li>Dúvidas sobre a fiação do seu veículo</li>
+            <li>Leds não acendem após instalação</li>
+            <li>Não consegue ativar o equipamento</li>
+            <li>Problemas com conexão no aplicativo</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost" style="margin-top: 16px; width: 100%">
+            <i class="fas fa-question-circle"></i> Precisa de ajuda?
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="section" id="pricing" style="background: rgba(255, 255, 255, 0.02)">
+    <div class="container">
+      <h2 class="section-title text-center">Investimento em <span class="gradient-text">segurança</span></h2>
+      <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
+        Tudo que você precisa por um valor justo e sem surpresas.
+      </p>
+      
+      <div class="pricing-card">
+        <h3 style="font-size: 24px; margin-bottom: 8px">Rastreador 4G com Bloqueio</h3>
+        <p style="color: var(--muted); margin-bottom: 20px">Mensalidade única, sem taxas extras</p>
+        
+        <div class="pricing-price">R$ 49,90<span style="font-size: 16px">/mês</span></div>
+        
+        <ul class="pricing-features">
+          <li>Uso ilimitado do aplicativo 24h</li>
+          <li>Suporte técnico especializado</li>
+          <li>Chip Vivo com créditos incluso</li>
+          <li>Plataforma completa de rastreamento</li>
+          <li>Bloqueio e desbloqueio remoto</li>
+          <li>Histórico de rotas e paradas</li>
+        </ul>
+        
+        <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" class="btn btn-ml" style="width: 100%" target="_blank" rel="noopener">
+          <i class="fas fa-shopping-cart"></i> COMPRAR AGORA
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section" id="testimonials">
+    <div class="container">
+      <h2 class="section-title text-center">O que dizem nossos <span class="gradient-text">clientes</span></h2>
+      <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
+        Veja a experiência de quem já está protegendo seu veículo com nosso rastreador.
+      </p>
+      
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <p class="testimonial-text">Instalei sozinho em menos de 30 minutos. O app é muito fácil de usar e o bloqueio remoto já me salvou quando esqueceram o carro aberto.</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div>
+              <div class="author-name">Carlos Silva</div>
+              <div class="author-role">Cliente desde 2022</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="testimonial-card">
+          <p class="testimonial-text">Ótimo custo-benefício. Pago menos que outros rastreadores e tenho mais funções, principalmente o bloqueio pelo celular que é essencial.</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div>
+              <div class="author-name">Ana Oliveira</div>
+              <div class="author-role">Cliente desde 2023</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="testimonial-card">
+          <p class="testimonial-text">O suporte resolveu minha dúvida de instalação rapidinho pelo WhatsApp. Recomendo demais, principalmente para quem quer instalar sozinho.</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div>
+              <div class="author-name">Roberto Santos</div>
+              <div class="author-role">Cliente desde 2023</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section" id="faq" style="background: rgba(255, 255, 255, 0.02)">
+    <div class="container">
+      <h2 class="section-title text-center">Perguntas <span class="gradient-text">Frequentes</span></h2>
+      <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
+        Tire suas dúvidas sobre o rastreador 4G com bloqueio.
+      </p>
+      
+      <div class="faq-container">
+        <div class="faq-item">
+          <div class="faq-question">Qual o prazo de entrega após a compra?</div>
+          <div class="faq-answer">Enviamos em até 2 dias úteis após a confirmação do pagamento. O prazo de entrega varia de 3 a 7 dias úteis dependendo da sua região.</div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Preciso contratar um plano de dados separado?</div>
+          <div class="faq-answer">Não. O chip Vivo já está incluso no pacote e os créditos são gerenciados por nós. Tudo incluso na mensalidade de R$ 49,90.</div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Como funciona a garantia do equipamento?</div>
+          <div class="faq-answer">Oferecemos 12 meses de garantia contra defeitos de fabricação. Em caso de problemas, entre em contato com nosso suporte para orientações.</div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Posso instalar em qualquer veículo?</div>
+          <div class="faq-answer">Sim, o rastreador é compatível com carros, motos, caminhões e outros veículos com bateria 12V. A instalação em motos requer alguns cuidados extras.</div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">O bloqueio remoto funciona mesmo sem sinal?</div>
+          <div class="faq-answer">O bloqueio requer conexão com a internet (via chip 4G). Se o veículo estiver em área sem cobertura, o comando será executado assim que o sinal for restabelecido.</div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Posso compartilhar o acesso com familiares?</div>
+          <div class="faq-answer">Sim, você pode criar logins adicionais para familiares ou funcionários, com diferentes níveis de acesso conforme sua necessidade.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">
+            <a class="brand" href="#">
+              <img src="./assets/logo.png" alt="Rastreando GPS" />
+              <span>Rastreando GPS</span>
+            </a>
+          </div>
+          <p style="color: var(--muted); margin-top: 16px; max-width: 300px">
+            Tecnologia em segurança veicular com instalação simples e controle total pelo aplicativo.
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="footer-title">Links Rápidos</h3>
+          <ul class="footer-links">
+            <li><a href="#features">Benefícios</a></li>
+            <li><a href="#how-it-works">Como Funciona</a></li>
+            <li><a href="#installation">Instalação</a></li>
+            <li><a href="#pricing">Planos</a></li>
+            <li><a href="#testimonials">Depoimentos</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="footer-title">Contato</h3>
+          <ul class="footer-links">
+            <li><a href="https://wa.me/5521969312625" target="_blank"><i class="fab fa-whatsapp"></i> (21) 96931-2625</a></li>
+            <li><a href="mailto:contato@rastreandogps.com"><i class="fas fa-envelope"></i> contato@rastreandogps.com</a></li>
+            <li><a href="#"><i class="fas fa-map-marker-alt"></i> Rio de Janeiro, RJ</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="footer-title">Legal</h3>
+          <ul class="footer-links">
+            <li><a href="#">Termos de Uso</a></li>
+            <li><a href="#">Política de Privacidade</a></li>
+            <li><a href="#">Trocas e Devoluções</a></li>
+            <li><a href="#">Garantia</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p class="footer-copy">© <span id="year"></span> Rastreando GPS. Todos os direitos reservados.</p>
+        <p class="footer-copy">CNPJ: 29.488.621/0001-48</p>
+      </div>
     </div>
   </footer>
 
-  <!-- Botão flutuante WhatsApp -->
-  <a class="whats" href="https://wa.me/5521969312625" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
-    <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M19.11 17.25c-.27-.13-1.61-.79-1.86-.88-.25-.09-.43-.13-.61.13-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.13-1.13-.42-2.15-1.34-.79-.7-1.32-1.57-1.48-1.83-.16-.27-.02-.42.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.13-.61-1.47-.84-2.01-.22-.53-.45-.46-.61-.46h-.52c-.18 0-.48.07-.73.34s-.96.94-.96 2.29 1 2.65 1.14 2.83c.14.18 1.96 2.99 4.75 4.2.66.29 1.18.46 1.58.59.66.21 1.27.18 1.75.11.53-.08 1.61-.66 1.84-1.29.23-.63.23-1.17.16-1.29-.07-.11-.25-.18-.52-.31zM16 3C9.93 3 5 7.93 5 14c0 2.41.79 4.65 2.13 6.46L5 29l8.73-2.29C15.17 26.9 15.58 27 16 27c6.07 0 11-4.93 11-11S22.07 3 16 3z"/></svg>
+  <!-- Floating CTA -->
+  <div class="floating-cta">
+    <p class="floating-cta-text">Proteja seu veículo agora mesmo</p>
+    <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" class="btn btn-ml btn-sm" target="_blank" rel="noopener">
+      COMPRAR
+    </a>
+  </div>
+
+  <!-- WhatsApp Button -->
+  <a href="https://wa.me/5521969312625" class="whatsapp-button" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <i class="fab fa-whatsapp" style="font-size: 24px"></i>
   </a>
 
-  <!-- Script (opcional, mas recomendado) -->
+  <!-- Scripts -->
   <script>
-    // atualiza ano no rodapé
+    // Atualiza ano no footer
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // tracking simples do clique no ML
-    const btnMl = document.getElementById('btn-ml');
-    btnMl?.addEventListener('click', () => {
-      try { sessionStorage.setItem('ml_click', String(Date.now())); } catch(e) {}
-    });
-
-    // rolagem suave para âncoras
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        const id = a.getAttribute('href');
-        const el = id && document.querySelector(id);
-        if(el){
-          e.preventDefault();
-          el.scrollIntoView({behavior:'smooth', block:'start'});
-          history.replaceState(null, '', id);
+    
+    // FAQ Accordion
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(question => {
+      question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        const isOpen = answer.classList.contains('open');
+        
+        // Fecha todas as respostas primeiro
+        document.querySelectorAll('.faq-answer').forEach(ans => {
+          ans.classList.remove('open');
+        });
+        document.querySelectorAll('.faq-question').forEach(q => {
+          q.classList.remove('active');
+        });
+        
+        // Abre apenas a resposta clicada se não estava aberta
+        if (!isOpen) {
+          answer.classList.add('open');
+          question.classList.add('active');
         }
       });
     });
+    
+    // Tracking de cliques no ML
+    const mlButtons = document.querySelectorAll('[href*="mercadolivre"]');
+    mlButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'conversion', {
+            'send_to': 'AW-123456789/AbCd-EFGhIJKLMNOPQRST-U',
+            'value': 1.0,
+            'currency': 'BRL'
+          });
+        }
+        try {
+          localStorage.setItem('ml_click', new Date().toISOString());
+        } catch(e) {}
+      });
+    });
+    
+    // Smooth scrolling para âncoras
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          
+          // Atualiza URL sem recarregar a página
+          history.pushState(null, null, targetId);
+        }
+      });
+    });
+    
+    // Animações simples ao rolar
+    const animateOnScroll = () => {
+      const elements = document.querySelectorAll('.feature-card, .step, .tip-card, .testimonial-card');
+      elements.forEach(el => {
+        const elTop = el.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        
+        if (elTop < windowHeight - 100) {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }
+      });
+    };
+    
+    // Configura elementos para animação
+    document.querySelectorAll('.feature-card, .step, .tip-card, .testimonial-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    });
+    
+    // Dispara animação ao carregar e ao rolar
+    window.addEventListener('load', animateOnScroll);
+    window.addEventListener('scroll', animateOnScroll);
   </script>
 </body>
 </html>

@@ -24,7 +24,6 @@
       --neon-green: rgba(34, 197, 94, 0.15); --neon-glow-green: 0 0 10px rgba(34, 197, 94, 0.7);
       --neon-purple: rgba(168, 85, 247, 0.15); --neon-glow-purple: 0 0 10px rgba(168, 85, 247, 0.7);
       --neon-pink: rgba(236, 72, 153, 0.15); --neon-glow-pink: 0 0 10px rgba(236, 72, 153, 0.7);
-      --icon-color: #1db9c3; /* New color for icons - mix of green and blue */
     }
     * { box-sizing: border-box; margin: 0; padding: 0 }
     html { scroll-behavior: smooth }
@@ -206,8 +205,7 @@
     .feature-icon {
       width: 56px; height: 56px; border-radius: 12px; display: flex;
       align-items: center; justify-content: center; margin-bottom: 20px;
-      background: rgba(29, 185, 195, 0.2); /* Updated background color */
-      color: var(--icon-color); /* Updated icon color */
+      background: rgba(14, 165, 233, 0.1); color: var(--primary);
       font-size: 24px;
     }
     .feature-title { font-size: 20px; margin-bottom: 12px; color: white }
@@ -258,12 +256,29 @@
       font-size: 22px; margin-bottom: 12px; color: white;
       display: flex; align-items: center; gap: 10px;
     }
-    .step-title-text {
-      display: inline-block;
-      margin-left: 10px;
+    .step:nth-child(1) .step-title::before {
+      content: ''; display: inline-block;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--primary);
+    }
+    .step:nth-child(2) .step-title::before {
+      content: ''; display: inline-block;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--secondary);
+    }
+    .step:nth-child(3) .step-title::before {
+      content: ''; display: inline-block;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #a855f7;
+    }
+    .step:nth-child(4) .step-title::before {
+      content: ''; display: inline-block;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #ec4899;
     }
     .step-desc { 
       color: var(--muted); 
+      padding-left: 22px;
     }
     
     /* Recovery Carousel Section */
@@ -614,29 +629,33 @@
       
       <div class="steps-container">
         <div class="step">
-          <div class="step-number">1 <span class="step-title-text">Receba seu equipamento</span></div>
+          <div class="step-number">1</div>
           <div class="step-content">
+            <h3 class="step-title">Receba seu equipamento</h3>
             <p class="step-desc">Após a compra no Mercado Livre, você receberá o rastreador 4G em casa com tudo necessário para instalação.</p>
           </div>
         </div>
         
         <div class="step">
-          <div class="step-number">2 <span class="step-title-text">Instale no veículo</span></div>
+          <div class="step-number">2</div>
           <div class="step-content">
+            <h3 class="step-title">Instale no veículo</h3>
             <p class="step-desc">Conecte o rastreador na bateria do veículo seguindo nosso guia simples. Posicione corretamente as antenas.</p>
           </div>
         </div>
         
         <div class="step">
-          <div class="step-number">3 <span class="step-title-text">Ative com nosso suporte</span></div>
+          <div class="step-number">3</div>
           <div class="step-content">
+            <h3 class="step-title">Ative com nosso suporte</h3>
             <p class="step-desc">Nosso time fará a ativação remota e enviará seus dados de acesso ao aplicativo.</p>
           </div>
         </div>
         
         <div class="step">
-          <div class="step-number">4 <span class="step-title-text">Controle pelo app</span></div>
+          <div class="step-number">4</div>
           <div class="step-content">
+            <h3 class="step-title">Controle pelo app</h3>
             <p class="step-desc">Baixe o app, faça login e tenha controle total: localização, histórico e bloqueio remoto.</p>
           </div>
         </div>

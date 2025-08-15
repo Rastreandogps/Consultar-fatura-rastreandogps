@@ -309,6 +309,67 @@
     .tip-card ul { padding-left: 20px; color: var(--muted) }
     .tip-card li { margin-bottom: 8px }
     
+    /* Professional Help Section */
+    .professionals-section {
+      padding: 60px 0;
+      background: linear-gradient(180deg, rgba(11, 18, 32, 0.8), rgba(11, 18, 32, 0.95));
+    }
+    .professionals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .professional-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .professional-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.2);
+    }
+    .professional-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+    }
+    .professional-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      background: rgba(14, 165, 233, 0.1);
+      color: var(--primary);
+      font-size: 24px;
+    }
+    .professional-title {
+      font-size: 20px;
+      margin-bottom: 12px;
+      color: white;
+    }
+    .professional-desc {
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+    .professional-tip {
+      font-size: 14px;
+      color: var(--primary);
+      font-weight: 500;
+    }
+    
     /* Pricing Section */
     .pricing-card {
       background: var(--card); border-radius: 16px; padding: 40px;
@@ -538,7 +599,7 @@
     <div class="container hero-container">
       <div class="hero-content">
         <h1 class="hero-title">Rastreador 4G com <span class="gradient-text">Bloqueio Remoto</span></h1>
-        <p class="hero-subtitle">Receba em casa pelo Mercado Livre, instale e tenha o controle do seu carro no app: bloqueie, desbloqueie e muito mais!</p>
+        <p class="hero-subtitle">Compre pelo mercado livre, receba, instale, e em minutos e tenha controle total do seu veículo, bloqueio e desbloqueio pelo app, 24 horas por dia.</p>
         <div class="hero-buttons">
           <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" class="btn btn-ml" target="_blank" rel="noopener">
             <i class="fas fa-bolt"></i> COMPRAR NO MERCADO LIVRE
@@ -634,6 +695,78 @@
             <p class="step-desc">Baixe o app, faça login e tenha controle total: localização, histórico e bloqueio remoto.</p>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Professional Help Section -->
+  <section class="professionals-section" id="professionals">
+    <div class="container">
+      <h2 class="section-title text-center">Precisa de ajuda para instalar?<br><span class="gradient-text">Conheça os profissionais que podem te ajudar</span></h2>
+      <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
+        Se você não se sente confiante para instalar sozinho, esses profissionais podem realizar a instalação do seu rastreador com segurança.
+      </p>
+      
+      <div class="professionals-grid">
+        <div class="professional-card">
+          <div class="professional-icon">
+            <i class="fas fa-wrench"></i>
+          </div>
+          <h3 class="professional-title">Oficinas mecânicas de bairro</h3>
+          <p class="professional-desc">Muitas têm profissionais que já fazem pequenos serviços elétricos e podem instalar rastreadores com facilidade.</p>
+          <p class="professional-tip">Dica: Pergunte se trabalham com instalação de alarmes ou acessórios elétricos</p>
+        </div>
+        
+        <div class="professional-card">
+          <div class="professional-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3 class="professional-title">Oficinas elétricas automotivas</h3>
+          <p class="professional-desc">Especializadas em parte elétrica, são ideais para instalar sistemas de bloqueio sem comprometer o carro.</p>
+          <p class="professional-tip">Dica: Peça para verificar a fiação antes da instalação</p>
+        </div>
+        
+        <div class="professional-card">
+          <div class="professional-icon">
+            <i class="fas fa-volume-up"></i>
+          </div>
+          <h3 class="professional-title">Lojas de som automotivo</h3>
+          <p class="professional-desc">Geralmente já trabalham com passagem de fios e instalação de equipamentos eletrônicos no veículo.</p>
+          <p class="professional-tip">Dica: Eles costumam ter experiência com instalações discretas</p>
+        </div>
+        
+        <div class="professional-card">
+          <div class="professional-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 class="professional-title">Empresas de alarmes e travas elétricas</h3>
+          <p class="professional-desc">Têm experiência direta com sistemas de segurança e bloqueio, podendo instalar seu rastreador com perfeição.</p>
+          <p class="professional-tip">Dica: Peça para integrarem com seu sistema existente</p>
+        </div>
+        
+        <div class="professional-card">
+          <div class="professional-icon">
+            <i class="fas fa-car"></i>
+          </div>
+          <h3 class="professional-title">Lojas de insulfilm e customização</h3>
+          <p class="professional-desc">Algumas também oferecem instalação de acessórios e podem incluir rastreadores em seus serviços.</p>
+          <p class="professional-tip">Dica: Combine com outros serviços para economizar</p>
+        </div>
+        
+        <div class="professional-card">
+          <div class="professional-icon">
+            <i class="fas fa-user-cog"></i>
+          </div>
+          <h3 class="professional-title">Você mesmo pode instalar</h3>
+          <p class="professional-desc">Com um manual de instalação e ferramentas básicas, é possível instalar seguindo tutoriais e cuidados necessários.</p>
+          <p class="professional-tip">Dica: Nosso suporte está disponível para tirar dúvidas</p>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="https://wa.me/5521969312625?text=Preciso+de+ajuda+para+instalar+meu+rastreador%2C+voc%C3%AAs+podem+me+indicar+um+profissional+na+minha+regi%C3%A3o%3F" class="btn btn-whatsapp" target="_blank" rel="noopener">
+          <i class="fab fa-whatsapp"></i> PRECISO DE AJUDA PARA INSTALAR
+        </a>
       </div>
     </div>
   </section>
@@ -977,6 +1110,7 @@
             <li><a href="#pricing">Planos</a></li>
             <li><a href="#testimonials">Depoimentos</a></li>
             <li><a href="#faq">FAQ</a></li>
+            <li><a href="#professionals">Profissionais</a></li>
           </ul>
         </div>
         
@@ -1094,7 +1228,7 @@
 
     // Animações simples ao rolar
     const animateOnScroll = () => {
-      const elements = document.querySelectorAll('.feature-card, .step, .tip-card, .testimonial-card');
+      const elements = document.querySelectorAll('.feature-card, .step, .tip-card, .testimonial-card, .professional-card');
       elements.forEach(el => {
         const elTop = el.getBoundingClientRect().top;
         const windowHeight = window.innerHeight;
@@ -1104,7 +1238,7 @@
         }
       });
     };
-    document.querySelectorAll('.feature-card, .step, .tip-card, .testimonial-card').forEach(el => {
+    document.querySelectorAll('.feature-card, .step, .tip-card, .testimonial-card, .professional-card').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(20px)';
       el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';

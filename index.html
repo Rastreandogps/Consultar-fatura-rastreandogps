@@ -461,12 +461,8 @@
     .app-button i {
       font-size: 24px;
     }
-    .app-button-android i {
-      color: white;
-    }
-    .app-button-ios i {
-      color: white;
-    }
+    .app-button-android i,
+    .app-button-ios i,
     .app-button-web i {
       color: white;
     }
@@ -502,30 +498,12 @@
       .btn { width: 100%; max-width: 300px }
       .section { padding: 50px 0 }
       .pricing-card { padding: 30px }
-      .app-buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-      .app-button {
-        width: 100%;
-        max-width: 300px;
-      }
-      .whatsapp-button {
-        width: 50px; height: 50px; bottom: 20px; right: 20px;
-      }
-      .whatsapp-button img {
-        width: 26px; height: 26px;
-      }
-      .step-content {
-        margin-left: 40px;
-        padding: 20px;
-      }
-      .step-number {
-        width: 48px;
-        height: 48px;
-        font-size: 20px;
-        left: -24px;
-      }
+      .app-buttons { flex-direction: column; align-items: center }
+      .app-button { width: 100%; max-width: 300px }
+      .whatsapp-button { width: 50px; height: 50px; bottom: 20px; right: 20px; }
+      .whatsapp-button img { width: 26px; height: 26px; }
+      .step-content { margin-left: 40px; padding: 20px; }
+      .step-number { width: 48px; height: 48px; font-size: 20px; left: -24px; }
     }
     @media (max-width: 480px) {
       .topbar-container { flex-direction: column; gap: 12px }
@@ -536,11 +514,7 @@
       .step { flex-direction: column; gap: 12px; border-left: none }
       .step-number { position: static; margin-bottom: 12px }
       .step-content { margin-left: 0 }
-      .carousel-control {
-        width: 30px;
-        height: 30px;
-        padding: 5px;
-      }
+      .carousel-control { width: 30px; height: 30px; padding: 5px; }
     }
   </style>
 </head>
@@ -548,7 +522,8 @@
   <!-- Topbar -->
   <header class="topbar">
     <div class="container topbar-container">
-      <a class="brand" href="#">
+      <!-- Link ajustado para ir ao topo/hero -->
+      <a class="brand" href="#hero">
         <img src="./assets/logo.png" alt="Rastreando GPS" />
         <span>Rastreando GPS</span>
       </a>
@@ -563,7 +538,7 @@
     <div class="container hero-container">
       <div class="hero-content">
         <h1 class="hero-title">Rastreador 4G com <span class="gradient-text">Bloqueio Remoto</span></h1>
-        <p class="hero-subtitle">Compre online, instale você mesmo em minutos e tenha controle total do seu veículo pelo app, 24 horas por dia.</p>
+        <p class="hero-subtitle">Compre online, instale você mesmo em minutos e tenha controle total do seu veículo, bloqueio e desbloqueio pelo app, 24 horas por dia.</p>
         <div class="hero-buttons">
           <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" class="btn btn-ml" target="_blank" rel="noopener">
             <i class="fas fa-bolt"></i> COMPRAR NO MERCADO LIVRE
@@ -622,7 +597,7 @@
   <!-- How It Works Section -->
   <section class="section" id="how-it-works" style="background: rgba(255, 255, 255, 0.02)">
     <div class="container">
-      <h2 class="section-title text-center">Como funciona em <span class="gradient-text">4 passos</span></h2>
+      <h2 class="section-title text-center"> Como funciona em<br><span class="gradient-text">4 passos</span></h2> 
       <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
         Instalação simples que você mesmo pode fazer em poucos minutos. Sem complicação!
       </p>
@@ -632,7 +607,7 @@
           <div class="step-number">1</div>
           <div class="step-content">
             <h3 class="step-title">Receba seu equipamento</h3>
-            <p class="step-desc">Após a compra no Mercado Livre, você receberá o rastreador 4G em casa com tudo necessário para instalação.</p>
+            <p class="step-desc">Após a compra no Mercado Livre, você receberá seu Rastreador 4G em sua casa com tudo necessário para instalação.</p>
           </div>
         </div>
         
@@ -640,7 +615,7 @@
           <div class="step-number">2</div>
           <div class="step-content">
             <h3 class="step-title">Instale no veículo</h3>
-            <p class="step-desc">Conecte o rastreador na bateria do veículo seguindo nosso guia simples. Posicione corretamente as antenas.</p>
+            <p class="step-desc">Encontre e conecte o rastreador na alimentação 12v do Veículo.</p>
           </div>
         </div>
         
@@ -667,7 +642,7 @@
   <section class="recovery-section">
     <div class="container">
       <h2 class="section-title text-center">Recuperações realizadas com nosso <span class="gradient-text">rastreador</span></h2>
-      <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
+    <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
         Veja alguns exemplos de veículos recuperados graças ao nosso sistema de rastreamento.
       </p>
       
@@ -724,7 +699,7 @@
             <i class="fas fa-lock"></i>
           </div>
           <h3 class="feature-title">Bloqueio Remoto</h3>
-          <p class="feature-desc">Bloqueie e desbloqueie seu veículo remotamente pelo aplicativo, a qualquer momento.</p>
+          <p class="feature-desc">Bloqueie e desbloqueie seu veículo remotamente pelo aplicativo, em caso de emergências.</p>
         </div>
         
         <div class="feature-card">
@@ -747,8 +722,8 @@
           <div class="feature-icon">
             <i class="fas fa-user-shield"></i>
           </div>
-          <h3 class="feature-title">Login Exclusivo</h3>
-          <p class="feature-desc">Acesso seguro com login e senha exclusivos para você controlar quem acessa seu veículo.</p>
+          <h3 class="feature-title">Login Exclusivo ou Compartilhado</h3>
+          <p class="feature-desc">Acesso seguro com login e senha exclusivos para você controlar quem acessa seu veículo, pode baixar em outros telefones.</p>
         </div>
         
         <div class="feature-card">
@@ -764,7 +739,7 @@
             <i class="fas fa-wallet"></i>
           </div>
           <h3 class="feature-title">Sem Custos Ocultos</h3>
-          <p class="feature-desc">Mensalidade fixa sem taxas extras. Tudo incluso: app, suporte e chip Vivo.</p>
+          <p class="feature-desc">Mensalidade fixa de R$: 49,90 sem taxas extras. Tudo incluso: app, suporte e chip Vivo.</p>
         </div>
       </div>
     </div>
@@ -794,8 +769,8 @@
           <ul>
             <li>Conecte o fio vermelho no positivo da bateria</li>
             <li>Conecte o fio preto no negativo da bateria</li>
-            <li>Opcional: conecte o fio branco na ignição</li>
-            <li>Use conectores de qualidade e isole bem as emendas</li>
+            <li>Opcional: Conecte o fio laranja no pós-chave</li>
+            <li>Use fitas isolantes e isole bem as emendas</li>
           </ul>
         </div>
         
@@ -932,7 +907,7 @@
         
         <div class="faq-item">
           <div class="faq-question">O bloqueio remoto funciona mesmo sem sinal?</div>
-          <div class="faq-answer">O bloqueio requer conexão com a internet (via chip 4G). Se o veículo estiver em área sem cobertura, o comando será executado assim que o sinal for restabelecido.</div>
+          <div class="faq-answer">O bloqueio requer conexão com a internet (via chip 4G). Se o veículo estiver em área sem cobertura.</div>
         </div>
         
         <div class="faq-item">
@@ -983,7 +958,7 @@
       <div class="footer-grid">
         <div>
           <div class="footer-logo">
-            <a class="brand" href="#">
+            <a class="brand" href="#hero">
               <img src="./assets/logo.png" alt="Rastreando GPS" />
               <span>Rastreando GPS</span>
             </a>
@@ -1039,32 +1014,55 @@
 
   <!-- Scripts -->
   <script>
+    // Desativa restauração automática de rolagem o quanto antes
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // Função que força o topo sem animação (evita conflitos com scroll-behavior: smooth)
+    function forceTop() {
+      const html = document.documentElement;
+      const prevBehavior = html.style.scrollBehavior;
+      html.style.scrollBehavior = 'auto';
+      window.scrollTo(0, 0);
+      // restaura o comportamento suave para navegação por âncora
+      html.style.scrollBehavior = prevBehavior || 'smooth';
+    }
+
+    // Garante topo em cenários diversos (load, pageshow/bfcache, pequenos timeouts)
+    forceTop();
+    window.addEventListener('load', () => {
+      forceTop();
+      setTimeout(forceTop, 0);
+      setTimeout(forceTop, 100);
+    });
+    window.addEventListener('pageshow', (e) => {
+      // Em retorno do bfcache alguns navegadores restauram a posição
+      forceTop();
+    });
+    window.addEventListener('beforeunload', () => {
+      // Alguns navegadores consideram a posição atual ao sair
+      window.scrollTo(0, 0);
+    });
+
     // Atualiza ano no footer
     document.getElementById('year').textContent = new Date().getFullYear();
-    
+
     // FAQ Accordion
     const faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(question => {
       question.addEventListener('click', () => {
         const answer = question.nextElementSibling;
         const isOpen = answer.classList.contains('open');
-        
-        // Fecha todas as respostas primeiro
-        document.querySelectorAll('.faq-answer').forEach(ans => {
-          ans.classList.remove('open');
-        });
-        document.querySelectorAll('.faq-question').forEach(q => {
-          q.classList.remove('active');
-        });
-        
-        // Abre apenas a resposta clicada se não estava aberta
+        document.querySelectorAll('.faq-answer').forEach(ans => ans.classList.remove('open'));
+        document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
         if (!isOpen) {
           answer.classList.add('open');
           question.classList.add('active');
         }
       });
     });
-    
+
     // Tracking de cliques no ML
     const mlButtons = document.querySelectorAll('[href*="mercadolivre"]');
     mlButtons.forEach(button => {
@@ -1076,154 +1074,103 @@
             'currency': 'BRL'
           });
         }
-        try {
-          localStorage.setItem('ml_click', new Date().toISOString());
-        } catch(e) {}
+        try { localStorage.setItem('ml_click', new Date().toISOString()); } catch(e) {}
       });
     });
-    
-    // Smooth scrolling para âncoras
+
+    // Smooth scrolling para âncoras (ignora href="#" vazio)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
-        e.preventDefault();
         const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
+        if (!targetId || targetId === '#') return; // não interfere em links vazios
+        e.preventDefault();
         const targetElement = document.querySelector(targetId);
         if (targetElement) {
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-          
-          // Atualiza URL sem recarregar a página
-          history.pushState(null, null, targetId);
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          history.pushState(null, '', targetId);
         }
       });
     });
-    
+
     // Animações simples ao rolar
     const animateOnScroll = () => {
       const elements = document.querySelectorAll('.feature-card, .step, .tip-card, .testimonial-card');
       elements.forEach(el => {
         const elTop = el.getBoundingClientRect().top;
         const windowHeight = window.innerHeight;
-        
         if (elTop < windowHeight - 100) {
           el.style.opacity = '1';
           el.style.transform = 'translateY(0)';
         }
       });
     };
-    
-    // Configura elementos para animação
     document.querySelectorAll('.feature-card, .step, .tip-card, .testimonial-card').forEach(el => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(20px)';
       el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     });
-    
-    // Dispara animação ao carregar e ao rolar
     window.addEventListener('load', animateOnScroll);
     window.addEventListener('scroll', animateOnScroll);
-    
+
     // Carrossel Hero
     const heroCarousel = document.getElementById('hero-carousel');
     const heroItems = document.querySelectorAll('#hero-carousel .carousel-item');
     const heroIndicators = document.querySelectorAll('#hero-indicators .carousel-indicator');
     let heroCurrentIndex = 0;
-    
+
     function updateHeroCarousel() {
       heroCarousel.style.transform = `translateX(-${heroCurrentIndex * 100}%)`;
-      
-      heroIndicators.forEach((indicator, index) => {
-        if (index === heroCurrentIndex) {
-          indicator.classList.add('active');
-        } else {
-          indicator.classList.remove('active');
-        }
-      });
+      heroIndicators.forEach((indicator, index) => indicator.classList.toggle('active', index === heroCurrentIndex));
     }
-    
     document.getElementById('next-hero').addEventListener('click', () => {
       heroCurrentIndex = (heroCurrentIndex + 1) % heroItems.length;
       updateHeroCarousel();
     });
-    
     document.getElementById('prev-hero').addEventListener('click', () => {
       heroCurrentIndex = (heroCurrentIndex - 1 + heroItems.length) % heroItems.length;
       updateHeroCarousel();
     });
-    
     heroIndicators.forEach((indicator, index) => {
-      indicator.addEventListener('click', () => {
-        heroCurrentIndex = index;
-        updateHeroCarousel();
-      });
+      indicator.addEventListener('click', () => { heroCurrentIndex = index; updateHeroCarousel(); });
     });
-    
-    // Auto-rotate hero carousel
     let heroInterval = setInterval(() => {
       heroCurrentIndex = (heroCurrentIndex + 1) % heroItems.length;
       updateHeroCarousel();
     }, 5000);
-    
-    heroCarousel.parentElement.addEventListener('mouseenter', () => {
-      clearInterval(heroInterval);
-    });
-    
+    heroCarousel.parentElement.addEventListener('mouseenter', () => clearInterval(heroInterval));
     heroCarousel.parentElement.addEventListener('mouseleave', () => {
       heroInterval = setInterval(() => {
         heroCurrentIndex = (heroCurrentIndex + 1) % heroItems.length;
         updateHeroCarousel();
       }, 5000);
     });
-    
+
     // Carrossel Recovery
     const recoveryCarousel = document.getElementById('recovery-carousel');
     const recoveryItems = document.querySelectorAll('#recovery-carousel .carousel-item');
     const recoveryIndicators = document.querySelectorAll('#recovery-indicators .carousel-indicator');
     let recoveryCurrentIndex = 0;
-    
+
     function updateRecoveryCarousel() {
       recoveryCarousel.style.transform = `translateX(-${recoveryCurrentIndex * 100}%)`;
-      
-      recoveryIndicators.forEach((indicator, index) => {
-        if (index === recoveryCurrentIndex) {
-          indicator.classList.add('active');
-        } else {
-          indicator.classList.remove('active');
-        }
-      });
+      recoveryIndicators.forEach((indicator, index) => indicator.classList.toggle('active', index === recoveryCurrentIndex));
     }
-    
     document.getElementById('next-recovery').addEventListener('click', () => {
       recoveryCurrentIndex = (recoveryCurrentIndex + 1) % recoveryItems.length;
       updateRecoveryCarousel();
     });
-    
     document.getElementById('prev-recovery').addEventListener('click', () => {
       recoveryCurrentIndex = (recoveryCurrentIndex - 1 + recoveryItems.length) % recoveryItems.length;
       updateRecoveryCarousel();
     });
-    
     recoveryIndicators.forEach((indicator, index) => {
-      indicator.addEventListener('click', () => {
-        recoveryCurrentIndex = index;
-        updateRecoveryCarousel();
-      });
+      indicator.addEventListener('click', () => { recoveryCurrentIndex = index; updateRecoveryCarousel(); });
     });
-    
-    // Auto-rotate recovery carousel
     let recoveryInterval = setInterval(() => {
       recoveryCurrentIndex = (recoveryCurrentIndex + 1) % recoveryItems.length;
       updateRecoveryCarousel();
     }, 5000);
-    
-    recoveryCarousel.parentElement.addEventListener('mouseenter', () => {
-      clearInterval(recoveryInterval);
-    });
-    
+    recoveryCarousel.parentElement.addEventListener('mouseenter', () => clearInterval(recoveryInterval));
     recoveryCarousel.parentElement.addEventListener('mouseleave', () => {
       recoveryInterval = setInterval(() => {
         recoveryCurrentIndex = (recoveryCurrentIndex + 1) % recoveryItems.length;

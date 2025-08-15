@@ -1039,6 +1039,23 @@
 
   <!-- Scripts -->
   <script>
+    // Garante que a página sempre comece no topo
+    window.addEventListener('load', function() {
+      // Rola para o topo imediatamente quando a página carrega
+      window.scrollTo(0, 0);
+      
+      // Alguns navegadores podem tentar restaurar a posição de rolagem depois
+      // então adicionamos um timeout para garantir
+      setTimeout(function() {
+        window.scrollTo(0, 0);
+      }, 0);
+      
+      // Para navegadores que ainda tentam restaurar a posição
+      if (history.scrollRestoration) {
+        history.scrollRestoration = 'manual';
+      }
+    });
+
     // Atualiza ano no footer
     document.getElementById('year').textContent = new Date().getFullYear();
     

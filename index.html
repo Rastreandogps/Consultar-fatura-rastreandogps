@@ -1270,13 +1270,13 @@
     let heroInterval = setInterval(() => {
       heroCurrentIndex = (heroCurrentIndex + 1) % heroItems.length;
       updateHeroCarousel();
-    }, 5000);
+    }, 3000);
     heroCarousel.parentElement.addEventListener('mouseenter', () => clearInterval(heroInterval));
     heroCarousel.parentElement.addEventListener('mouseleave', () => {
       heroInterval = setInterval(() => {
         heroCurrentIndex = (heroCurrentIndex + 1) % heroItems.length;
         updateHeroCarousel();
-      }, 5000);
+      }, 3000);
     });
 
     // Carrossel Recovery
@@ -1303,13 +1303,13 @@
     let recoveryInterval = setInterval(() => {
       recoveryCurrentIndex = (recoveryCurrentIndex + 1) % recoveryItems.length;
       updateRecoveryCarousel();
-    }, 5000);
+    }, 3000);
     recoveryCarousel.parentElement.addEventListener('mouseenter', () => clearInterval(recoveryInterval));
     recoveryCarousel.parentElement.addEventListener('mouseleave', () => {
       recoveryInterval = setInterval(() => {
         recoveryCurrentIndex = (recoveryCurrentIndex + 1) % recoveryItems.length;
         updateRecoveryCarousel();
-      }, 5000);
+      }, 3000);
     });
   </script>
 </body>

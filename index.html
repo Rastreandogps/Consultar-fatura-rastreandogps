@@ -667,7 +667,7 @@
   <section class="recovery-section">
     <div class="container">
       <h2 class="section-title text-center">Recuperações realizadas com nosso <span class="gradient-text">rastreador</span></h2>
-    <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
+      <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
         Veja alguns exemplos de veículos recuperados graças ao nosso sistema de rastreamento.
       </p>
       
@@ -1039,16 +1039,6 @@
 
   <!-- Scripts -->
   <script>
-    // <<< CORREÇÃO: impedir que o navegador restaure a rolagem automaticamente >>>
-    try { if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; } } catch(e) {}
-    // Garante topo também ao retornar via bfcache (mobile/back-forward)
-    window.addEventListener('pageshow', function (e) {
-      const nav = (performance && performance.getEntriesByType) ? performance.getEntriesByType('navigation')[0] : null;
-      if (e.persisted || (nav && nav.type === 'back_forward')) {
-        window.scrollTo(0, 0);
-      }
-    });
-
     // Garante que a página sempre comece no topo
     window.addEventListener('load', function() {
       // Rola para o topo imediatamente quando a página carrega

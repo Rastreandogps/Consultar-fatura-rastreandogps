@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Rastreador 4G com Bloqueio — Instale você mesmo e tenha segurança 24h</title>
   <meta name="description" content="Compre seu rastreador 4G com bloqueio pelo Mercado Livre, instale você mesmo em minutos e controle seu veículo pelo app. Chip Vivo incluso e suporte especializado.">
   <meta property="og:title" content="Rastreador 4G com Bloqueio — Instale você mesmo">
@@ -32,15 +32,6 @@
       color: var(--white); background: linear-gradient(180deg, #050913, #0b1525 60%, #0b1220);
       -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
       line-height: 1.5;
-      /* Garante que a página comece no topo */
-      position: relative;
-      overflow-x: hidden;
-    }
-    /* Adicionado para prevenir problemas de rolagem no iOS */
-    body, html {
-      width: 100%;
-      height: 100%;
-      overscroll-behavior-y: contain;
     }
     .container { width: min(1200px, 92vw); margin: 0 auto; padding: 0 20px }
     .section { padding: 80px 0; scroll-margin-top: 80px }
@@ -1048,36 +1039,22 @@
 
   <!-- Scripts -->
   <script>
-    // Solução robusta para garantir que a página sempre comece no topo
-    (function() {
-      // Rola para o topo imediatamente
+    // Garante que a página sempre comece no topo
+    window.addEventListener('load', function() {
+      // Rola para o topo imediatamente quando a página carrega
       window.scrollTo(0, 0);
       
-      // Desativa o scroll restoration do navegador
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-      }
-      
-      // Adiciona um timeout para garantir que o iOS respeite
+      // Alguns navegadores podem tentar restaurar a posição de rolagem depois
+      // então adicionamos um timeout para garantir
       setTimeout(function() {
         window.scrollTo(0, 0);
       }, 0);
       
-      // Adiciona um listener para prevenir qualquer tentativa de scroll automático
-      window.addEventListener('scroll', function() {
-        if (window.pageYOffset !== 0) {
-          window.scrollTo(0, 0);
-        }
-      }, { passive: false });
-      
-      // Adiciona um listener para o evento load para garantir
-      window.addEventListener('load', function() {
-        window.scrollTo(0, 0);
-        setTimeout(function() {
-          window.scrollTo(0, 0);
-        }, 100);
-      });
-    })();
+      // Para navegadores que ainda tentam restaurar a posição
+      if (history.scrollRestoration) {
+        history.scrollRestoration = 'manual';
+      }
+    });
 
     // Atualiza ano no footer
     document.getElementById('year').textContent = new Date().getFullYear();

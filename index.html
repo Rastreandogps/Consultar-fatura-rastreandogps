@@ -593,33 +593,42 @@
       color: white;
       min-width: 200px;
     }
-    .app-button-android {
-      background: #3ddc84;
-      box-shadow: 0 4px 20px rgba(61, 220, 132, 0.3);
-    }
-    .app-button-ios {
-      background: #007aff;
-      box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
-    }
-   .app-button-pc {
+/* Botão Android - Cores oficiais Play Store */
+.app-button-android {
+  background: linear-gradient(to bottom, #3ddc84, #2bb673);
+  box-shadow: 0 4px 20px rgba(61, 220, 132, 0.3);
+}
+
+/* Botão iOS - Cores oficiais App Store */
+.app-button-ios {
+  background: linear-gradient(to bottom, #0d96f6, #0a7ed6);
+  box-shadow: 0 4px 20px rgba(13, 150, 246, 0.3);
+}
+
+/* Botão PC - Preto como solicitado */
+.app-button-pc {
   background: #000000;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  color: white;
-   }
+}
+
+/* Efeitos hover */
+.app-button-android:hover {
+  background: linear-gradient(to bottom, #2bb673, #1fa463);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(61, 220, 132, 0.4);
+}
+
+.app-button-ios:hover {
+  background: linear-gradient(to bottom, #0a7ed6, #086cbd);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(13, 150, 246, 0.4);
+}
 
 .app-button-pc:hover {
   background: #111111;
   transform: translateY(-2px);
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
-   }
-    
-    .app-button i {
-      font-size: 24px;
-    }
-   .app-button-android {
-   background: #007aff; /* Mesma cor azul do iOS */
-   box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
-   }
+}
     /* WhatsApp Floating Button */
     .whatsapp-button {
       position: fixed; bottom: 30px; right: 30px; z-index: 99;
@@ -803,19 +812,33 @@
 
     <!-- App Download Buttons - Adicionado aqui -->
   <div class="app-buttons">
-  <a href="https://play.google.com/store/apps/details?id=com.rastreandogpsrastreamento.br" class="app-button app-button-android" target="_blank" rel="noopener">
+  <!-- Android - Google Play Store -->
+  <a href="https://play.google.com/store/apps/details?id=com.rastreandogpsrastreamento.br" 
+     class="app-button app-button-android" 
+     target="_blank" 
+     rel="noopener">
     <i class="fab fa-google-play"></i>
     <span>Baixar para Android</span>
-    </a>
-   <a href="https://apps.apple.com/br/app/rastreando-gps/id1642112039" class="app-button app-button-ios" target="_blank" rel="noopener">
+  </a>
+  
+  <!-- iOS - Apple App Store -->
+  <a href="https://apps.apple.com/br/app/rastreando-gps/id1642112039" 
+     class="app-button app-button-ios" 
+     target="_blank" 
+     rel="noopener">
     <i class="fab fa-apple"></i>
     <span>Baixar para iPhone</span>
-    </a>
-   <a href="https://rastreamento.ong.br/index.php" class="app-button app-button-pc" target="_blank" rel="noopener">
+  </a>
+  
+  <!-- Acesso PC -->
+  <a href="https://rastreamento.ong.br/index.php" 
+     class="app-button app-button-pc" 
+     target="_blank" 
+     rel="noopener">
     <i class="fas fa-desktop"></i>
     <span>Acesse pelo Computador</span>
   </a>
-</div>
+</div> 
   </div>
   </section>
 

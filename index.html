@@ -601,14 +601,18 @@
       background: #007aff;
       box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
     }
-    .app-button-web {
-      background: var(--primary);
-      box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
-    }
-    .app-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
-    }
+   .app-button-pc {
+  background: #000000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  color: white;
+   }
+
+.app-button-pc:hover {
+  background: #111111;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+   }
+    
     .app-button i {
       font-size: 24px;
     }
@@ -800,20 +804,20 @@
     </div>
 
     <!-- App Download Buttons - Adicionado aqui -->
-    <div class="app-buttons">
-      <a href="https://play.google.com/store/apps/details?id=com.rastreandogpsrastreamento.br" class="app-button app-button-android" target="_blank" rel="noopener">
-        <i class="fab fa-google-play"></i>
-        <span>Baixar para Android</span>
-      </a>
-      <a href="https://apps.apple.com/br/app/rastreando-gps/id1642112039" class="app-button app-button-ios" target="_blank" rel="noopener">
-        <i class="fab fa-apple"></i>
-        <span>Baixar para iPhone</span>
-      </a>
-      <a href="https://rastreamento.ong.br/index.php" class="app-button app-button-web" target="_blank" rel="noopener">
-        <i class="fas fa-desktop"></i>
-        <span>Acesse pelo Computador</span>
-      </a>
-    </div>
+  <div class="app-buttons">
+  <a href="https://play.google.com/store/apps/details?id=com.rastreandogpsrastreamento.br" class="app-button app-button-android" target="_blank" rel="noopener">
+    <i class="fab fa-google-play"></i>
+    <span>Baixar para Android</span>
+    </a>
+   <a href="https://apps.apple.com/br/app/rastreando-gps/id1642112039" class="app-button app-button-ios" target="_blank" rel="noopener">
+    <i class="fab fa-apple"></i>
+    <span>Baixar para iPhone</span>
+    </a>
+   <a href="https://rastreamento.ong.br/index.php" class="app-button app-button-pc" target="_blank" rel="noopener">
+    <i class="fas fa-desktop"></i>
+    <span>Acesse pelo Computador</span>
+  </a>
+</div>
   </div>
   </section>
 

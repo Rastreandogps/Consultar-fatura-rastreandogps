@@ -292,14 +292,33 @@
     }
     
     /* GIF Container */
-    .gif-container {
-      width: 100%;
-      max-width: 800px;
-      margin: 0 auto 40px;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
+  .gif-container {
+  width: 100%;
+  max-width: 600px; /* Tamanho máximo em desktop */
+  margin: 0 auto 40px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+   }
+
+.gif-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+  @media (max-width: 768px) {
+  .gif-container {
+    max-width: 90%; /* Reduz a largura máxima em mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .gif-container {
+    max-width: 95%; /* Aumenta um pouco a largura em telas muito pequenas */
+    margin-bottom: 30px; /* Reduz um pouco a margem inferior */
+  }
+}
     
     /* Empresas de Frotas Section */
     .fleet-section {

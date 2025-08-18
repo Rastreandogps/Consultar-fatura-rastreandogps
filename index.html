@@ -681,6 +681,111 @@
       width: 32px; height: 32px;
     }
     
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+      background-color: var(--card);
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 800px;
+      width: 90%;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+    }
+    
+    .close-modal {
+      color: var(--muted);
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    
+    .close-modal:hover {
+      color: white;
+    }
+    
+    .modal-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: white;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 10px;
+    }
+    
+    .modal-body {
+      color: var(--muted);
+      line-height: 1.6;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    
+    .modal-body p {
+      margin-bottom: 15px;
+    }
+    
+    .modal-body strong {
+      color: white;
+    }
+    
+    .modal-body ul {
+      padding-left: 20px;
+      margin-bottom: 15px;
+    }
+    
+    /* Installer Finder Section */
+    .installer-finder {
+      background: rgba(14, 165, 233, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      margin: 40px 0;
+      border: 1px solid rgba(14, 165, 233, 0.2);
+      text-align: center;
+    }
+    
+    .installer-finder h3 {
+      font-size: 24px;
+      margin-bottom: 15px;
+      color: white;
+    }
+    
+    .installer-finder p {
+      color: var(--muted);
+      margin-bottom: 20px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .installer-finder .btn {
+      margin-top: 15px;
+    }
+    
+    .installer-note {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 20px;
+      font-style: italic;
+    }
+    
     /* Responsive */
     @media (max-width: 1024px) {
       .hero-container { grid-template-columns: 1fr }
@@ -712,6 +817,10 @@
       .step-number { width: 48px; height: 48px; font-size: 20px; left: -24px; }
       .fleet-stats {
         grid-template-columns: 1fr;
+      }
+      .modal-content {
+        margin: 10% auto;
+        width: 95%;
       }
     }
     @media (max-width: 480px) {
@@ -882,8 +991,6 @@
   </video>
 </div>
 
-
-
   </div>
   </section>
 
@@ -955,10 +1062,10 @@
   <div class="pricing-price">R$ 179,90</div>
   
    <ul class="pricing-features">
-    <li>Rastreador 4G com bloqueio remoto</li>
-    <li>Chip Vivo incluso com créditos</li>
-    <li>Todos os cabos e acessórios necessários</li>
-    <li>Manual de instalação completo</li>
+    <li>Aparelho rastreador 4G</li>
+    <li>Chicote de instalação</li>
+    <li>Relé 12V</li>
+    <li>Chip M2M de telemetria</li>
   </ul>
   
    <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -995,6 +1102,16 @@
             <i class="fab fa-whatsapp"></i> TIRAR DÚVIDAS
           </a>
         </div>
+      </div>
+      
+      <!-- Installer Finder Section -->
+      <div class="installer-finder">
+        <h3>Precisa de ajuda para instalar?</h3>
+        <p>Caso não se sinta confiante para instalar sozinho, você pode consultar nossa rede de profissionais parceiros em todo o Brasil. Encontre um instalador qualificado próximo a você.</p>
+        <a href="https://www.instaladoresderastreador.com.br/#/pesquisa" class="btn btn-primary" target="_blank" rel="noopener">
+          <i class="fas fa-search-location"></i> BUSCAR INSTALADOR NA MINHA REGIÃO
+        </a>
+        <p class="installer-note">* Este serviço é independente e não possui vínculo com a Rastreando GPS. A empresa não se responsabiliza pela qualidade do serviço prestado por terceiros.</p>
       </div>
     </div>
   </section>
@@ -1075,7 +1192,7 @@
         </div>
         
         <div style="margin-top: 40px;">
-          <a href="https://wa.me/5521969312625?text=Tenho+uma+frota+e+gostaria+de+mais+informações+sobre+o+rastreador+para+meus+veículos." class="btn btn-primary" style="width: 100%; max-width: 400px; margin: 0 auto;">
+          <a href="https://wa.me/5521969312625?text=Tenho+uma+frota+e+gostaria+de+mais+informa%C3%A7%C3%B5es+sobre+o+rastreador+para+meus+ve%C3%ADculos." class="btn btn-primary" style="width: 100%; max-width: 400px; margin: 0 auto;">
             <i class="fas fa-truck"></i> SOLICITAR COTAÇÃO PARA FROTA
           </a>
         </div>
@@ -1151,7 +1268,7 @@
       </div>
       
       <div style="text-align: center; margin-top: 40px;">
-        <a href="https://wa.me/5521980886087?text=Comprei+o+rastreador+e+preciso+de+ajuda+na+instalação.+Tem+como+me+orientar+sobre+profissionais?" class="btn btn-whatsapp" target="_blank" rel="noopener">
+        <a href="https://wa.me/5521980886087?text=Comprei+o+rastreador+e+preciso+de+ajuda+na+instala%C3%A7%C3%A3o.+Tem+como+me+orientar+sobre+profissionais?" class="btn btn-whatsapp" target="_blank" rel="noopener">
           <i class="fab fa-whatsapp"></i> QUERO AJUDA PARA INSTALAR
         </a>
       </div>
@@ -1371,7 +1488,7 @@
         <div>
           <h3 class="footer-title">Legal</h3>
           <ul class="footer-links">
-            <li><a href="#">Termos de Uso</a></li>
+            <li><a href="#" id="terms-btn">Termos de Uso</a></li>
             <li><a href="#">Política de Privacidade</a></li>
             <li><a href="#">Trocas e Devoluções</a></li>
             <li><a href="#">Garantia</a></li>
@@ -1390,6 +1507,52 @@
   <a href="https://wa.me/5521969312625?text=Quero+adquirir%2C+gostaria+de+saber+mais+informa%C3%A7%C3%B5es+a+respeito+do+rastreador+com+bloqueio." class="whatsapp-button" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
     <img src="./assets/whatsapp.png" alt="WhatsApp">
   </a>
+
+  <!-- Modal Terms -->
+  <div id="terms-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h3 class="modal-title">Termos de Uso e Responsabilidade</h3>
+      <div class="modal-body">
+        <p><strong>1. Responsabilidade Limitada</strong></p>
+        <p>A Rastreando GPS é responsável exclusivamente pelo fornecimento do equipamento de rastreamento e pela disponibilização da plataforma de monitoramento. Todo o conteúdo e funcionalidades do aplicativo e sistema web são de responsabilidade da empresa.</p>
+        
+        <p><strong>2. Instalação do Equipamento</strong></p>
+        <p>A instalação do equipamento é de inteira responsabilidade do cliente ou do profissional por ele contratado. A Rastreando GPS não se responsabiliza por:</p>
+        <ul>
+          <li>Danos causados durante a instalação por terceiros</li>
+          <li>Problemas decorrentes de instalação incorreta</li>
+          <li>Qualquer tipo de dano ao veículo relacionado à instalação</li>
+        </ul>
+        
+        <p><strong>3. Profissionais de Instalação</strong></p>
+        <p>Quaisquer indicações de profissionais ou serviços de instalação são feitas apenas como cortesia. A Rastreando GPS:</p>
+        <ul>
+          <li>Não possui qualquer vínculo empregatício ou contratual com os instaladores indicados</li>
+          <li>Não garante a qualidade do serviço prestado por terceiros</li>
+          <li>Não se responsabiliza por quaisquer problemas decorrentes da contratação desses profissionais</li>
+        </ul>
+        
+        <p><strong>4. Uso do Equipamento</strong></p>
+        <p>O cliente é integralmente responsável por:</p>
+        <ul>
+          <li>Utilizar o equipamento em conformidade com a legislação vigente</li>
+          <li>Manter o equipamento em boas condições de funcionamento</li>
+          <li>Garantir que a instalação não interfira no funcionamento normal do veículo</li>
+        </ul>
+        
+        <p><strong>5. Garantia</strong></p>
+        <p>A garantia cobre apenas defeitos de fabricação do equipamento, não incluindo:</p>
+        <ul>
+          <li>Danos causados por instalação inadequada</li>
+          <li>Problemas decorrentes de uso indevido</li>
+          <li>Danos causados por acidentes, intempéries ou força maior</li>
+        </ul>
+        
+        <p>Ao adquirir nosso produto, você concorda com estes termos e assume toda a responsabilidade pela instalação e uso do equipamento.</p>
+      </div>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script>
@@ -1556,6 +1719,25 @@
         updateRecoveryCarousel();
       }, 3000);
     });
+
+    // Modal Terms
+    const modal = document.getElementById("terms-modal");
+    const btn = document.getElementById("terms-btn");
+    const span = document.getElementsByClassName("close-modal")[0];
+
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
   </script>
 </body>
 </html>

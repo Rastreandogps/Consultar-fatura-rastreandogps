@@ -550,6 +550,16 @@
     .author-name { font-weight: 600; color: white }
     .author-role { font-size: 14px; color: var(--muted) }
     
+    /* Depoimentos Carousel Section */
+    .depoimentos-section {
+      padding: 60px 0;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .depoimentos-carousel {
+      max-width: 800px;
+      margin: 40px auto 0;
+    }
+    
     /* FAQ Section */
     .faq-container { max-width: 800px; margin: 0 auto }
     .faq-item {
@@ -596,6 +606,7 @@
     .footer-bottom {
       border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 30px;
       display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px;
+      align-items: center;
     }
     .footer-copy { color: var(--muted); font-size: 14px }
     
@@ -855,8 +866,8 @@
   <section class="hero" id="hero">
     <div class="container hero-container">
       <div class="hero-content">
-        <h1 class="hero-title"> Rastreador 4G + App Android e Ios <span class="gradient-text"> Bloqueio Remoto pelo celular</span></h1>
-        <p class="hero-subtitle">Peça pelo Mercado Livre, receba rápido, configure em instantes e monitore seu veículo com bloqueio total 24/7; segurança na palma da mão!</p>
+        <h1 class="hero-title"> Rastreador 4G + App Android e IOS <span class="gradient-text"> Bloqueio Remoto pelo celular</span></h1>
+        <p class="hero-subtitle">Peça pelo Mercado Livre, receba rápido, configure em instantes e monitore seu veículo com bloqueio ou sem, segurança na palma da mão!</p>
         <div class="hero-buttons">
           <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" class="btn btn-ml" target="_blank" rel="noopener">
             <i class="fas fa-bolt"></i> COMPRAR NO MERCADO LIVRE
@@ -1041,6 +1052,45 @@
     </div>
   </section>
 
+  <!-- Depoimentos Section -->
+  <section class="depoimentos-section" id="depoimentos">
+    <div class="container">
+      <h2 class="section-title text-center">Depoimentos de <span class="gradient-text">clientes satisfeitos</span></h2>
+      <p class="text-center" style="max-width: 700px; margin: 0 auto 40px; color: var(--muted)">
+        Veja o que nossos clientes estão falando sobre o rastreador e como ele tem ajudado na segurança de seus veículos.
+      </p>
+      
+      <div class="depoimentos-carousel">
+        <div class="carousel">
+          <div class="carousel-inner" id="depoimentos-carousel">
+            <div class="carousel-item">
+              <img src="./assets/depoimento1.jpg" alt="Depoimento de cliente 1" loading="lazy">
+            </div>
+            <div class="carousel-item">
+              <img src="./assets/depoimento2.jpg" alt="Depoimento de cliente 2" loading="lazy">
+            </div>
+            <div class="carousel-item">
+              <img src="./assets/depoimento3.jpg" alt="Depoimento de cliente 3" loading="lazy">
+            </div>
+            <div class="carousel-item">
+              <img src="./assets/depoimento4.jpg" alt="Depoimento de cliente 4" loading="lazy">
+            </div>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-control" id="prev-depoimentos"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-control" id="next-depoimentos"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="carousel-indicators" id="depoimentos-indicators">
+            <div class="carousel-indicator active"></div>
+            <div class="carousel-indicator"></div>
+            <div class="carousel-indicator"></div>
+            <div class="carousel-indicator"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Pricing Section (Moved from below) -->
   <section class="section" id="pricing" style="background: rgba(255, 255, 255, 0.02)">
     <div class="container">
@@ -1091,7 +1141,7 @@
           <li>Chip Vivo com créditos incluso</li>
           
           <li>Bloqueio e desbloqueio remoto</li>
-          <li>Histórico de rotas e paradas</li>
+          <li>Histórico de rotas and paradas</li>
         </ul>
         
         <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -1169,7 +1219,7 @@ Esse sistema é amplamente utilizado por diversas empresas para localizar técni
             </div>
             <div class="fleet-feature-content">
               <h3>Relatórios Personalizados</h3>
-              <p>Gere relatórios detalhados de quilometragem, tempo de uso, consumo de combustível e eficiência operacional.</p>
+              <p>Gere relatórios detalhados de quilometragem, tempo de uso, consumo de combustível and eficiência operacional.</p>
             </div>
           </div>
         </div>
@@ -1228,7 +1278,7 @@ Esse sistema é amplamente utilizado por diversas empresas para localizar técni
             <i class="fas fa-bolt"></i>
           </div>
           <h3 class="professional-title">Oficinas elétricas automotivas</h3>
-          <p class="professional-desc">Especializadas em parte elétrica, são ideias para instalar sistemas de bloqueio sem comprometer o carro.</p>
+          <p class="professional-desc">Especializadas in parte elétrica, são ideias para instalar sistemas de bloqueio sem comprometer o carro.</p>
           <p class="professional-tip">Dica: Peça para verificar a fiação antes da instalação</p>
         </div>
         
@@ -1272,7 +1322,7 @@ Esse sistema é amplamente utilizado por diversas empresas para localizar técni
       <div style="text-align: center; margin-top: 40px;">
         <a href="https://wa.me/5521980886087?text=Comprei+o+rastreador+e+preciso+de+ajuda+na+instala%C3%A7%C3%A3o.+Tem+como+me+orientar+sobre+profissionais?" class="btn btn-whatsapp" target="_blank" rel="noopener">
           <i class="fab fa-whatsapp"></i> QUERO AJUDA PARA INSTALAR
-        </a>
+          </a>
       </div>
     </div>
   </section>
@@ -1475,6 +1525,7 @@ Esse sistema é amplamente utilizado por diversas empresas para localizar técni
             <li><a href="#testimonials">Depoimentos</a></li>
             <li><a href="#faq">FAQ</a></li>
             <li><a href="#professionals">Profissionais</a></li>
+            <li><a href="#depoimentos">Depoimentos em Imagem</a></li>
           </ul>
         </div>
         
@@ -1520,7 +1571,7 @@ Esse sistema é amplamente utilizado por diversas empresas para localizar técni
         <p>A Rastreando GPS é responsável exclusivamente pelo fornecimento do equipamento de rastreamento e pela disponibilização da plataforma de monitoramento. Todo o conteúdo e funcionalidades do aplicativo e sistema web são de responsabilidade da empresa.</p>
         
         <p><strong>2. Instalação do Equipamento</strong></p>
-        <p>A instalação do equipamento é de inteira responsabilidade do cliente ou do profissional por ele contratado. A Rastreando GPS não se responsabiliza por:</p>
+        <p>A instalação do equipamento é de inteira responsabilidade do cliente or do profissional por ele contratado. A Rastreando GPS não se responsabiliza por:</p>
         <ul>
           <li>Danos causados durante a instalação por terceiros</li>
           <li>Problemas decorrentes de instalação incorreta</li>
@@ -1719,6 +1770,39 @@ Esse sistema é amplamente utilizado por diversas empresas para localizar técni
       recoveryInterval = setInterval(() => {
         recoveryCurrentIndex = (recoveryCurrentIndex + 1) % recoveryItems.length;
         updateRecoveryCarousel();
+      }, 3000);
+    });
+
+    // Carrossel Depoimentos
+    const depoimentosCarousel = document.getElementById('depoimentos-carousel');
+    const depoimentosItems = document.querySelectorAll('#depoimentos-carousel .carousel-item');
+    const depoimentosIndicators = document.querySelectorAll('#depoimentos-indicators .carousel-indicator');
+    let depoimentosCurrentIndex = 0;
+
+    function updateDepoimentosCarousel() {
+      depoimentosCarousel.style.transform = `translateX(-${depoimentosCurrentIndex * 100}%)`;
+      depoimentosIndicators.forEach((indicator, index) => indicator.classList.toggle('active', index === depoimentosCurrentIndex));
+    }
+    document.getElementById('next-depoimentos').addEventListener('click', () => {
+      depoimentosCurrentIndex = (depoimentosCurrentIndex + 1) % depoimentosItems.length;
+      updateDepoimentosCarousel();
+    });
+    document.getElementById('prev-depoimentos').addEventListener('click', () => {
+      depoimentosCurrentIndex = (depoimentosCurrentIndex - 1 + depoimentosItems.length) % depoimentosItems.length;
+      updateDepoimentosCarousel();
+    });
+    depoimentosIndicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => { depoimentosCurrentIndex = index; updateDepoimentosCarousel(); });
+    });
+    let depoimentosInterval = setInterval(() => {
+      depoimentosCurrentIndex = (depoimentosCurrentIndex + 1) % depoimentosItems.length;
+      updateDepoimentosCarousel();
+    }, 3000);
+    depoimentosCarousel.parentElement.addEventListener('mouseenter', () => clearInterval(depoimentosInterval));
+    depoimentosCarousel.parentElement.addEventListener('mouseleave', () => {
+      depoimentosInterval = setInterval(() => {
+        depoimentosCurrentIndex = (depoimentosCurrentIndex + 1) % depoimentosItems.length;
+        updateDepoimentosCarousel();
       }, 3000);
     });
 

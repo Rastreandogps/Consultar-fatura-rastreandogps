@@ -13,7 +13,35 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- ====== NOVO: BLOCO DO VÍDEO NO TOPO (VISÍVEL NA PÁGINA) ====== -->
+  <section class="sales-video-top" id="video-vendas">
+    <div class="container">
+      <div class="sales-video-card">
+        <div class="sales-video-head">
+          <div>
+            <h2><i class="fas fa-play-circle"></i> Assista ao vídeo de vendas (explica tudo em poucos minutos)</h2>
+            <div class="sales-video-sub">Se não abrir automaticamente, clique no play aqui embaixo.</div>
+          </div>
+          <button class="btn btn-primary" id="open-video-modal" type="button">
+            <i class="fas fa-play"></i> ABRIR EM POP-UP
+          </button>
+        </div>
 
+        <div class="yt-wrap">
+          <!-- IMPORTANTE: troque SEU_VIDEO_ID_AQUI pelo ID do vídeo (ou cole o embed direto no JS abaixo). -->
+          <iframe
+            id="topSalesVideo"
+            src="https://www.youtube-nocookie.com/embed/SEU_VIDEO_ID_AQUI?rel=0&modestbranding=1"
+            title="Vídeo de vendas - Rastreando GPS"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
   <style>
     :root {
       --bg: #0b1220; --ink: #0d3c61; --muted: #94a3b8; --card: #0f172a;
@@ -973,34 +1001,7 @@
     </div>
   </section>
 
-  <!-- ====== NOVO: BLOCO DO VÍDEO NO TOPO (VISÍVEL NA PÁGINA) ====== -->
-  <section class="sales-video-top" id="video-vendas">
-    <div class="container">
-      <div class="sales-video-card">
-        <div class="sales-video-head">
-          <div>
-            <h2><i class="fas fa-play-circle"></i> Assista ao vídeo de vendas (explica tudo em poucos minutos)</h2>
-            <div class="sales-video-sub">Se não abrir automaticamente, clique no play aqui embaixo.</div>
-          </div>
-          <button class="btn btn-primary" id="open-video-modal" type="button">
-            <i class="fas fa-play"></i> ABRIR EM POP-UP
-          </button>
-        </div>
 
-        <div class="yt-wrap">
-          <!-- IMPORTANTE: troque SEU_VIDEO_ID_AQUI pelo ID do vídeo (ou cole o embed direto no JS abaixo). -->
-          <iframe
-            id="topSalesVideo"
-            src="https://www.youtube-nocookie.com/embed/SEU_VIDEO_ID_AQUI?rel=0&modestbranding=1"
-            title="Vídeo de vendas - Rastreando GPS"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen>
-          </iframe>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- How It Works Section -->
   <section class="section" id="how-it-works" style="background: rgba(255, 255, 255, 0.02)">

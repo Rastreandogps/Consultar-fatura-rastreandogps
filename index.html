@@ -892,34 +892,61 @@
    <!-- Container modificado com flex-direction: column -->
    <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 20px;">
     <!-- Imagem triplicada (240px) -->
-<div class="carousel" style="max-width: 360px;">
-  <div class="carousel-inner" id="hero-carousel">
-    <div class="carousel-item">
-      <img src="./assets/hero.jpg" alt="Rastreador 4G">
-    </div>
-    <div class="carousel-item">
-      <img src="./assets/hero2.jpg" alt="Rastreador 4G">
-    </div>
-    <div class="carousel-item">
-      <img src="./assets/hero3.jpg" alt="Rastreador 4G">
-    </div>
-  </div>
+   const heroCarousel = document.getElementById('hero-carousel');
+const heroItems = document.querySelectorAll('#hero-carousel .carousel-item');
+const heroIndicators = document.querySelectorAll('#hero-indicators .carousel-indicator');
+let heroCurrentIndex = 0;
 
-  <div class="carousel-controls">
-    <button class="carousel-control" id="prev-hero">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="carousel-control" id="next-hero">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
+function updateHeroCarousel() {
+  // 🔁 garante loop infinito
+  if (heroCurrentIndex >= heroItems.length) {
+    heroCurrentIndex = 0;
+  }
+  if (heroCurrentIndex < 0) {
+    heroCurrentIndex = heroItems.length - 1;
+  }
 
-  <div class="carousel-indicators" id="hero-indicators">
-    <div class="carousel-indicator active"></div>
-    <div class="carousel-indicator"></div>
-    <div class="carousel-indicator"></div>
-  </div>
-</div>
+  heroCarousel.style.transform = `translateX(-${heroCurrentIndex * 100}%)`;
+
+  heroIndicators.forEach((indicator, index) => {
+    indicator.classList.toggle('active', index === heroCurrentIndex);
+  });
+}
+
+document.getElementById('next-hero').addEventListener('click', () => {
+  heroCurrentIndex++;
+  updateHeroCarousel();
+});
+
+document.getElementById('prev-hero').addEventListener('click', () => {
+  heroCurrentIndex--;
+  updateHeroCarousel();
+});
+
+heroIndicators.forEach((indicator, index) => {
+  indicator.addEventListener('click', () => {
+    heroCurrentIndex = index;
+    updateHeroCarousel();
+  });
+});
+
+// 🔁 autoplay infinito sem tela preta
+let heroInterval = setInterval(() => {
+  heroCurrentIndex++;
+  updateHeroCarousel();
+}, 3000);
+
+// pausa ao passar o mouse
+heroCarousel.parentElement.addEventListener('mouseenter', () => {
+  clearInterval(heroInterval);
+});
+
+heroCarousel.parentElement.addEventListener('mouseleave', () => {
+  heroInterval = setInterval(() => {
+    heroCurrentIndex++;
+    updateHeroCarousel();
+  }, 3000);
+});
 
     <!-- Título agora abaixo da imagem -->
     <h3 style="font-size: 24px; margin: 0; text-align: center;">Equipamento por Apenas:</h3>

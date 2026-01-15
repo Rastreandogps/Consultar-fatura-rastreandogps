@@ -892,7 +892,34 @@
    <!-- Container modificado com flex-direction: column -->
    <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 20px;">
     <!-- Imagem triplicada (240px) -->
-    <img src="./assets/equipamento.png" alt="Equipamento Rastreador" style="width: 360px; height: auto;">
+         <div class="hero-image">
+        <div class="carousel">
+          <div class="carousel-inner" id="hero-carousel">
+            <div class="carousel-item">
+              <img src="./assets/hero.jpg" alt="Rastreador 4G com bloqueio remoto" loading="lazy">
+            </div>
+            <div class="carousel-item">
+              <img src="./assets/hero2.jpg" alt="Rastreador 4G com bloqueio remoto" loading="lazy">
+            </div>
+            <div class="carousel-item">
+              <img src="./assets/hero3.jpg" alt="Rastreador 4G com bloqueio remoto" loading="lazy">
+            </div>
+            
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-control" id="prev-hero"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-control" id="next-hero"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="carousel-indicators" id="hero-indicators">
+            <div class="carousel-indicator active"></div>
+            <div class="carousel-indicator"></div>
+            <div class="carousel-indicator"></div>
+            <div class="carousel-indicator"></div>
+            <div class="carousel-indicator"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Título agora abaixo da imagem -->
     <h3 style="font-size: 24px; margin: 0; text-align: center;">Equipamento por Apenas:</h3>
    </div>
@@ -1039,34 +1066,7 @@ Esse sistema é amplamente utilizado por diversas empresas para localizar técni
           </div>
         </div>
       </div>
-      <div class="hero-image">
-        <div class="carousel">
-          <div class="carousel-inner" id="hero-carousel">
-            <div class="carousel-item">
-              <img src="./assets/hero.jpg" alt="Rastreador 4G com bloqueio remoto" loading="lazy">
-            </div>
-            <div class="carousel-item">
-              <img src="./assets/hero2.jpg" alt="Rastreador 4G com bloqueio remoto" loading="lazy">
-            </div>
-            <div class="carousel-item">
-              <img src="./assets/hero3.jpg" alt="Rastreador 4G com bloqueio remoto" loading="lazy">
-            </div>
-            
-          </div>
-          <div class="carousel-controls">
-            <button class="carousel-control" id="prev-hero"><i class="fas fa-chevron-left"></i></button>
-            <button class="carousel-control" id="next-hero"><i class="fas fa-chevron-right"></i></button>
-          </div>
-          <div class="carousel-indicators" id="hero-indicators">
-            <div class="carousel-indicator active"></div>
-            <div class="carousel-indicator"></div>
-            <div class="carousel-indicator"></div>
-            <div class="carousel-indicator"></div>
-            <div class="carousel-indicator"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+
   </section>
 
  

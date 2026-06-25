@@ -6,26 +6,38 @@
   <title>Rastreador 4G com Bloqueio — Rastreando GPS</title>
   <meta name="description" content="Rastreador 4G com bloqueio remoto pelo celular. Chip Vivo incluso, app Android/iOS, suporte especializado. Compre pelo Mercado Livre.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
+    /* ============================================================
+       PALETA — inspirada no Mercado Livre
+       Amarelo (header/destaque) + Azul (ação/compra) + Verde (confiança)
+       Fundo claro, igual ao ambiente onde o cliente já está comprando.
+       ============================================================ */
     :root {
-      --bg:        #070d18;
-      --bg2:       #0c1628;
-      --card:      #111d30;
-      --card2:     #162038;
-      --border:    rgba(255,255,255,0.07);
-      --blue:      #0ea5e9;
-      --blue-glow: rgba(14,165,233,0.25);
-      --green:     #22c55e;
-      --green-glow:rgba(34,197,94,0.25);
-      --yellow:    #fde047;
-      --ml:        #fee600;
-      --ml-dark:   #2b2b2b;
-      --wa:        #25d366;
-      --muted:     #8096b4;
-      --white:     #f0f6ff;
+      --bg:         #ffffff;
+      --bg-soft:    #fff9df;   /* amarelo bem clarinho, pro "zebrado" das seções */
+      --card:       #ffffff;
+      --border:     #ececec;
+      --ink:        #232323;
+      --muted:      #6b6f76;
+
+      --yellow:      #ffe600;  /* amarelo Mercado Livre */
+      --yellow-deep: #ffd100;
+      --yellow-line: #f0c400;
+
+      --blue:       #3483fa;  /* azul de "Comprar agora" do Mercado Livre */
+      --blue-dark:  #2968c8;
+      --blue-glow:  rgba(52,131,250,0.22);
+
+      --green:      #00a650;  /* verde de confiança/desconto do Mercado Livre */
+      --green-soft: rgba(0,166,80,0.10);
+
+      --wa:         #25d366;
+      --shadow-sm:  0 6px 18px rgba(35,35,35,0.06);
+      --shadow-md:  0 14px 40px rgba(35,35,35,0.10);
+      --shadow-lg:  0 24px 60px rgba(35,35,35,0.14);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,42 +46,45 @@
     body {
       font-family: 'Barlow', sans-serif;
       background: var(--bg);
-      color: var(--white);
+      color: var(--ink);
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
-    /* ── NOISE TEXTURE ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      opacity: 0.4;
-    }
-
     .container { width: min(1200px, 94vw); margin: 0 auto; position: relative; z-index: 1; }
 
-    /* ─── TOPBAR ─── */
+    /* ─── DESTAQUE "MARCA-TEXTO" (assinatura visual da página) ─── */
+    .grad {
+      background: linear-gradient(180deg, transparent 58%, var(--yellow) 58%);
+      color: var(--ink);
+      padding: 0 6px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .grad.blue-mark {
+      background: linear-gradient(180deg, transparent 58%, rgba(52,131,250,0.25) 58%);
+      color: var(--blue-dark);
+    }
+
+    /* ─── TOPBAR (igual ao header amarelo do Mercado Livre) ─── */
     .topbar {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(7,13,24,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 0;
+      background: var(--yellow);
+      border-bottom: 1px solid var(--yellow-line);
+      box-shadow: 0 2px 14px rgba(0,0,0,0.08);
+      padding: 12px 0;
     }
     .topbar-inner {
       display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
     .brand {
       display: flex; align-items: center; gap: 10px;
-      color: var(--white); text-decoration: none;
+      color: var(--ink); text-decoration: none;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 22px; font-weight: 800; letter-spacing: 0.5px;
     }
     .brand img { width: 38px; height: 38px; border-radius: 8px; }
-    .topbar-cta {
-      display: flex; gap: 10px; align-items: center;
-    }
+    .topbar-cta { display: flex; gap: 10px; align-items: center; }
 
     /* ─── BOTÕES ─── */
     .btn {
@@ -82,43 +97,45 @@
     }
     .btn:hover { transform: translateY(-2px); }
 
+    /* Botão principal de compra — azul, igual ao "Comprar agora" do ML */
     .btn-ml {
-      background: var(--ml); color: var(--ml-dark);
-      box-shadow: 0 4px 20px rgba(254,230,0,0.28);
+      background: var(--blue); color: #fff;
+      box-shadow: 0 6px 22px var(--blue-glow);
     }
-    .btn-ml:hover { box-shadow: 0 8px 28px rgba(254,230,0,0.42); }
+    .btn-ml:hover { background: var(--blue-dark); box-shadow: 0 10px 30px var(--blue-glow); }
 
     .btn-wa {
       background: var(--wa); color: #fff;
-      box-shadow: 0 4px 20px rgba(37,211,102,0.28);
+      box-shadow: 0 6px 22px rgba(37,211,102,0.28);
     }
-    .btn-wa:hover { box-shadow: 0 8px 28px rgba(37,211,102,0.42); }
+    .btn-wa:hover { box-shadow: 0 10px 30px rgba(37,211,102,0.4); }
 
     .btn-blue {
-      background: var(--blue); color: #fff;
-      box-shadow: 0 4px 20px var(--blue-glow);
+      background: transparent; color: var(--blue-dark);
+      border: 1.5px solid var(--blue);
     }
-    .btn-blue:hover { box-shadow: 0 8px 28px rgba(14,165,233,0.42); }
+    .btn-blue:hover { background: rgba(52,131,250,0.08); }
 
     .btn-outline {
-      background: transparent; color: var(--white);
-      border: 1px solid var(--border);
+      background: transparent; color: var(--ink);
+      border: 1.5px solid var(--border);
     }
-    .btn-outline:hover { background: rgba(255,255,255,0.05); }
+    .btn-outline:hover { background: #f7f7f7; }
 
-    .btn-lg { padding: 16px 30px; font-size: 18px; border-radius: 12px; }
+    .btn-lg { padding: 17px 30px; font-size: 18px; border-radius: 12px; }
     .btn-full { width: 100%; }
 
     /* ─── SEÇÃO BASE ─── */
     .section { padding: 80px 0; scroll-margin-top: 80px; }
+    .section.alt { background: var(--bg-soft); }
 
     .tag {
       display: inline-block;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 13px; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--blue);
-      background: rgba(14,165,233,0.1);
-      border: 1px solid rgba(14,165,233,0.25);
+      text-transform: uppercase; color: var(--blue-dark);
+      background: rgba(52,131,250,0.08);
+      border: 1px solid rgba(52,131,250,0.22);
       padding: 4px 14px; border-radius: 50px;
       margin-bottom: 16px;
     }
@@ -126,23 +143,36 @@
     .section-title {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: clamp(32px, 5vw, 52px);
-      font-weight: 900; line-height: 1.05;
+      font-weight: 900; line-height: 1.06;
       text-transform: uppercase; letter-spacing: -0.5px;
+      color: var(--ink);
     }
     .section-sub {
-      color: var(--muted); font-size: 17px; margin-top: 12px;
+      color: var(--muted); font-size: 17px; margin-top: 14px;
       max-width: 620px;
     }
     .text-center { text-align: center; }
-    .text-center .section-sub { margin: 12px auto 0; }
+    .text-center .section-sub { margin: 14px auto 0; }
 
-    .grad { background: linear-gradient(90deg, var(--green), var(--blue));
-      -webkit-background-clip: text; background-clip: text; color: transparent; }
+    /* Pílulas de confiança usadas em vários pontos da página */
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--yellow); color: var(--ink);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 12.5px; letter-spacing: 0.4px;
+      text-transform: uppercase;
+      padding: 7px 14px; border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .pill.pill-blue { background: rgba(52,131,250,0.1); color: var(--blue-dark); }
+    .pill.pill-green { background: var(--green-soft); color: var(--green); }
 
     /* ─── HERO ─── */
     .hero {
-      padding: 90px 0 70px;
-      background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(14,165,233,0.08) 0%, transparent 70%);
+      padding: 64px 0 70px;
+      background:
+        radial-gradient(ellipse 70% 55% at 78% 25%, rgba(255,230,0,0.35) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 50% at 10% 85%, rgba(52,131,250,0.10) 0%, transparent 65%);
     }
     .hero-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
@@ -167,41 +197,43 @@
     }
     .hero-title {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(40px, 6vw, 68px);
-      font-weight: 900; line-height: 1.0;
+      font-size: clamp(40px, 6vw, 66px);
+      font-weight: 900; line-height: 1.02;
       text-transform: uppercase;
       margin-bottom: 20px;
+      color: var(--ink);
     }
     .hero-sub {
       color: var(--muted); font-size: 18px; line-height: 1.6;
-      margin-bottom: 36px; max-width: 480px;
+      margin-bottom: 30px; max-width: 480px;
     }
-    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 36px; }
-    .hero-badges {
-      display: flex; gap: 10px; flex-wrap: wrap;
-    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; }
+    .hero-badges { display: flex; gap: 10px; flex-wrap: wrap; }
     .badge {
       display: flex; align-items: center; gap: 7px;
       padding: 7px 14px; border-radius: 50px;
-      background: rgba(255,255,255,0.04);
+      background: var(--card);
       border: 1px solid var(--border);
       font-size: 13px; color: var(--muted);
+      box-shadow: var(--shadow-sm);
     }
     .badge i { color: var(--green); font-size: 12px; }
 
     /* Carrossel Hero */
-    .carousel { position: relative; border-radius: 16px; overflow: hidden; }
+    .hero-image { position: relative; }
+    .carousel { position: relative; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); }
     .carousel-track { display: flex; transition: transform 0.5s cubic-bezier(.4,0,.2,1); }
     .carousel-slide { min-width: 100%; }
     .carousel-slide img { width: 100%; display: block; border-radius: 16px; }
     .carousel-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
       width: 40px; height: 40px; border-radius: 50%;
-      background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15);
-      color: #fff; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; z-index: 10; transition: background 0.2s;
+      background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.08);
+      color: var(--ink); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 10; transition: background 0.2s, transform 0.2s;
+      font-size: 18px;
     }
-    .carousel-btn:hover { background: rgba(14,165,233,0.5); }
+    .carousel-btn:hover { background: var(--yellow); transform: translateY(-50%) scale(1.06); }
     .carousel-btn.prev { left: 12px; }
     .carousel-btn.next { right: 12px; }
     .carousel-dots {
@@ -210,59 +242,64 @@
     }
     .dot {
       width: 8px; height: 8px; border-radius: 50%;
-      background: rgba(255,255,255,0.35); cursor: pointer;
-      transition: background 0.3s, transform 0.3s;
+      background: rgba(255,255,255,0.55); border: 1px solid rgba(0,0,0,0.1);
+      cursor: pointer; transition: background 0.3s, transform 0.3s;
     }
-    .dot.active { background: #fff; transform: scale(1.3); }
+    .dot.active { background: var(--blue); transform: scale(1.3); border-color: var(--blue); }
+
+    .ml-corner-badge {
+      position: absolute; top: 14px; left: 14px; z-index: 11;
+      background: var(--yellow); color: var(--ink);
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 12.5px; letter-spacing: 0.4px; text-transform: uppercase;
+      padding: 7px 14px; border-radius: 50px;
+      box-shadow: var(--shadow-sm);
+      display: flex; align-items: center; gap: 6px;
+    }
 
     /* ─── STRIP DE CONFIANÇA ─── */
     .trust-strip {
-      background: var(--card);
+      background: var(--bg-soft);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       padding: 20px 0;
     }
-    .trust-items {
-      display: flex; align-items: center; justify-content: center;
-      gap: 40px; flex-wrap: wrap;
-    }
+    .trust-items { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
     .trust-item {
       display: flex; align-items: center; gap: 10px;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 16px; font-weight: 700; letter-spacing: 0.3px;
-      color: var(--muted);
+      color: var(--ink);
     }
     .trust-item i { color: var(--green); font-size: 18px; }
 
-    /* ─── PREÇO PRINCIPAL ─── */
-    .pricing-section {
-      background: var(--bg2);
-    }
-    .pricing-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px;
-    }
+    /* ─── PREÇOS ─── */
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
     .price-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 20px; padding: 36px;
       position: relative; overflow: hidden;
+      box-shadow: var(--shadow-sm);
       transition: transform 0.3s, box-shadow 0.3s;
     }
-    .price-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
-    }
+    .price-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
     .price-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
     }
-    .price-card.equip::before { background: linear-gradient(90deg, var(--yellow), var(--blue)); }
-    .price-card.monthly::before { background: linear-gradient(90deg, var(--green), var(--blue)); }
+    .price-card.equip::before   { background: linear-gradient(90deg, var(--yellow), var(--yellow-deep)); }
+    .price-card.monthly::before { background: linear-gradient(90deg, var(--blue), var(--green)); }
 
-    .price-card-label {
+    .step-pill {
+      display: inline-flex; align-items: center; gap: 6px;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+      font-size: 12.5px; font-weight: 800; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #fff;
+      background: var(--blue); padding: 5px 14px; border-radius: 50px;
+      margin-bottom: 14px;
     }
+    .price-card.equip .step-pill { background: var(--ink); }
+
     .price-card-title {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 24px; font-weight: 800; margin-bottom: 20px;
@@ -270,54 +307,66 @@
     .price-card img {
       width: 100%; max-width: 280px; display: block; margin: 0 auto 24px;
     }
-    .price-big {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 56px; font-weight: 900; line-height: 1;
-      background: linear-gradient(90deg, var(--yellow), var(--blue));
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-      margin-bottom: 8px;
-    }
-    .price-big.green-price {
-      background: linear-gradient(90deg, var(--green), var(--blue));
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-    }
-    .price-period { font-size: 20px; color: var(--muted); font-weight: 400; }
-    .price-note { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
 
-    .feature-list { list-style: none; margin: 24px 0; display: flex; flex-direction: column; gap: 10px; }
-    .feature-list li {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 15px; color: var(--muted);
+    /* Preço estilo "vitrine brasileira": número grande + centavos sobrescritos */
+    .price-big {
+      display: flex; align-items: flex-start; gap: 2px;
+      font-family: 'Barlow Condensed', sans-serif;
+      line-height: 1; margin-bottom: 6px;
     }
+    .price-big .moeda { font-size: 26px; font-weight: 800; margin-top: 6px; color: var(--ink); }
+    .price-big .inteiro {
+      font-size: 60px; font-weight: 900; color: var(--ink);
+      background: linear-gradient(180deg, transparent 60%, var(--yellow) 60%);
+      padding: 0 4px;
+    }
+    .price-card.monthly .price-big .inteiro {
+      background: none; color: var(--blue-dark);
+    }
+    .price-big .cents { font-size: 24px; font-weight: 800; margin-top: 6px; color: var(--ink); }
+    .price-card.monthly .price-big .cents { color: var(--blue-dark); }
+    .price-big .periodo { font-size: 18px; color: var(--muted); font-weight: 500; margin: auto 0 4px 4px; }
+
+    .price-note { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+
+    .feature-list { list-style: none; margin: 22px 0; display: flex; flex-direction: column; gap: 10px; }
+    .feature-list li { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--ink); }
     .feature-list li i { color: var(--green); font-size: 13px; flex-shrink: 0; }
 
-    .price-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 28px; }
+    .price-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; }
 
-    /* Destaque combo */
     .combo-note {
-      background: rgba(14,165,233,0.08);
-      border: 1px solid rgba(14,165,233,0.2);
+      background: var(--green-soft);
+      border: 1px solid rgba(0,166,80,0.25);
       border-radius: 12px; padding: 16px 20px;
       text-align: center; margin-top: 24px;
-      font-size: 15px; color: var(--muted);
+      font-size: 15px; color: var(--ink);
     }
-    .combo-note strong { color: var(--blue); }
+    .combo-note strong { color: var(--green); }
+
+    /* Instaladores (caixa dentro da seção de preços) */
+    .installer-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 36px; text-align: center; max-width: 700px; margin: 40px auto 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .installer-box h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 12px; }
+    .installer-box p { color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    .installer-note { font-size: 13px; color: var(--muted); margin-top: 20px; font-style: italic; line-height: 1.6; }
 
     /* ─── COMO FUNCIONA ─── */
-    .steps-section { background: var(--bg); }
-    .steps-wrapper {
-      display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-top: 48px;
-    }
+    .steps-wrapper { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-top: 48px; }
     .step-card {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 16px; padding: 28px 24px;
-      position: relative; transition: transform 0.3s, box-shadow 0.3s;
+      position: relative; box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, box-shadow 0.3s;
     }
-    .step-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .step-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
     .step-num {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 64px; font-weight: 900;
-      line-height: 1; color: rgba(255,255,255,0.04);
+      line-height: 1; color: var(--border);
       position: absolute; top: 12px; right: 16px;
     }
     .step-icon {
@@ -325,23 +374,15 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 22px; margin-bottom: 18px;
     }
-    .step-card:nth-child(1) .step-icon { background: rgba(254,224,0,0.1); color: var(--yellow); }
-    .step-card:nth-child(2) .step-icon { background: rgba(14,165,233,0.1); color: var(--blue); }
-    .step-card:nth-child(3) .step-icon { background: rgba(34,197,94,0.1); color: var(--green); }
+    .step-card:nth-child(1) .step-icon { background: rgba(255,209,0,0.18); color: #b8860b; }
+    .step-card:nth-child(2) .step-icon { background: rgba(52,131,250,0.1); color: var(--blue); }
+    .step-card:nth-child(3) .step-icon { background: var(--green-soft); color: var(--green); }
     .step-card:nth-child(4) .step-icon { background: rgba(168,85,247,0.1); color: #a855f7; }
-    .step-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 20px; font-weight: 800; margin-bottom: 10px;
-    }
+    .step-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 10px; }
     .step-desc { color: var(--muted); font-size: 14px; line-height: 1.6; }
 
     /* ─── APP DOWNLOAD ─── */
-    .app-section {
-      background: var(--bg2);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 40px 0;
-    }
+    .app-section { padding: 40px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .app-inner { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
     .app-btn {
       display: inline-flex; align-items: center; gap: 12px;
@@ -351,225 +392,195 @@
     }
     .app-btn:hover { transform: translateY(-2px); }
     .app-btn i { font-size: 24px; }
-    .app-btn.android { background: #007aff; box-shadow: 0 4px 20px rgba(0,122,255,0.3); }
-    .app-btn.ios     { background: #007aff; box-shadow: 0 4px 20px rgba(0,122,255,0.3); }
-    .app-btn.pc      { background: #1e293b; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .app-btn.android { background: var(--blue); box-shadow: 0 4px 20px var(--blue-glow); }
+    .app-btn.ios     { background: var(--ink); box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
+    .app-btn.pc      { background: #fff; color: var(--ink); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
 
     /* ─── BENEFÍCIOS ─── */
-    .features-section { background: var(--bg); }
-    .features-grid {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 48px;
-    }
+    .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 48px; }
     .feat-card {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 16px; padding: 28px;
+      box-shadow: var(--shadow-sm);
       transition: transform 0.3s, border-color 0.3s;
     }
-    .feat-card:hover { transform: translateY(-4px); border-color: rgba(14,165,233,0.3); }
+    .feat-card:hover { transform: translateY(-4px); border-color: rgba(52,131,250,0.3); }
     .feat-icon {
       width: 50px; height: 50px; border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(14,165,233,0.1); color: var(--blue);
+      background: rgba(52,131,250,0.1); color: var(--blue);
       font-size: 20px; margin-bottom: 18px;
     }
     .feat-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 8px; }
     .feat-desc { color: var(--muted); font-size: 14px; line-height: 1.65; }
 
-    /* ─── RECUPERAÇÕES ─── */
-    .recovery-section { background: var(--bg2); }
-    .recovery-carousel { max-width: 760px; margin: 40px auto 0; }
+    /* ─── CARROSSÉIS (recuperação / depoimentos) ─── */
+    .recovery-carousel, .depo-carousel { max-width: 760px; margin: 40px auto 0; }
 
-    /* ─── DEPOIMENTOS ─── */
-    .depo-section { background: var(--bg); }
-    .depo-carousel { max-width: 760px; margin: 40px auto 0; }
+    /* ─── DEPOIMENTOS EM TEXTO ─── */
+    .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 40px; }
+    .testi-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; box-shadow: var(--shadow-sm);
+    }
+    .testi-text {
+      color: var(--ink); font-size: 15px; line-height: 1.65;
+      position: relative; padding-left: 20px; margin-bottom: 20px;
+    }
+    .testi-text::before {
+      content: '"'; position: absolute; left: 0; top: -8px;
+      font-size: 40px; color: var(--yellow-deep); line-height: 1;
+    }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(52,131,250,0.12); display: flex;
+      align-items: center; justify-content: center; color: var(--blue);
+    }
+    .testi-name { font-weight: 700; font-size: 15px; }
+    .testi-role { font-size: 13px; color: var(--muted); }
 
     /* ─── FROTAS ─── */
-    .fleet-section { background: var(--bg2); }
     .fleet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 48px; }
     .fleet-item {
       display: flex; gap: 16px; padding: 18px;
-      background: rgba(255,255,255,0.03); border-radius: 12px;
+      background: var(--card); border-radius: 12px;
+      border: 1px solid var(--border);
       border-left: 3px solid var(--blue); margin-bottom: 16px;
-      transition: background 0.2s;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s;
     }
-    .fleet-item:hover { background: rgba(255,255,255,0.06); }
+    .fleet-item:hover { transform: translateX(3px); }
     .fleet-item-icon {
       width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(14,165,233,0.1); color: var(--blue); font-size: 18px;
+      background: rgba(52,131,250,0.1); color: var(--blue); font-size: 18px;
     }
     .fleet-item-title { font-weight: 700; margin-bottom: 4px; font-size: 16px; }
     .fleet-item-desc { color: var(--muted); font-size: 14px; }
     .fleet-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; }
     .fleet-stat {
-      background: rgba(14,165,233,0.07); border: 1px solid rgba(14,165,233,0.15);
+      background: var(--green-soft); border: 1px solid rgba(0,166,80,0.2);
       border-radius: 12px; padding: 18px; text-align: center;
     }
     .fleet-stat-num {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 36px; font-weight: 900;
-      background: linear-gradient(90deg, var(--green), var(--blue));
-      -webkit-background-clip: text; background-clip: text; color: transparent;
+      font-size: 36px; font-weight: 900; color: var(--green);
     }
     .fleet-stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
-    .fleet-gif { border-radius: 16px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
+    .fleet-gif { border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
     .fleet-gif img { width: 100%; display: block; }
 
     /* ─── INSTALADORES ─── */
-    .installers-section { background: var(--bg); }
-    .installer-box {
-      background: rgba(14,165,233,0.07); border: 1px solid rgba(14,165,233,0.2);
-      border-radius: 16px; padding: 36px; text-align: center; max-width: 700px; margin: 40px auto 0;
-    }
-    .installer-box h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 12px; }
-    .installer-box p { color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
-    .installer-note { font-size: 13px; color: var(--muted); margin-top: 20px; font-style: italic; line-height: 1.6; }
-
     .pros-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 40px; }
     .pro-card {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 14px; padding: 24px;
+      box-shadow: var(--shadow-sm);
       transition: transform 0.3s, border-color 0.3s;
       position: relative; overflow: hidden;
     }
     .pro-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, var(--green), var(--blue));
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
     }
-    .pro-card:hover { transform: translateY(-4px); border-color: rgba(34,197,94,0.25); }
+    .pro-card:hover { transform: translateY(-4px); border-color: rgba(52,131,250,0.25); }
     .pro-icon {
       width: 44px; height: 44px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(34,197,94,0.1); color: var(--green);
+      background: rgba(52,131,250,0.1); color: var(--blue);
       font-size: 18px; margin-bottom: 14px;
     }
     .pro-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 8px; }
     .pro-desc { color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
-    .pro-tip { font-size: 12px; color: var(--blue); font-weight: 600; }
+    .pro-tip { font-size: 12px; color: var(--blue-dark); font-weight: 600; }
 
     /* ─── FAQ ─── */
-    .faq-section { background: var(--bg2); }
     .faq-wrap { max-width: 780px; margin: 40px auto 0; }
     .faq-item { border-bottom: 1px solid var(--border); }
     .faq-q {
-      width: 100%; background: none; border: none; color: var(--white);
+      width: 100%; background: none; border: none; color: var(--ink);
       font-family: 'Barlow', sans-serif; font-size: 16px; font-weight: 600;
       padding: 20px 0; display: flex; justify-content: space-between; align-items: center;
       cursor: pointer; gap: 16px; text-align: left;
     }
     .faq-q .icon {
       width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-      background: rgba(14,165,233,0.1); color: var(--blue);
+      background: rgba(52,131,250,0.1); color: var(--blue);
       display: flex; align-items: center; justify-content: center;
       font-size: 16px; transition: transform 0.3s;
     }
-    .faq-q.open .icon { transform: rotate(45deg); }
-    .faq-a {
-      max-height: 0; overflow: hidden; transition: max-height 0.35s ease;
-      color: var(--muted); font-size: 15px; line-height: 1.65;
-    }
+    .faq-q.open .icon { transform: rotate(45deg); background: var(--blue); color: #fff; }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; color: var(--muted); font-size: 15px; line-height: 1.65; }
     .faq-a-inner { padding-bottom: 20px; }
 
-    /* ─── EMPRESA INFO ─── */
+    /* ─── EMPRESA ─── */
     .company-box {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 16px; padding: 32px; margin-top: 60px;
+      box-shadow: var(--shadow-sm);
     }
     .company-box h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 20px; }
     .company-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .company-grid p { color: var(--muted); font-size: 15px; }
-    .company-grid strong { color: var(--white); }
-
-    /* ─── DEPOIMENTOS TEXTO ─── */
-    .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 40px; }
-    .testi-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 24px;
-    }
-    .testi-text {
-      color: var(--muted); font-size: 15px; line-height: 1.65;
-      position: relative; padding-left: 20px; margin-bottom: 20px;
-    }
-    .testi-text::before {
-      content: '"'; position: absolute; left: 0; top: -8px;
-      font-size: 40px; color: rgba(14,165,233,0.3); line-height: 1;
-    }
-    .testi-author { display: flex; align-items: center; gap: 12px; }
-    .testi-avatar {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(14,165,233,0.15); display: flex;
-      align-items: center; justify-content: center; color: var(--blue);
-    }
-    .testi-name { font-weight: 700; font-size: 15px; }
-    .testi-role { font-size: 13px; color: var(--muted); }
+    .company-grid strong { color: var(--ink); }
 
     /* ─── VÍDEO ─── */
-    .video-section { background: var(--bg); }
-    .video-wrap {
-      max-width: 420px; margin: 40px auto 0;
-    }
+    .video-wrap { max-width: 420px; margin: 40px auto 0; }
     .video-inner {
       position: relative; padding-top: 177.77%;
       border-radius: 20px; overflow: hidden;
-      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+      box-shadow: var(--shadow-lg); border: 1px solid var(--border);
     }
-    .video-inner iframe {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      border: none;
-    }
+    .video-inner iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-    /* ─── FOOTER ─── */
-    .footer {
-      background: var(--card);
-      border-top: 1px solid var(--border);
-      padding: 60px 0 30px;
-    }
-    .footer-grid {
-      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px;
-    }
-    .footer-about p { color: var(--muted); font-size: 14px; line-height: 1.65; margin-top: 14px; max-width: 280px; }
+    /* ─── FOOTER (único contraste escuro da página) ─── */
+    .footer { background: #1a1a1a; color: #c7c9cc; padding: 60px 0 30px; }
+    .footer .brand { color: #fff; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-about p { color: #9a9da3; font-size: 14px; line-height: 1.65; margin-top: 14px; max-width: 280px; }
     .footer-col-title {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 16px; font-weight: 800; letter-spacing: 0.5px;
-      text-transform: uppercase; margin-bottom: 16px;
+      text-transform: uppercase; margin-bottom: 16px; color: var(--yellow);
     }
     .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-links a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--white); }
+    .footer-links a { color: #c7c9cc; text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--yellow); }
     .footer-bottom {
-      border-top: 1px solid var(--border); padding-top: 24px;
+      border-top: 1px solid #333; padding-top: 24px;
       display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
     }
-    .footer-copy { color: var(--muted); font-size: 13px; }
+    .footer-copy { color: #87898e; font-size: 13px; }
 
-    /* ─── WHATSAPP FLOAT ─── */
+    /* ─── WHATSAPP FLUTUANTE ─── */
     .wa-float {
       position: fixed; bottom: 28px; right: 28px; z-index: 200;
       width: 58px; height: 58px; border-radius: 50%;
       background: var(--wa); display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 24px rgba(37,211,102,0.4);
+      box-shadow: 0 6px 26px rgba(37,211,102,0.45);
       text-decoration: none; transition: transform 0.3s, box-shadow 0.3s;
     }
-    .wa-float:hover { transform: translateY(-3px) scale(1.07); box-shadow: 0 8px 32px rgba(37,211,102,0.55); }
+    .wa-float:hover { transform: translateY(-3px) scale(1.07); box-shadow: 0 10px 34px rgba(37,211,102,0.6); }
     .wa-float img { width: 30px; height: 30px; }
 
     /* ─── MODAL ─── */
     .modal {
       display: none; position: fixed; inset: 0; z-index: 500;
-      background: rgba(0,0,0,0.8); backdrop-filter: blur(6px);
+      background: rgba(20,20,20,0.6); backdrop-filter: blur(6px);
       overflow-y: auto;
     }
     .modal-box {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 20px; max-width: 760px; width: 92%; margin: 5% auto;
-      padding: 36px; position: relative;
+      padding: 36px; position: relative; box-shadow: var(--shadow-lg);
     }
     .modal-close {
       position: absolute; top: 14px; right: 18px;
       background: none; border: none; color: var(--muted);
       font-size: 26px; cursor: pointer; transition: color 0.2s;
     }
-    .modal-close:hover { color: var(--white); }
+    .modal-close:hover { color: var(--ink); }
     .modal-title {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 26px; font-weight: 800; margin-bottom: 20px;
@@ -577,14 +588,11 @@
     }
     .modal-body { color: var(--muted); line-height: 1.65; max-height: 65vh; overflow-y: auto; }
     .modal-body p { margin-bottom: 14px; }
-    .modal-body strong { color: var(--white); }
+    .modal-body strong { color: var(--ink); }
     .modal-body ul { padding-left: 18px; margin-bottom: 14px; }
 
     /* ─── ANIMAÇÕES SCROLL ─── */
-    .fade-up {
-      opacity: 0; transform: translateY(24px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
 
     /* ─── RESPONSIVO ─── */
@@ -593,7 +601,7 @@
       .hero-content { text-align: center; }
       .hero-btns { justify-content: center; }
       .hero-badges { justify-content: center; }
-      .hero-sub { margin: 0 auto 36px; }
+      .hero-sub { margin: 0 auto 30px; }
       .pricing-grid { grid-template-columns: 1fr; }
       .features-grid { grid-template-columns: 1fr 1fr; }
       .steps-wrapper { grid-template-columns: 1fr 1fr; }
@@ -610,6 +618,7 @@
       .company-grid { grid-template-columns: 1fr; }
       .trust-items { gap: 20px; }
       .section { padding: 60px 0; }
+      .price-big .inteiro { font-size: 48px; }
     }
     @media (max-width: 480px) {
       .pros-grid { grid-template-columns: 1fr; }
@@ -649,15 +658,15 @@
       </div>
       <h1 class="hero-title">
         Rastreador 4G<br>
-        <span class="grad">com Bloqueio<br>Remoto</span>
+        com <span class="grad">Bloqueio Remoto</span>
       </h1>
       <p class="hero-sub">
-        Monitore e bloqueie seu veículo pelo celular, 24h por dia. App Android &amp; iOS, instalação fácil e suporte especializado.
+        Monitore e bloqueie seu veículo pelo celular, 24h por dia. Compre direto no Mercado Livre, instale você mesmo em minutos e ative com nosso suporte.
       </p>
       <div class="hero-btns">
         <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM"
            class="btn btn-ml btn-lg" target="_blank" rel="noopener">
-          <i class="fas fa-bolt"></i> Comprar no Mercado Livre
+          <i class="fas fa-shopping-cart"></i> Comprar no Mercado Livre
         </a>
         <a href="https://wa.me/5521980886087?text=Quero+saber+mais+sobre+o+rastreador."
            class="btn btn-wa btn-lg" target="_blank" rel="noopener">
@@ -674,6 +683,7 @@
 
     <div class="hero-image">
       <div class="carousel" id="hero-car">
+        <span class="ml-corner-badge"><i class="fas fa-shopping-bag"></i> Vendido no Mercado Livre</span>
         <div class="carousel-track" id="hero-track">
           <div class="carousel-slide"><img src="./assets/hero.jpg" alt="Rastreador 4G"></div>
           <div class="carousel-slide"><img src="./assets/hero2.jpg" alt="Rastreador 4G"></div>
@@ -698,7 +708,7 @@
       <div class="trust-item"><i class="fas fa-shield-alt"></i> +6 anos de mercado</div>
       <div class="trust-item"><i class="fas fa-headset"></i> Suporte humanizado</div>
       <div class="trust-item"><i class="fas fa-map-marker-alt"></i> Rastreamento 24/7</div>
-      <div class="trust-item"><i class="fas fa-star"></i> Mercado Livre</div>
+      <div class="trust-item"><i class="fas fa-shopping-bag"></i> Compra no Mercado Livre</div>
       <div class="trust-item"><i class="fas fa-lock"></i> Bloqueio pelo celular</div>
     </div>
   </div>
@@ -727,7 +737,7 @@
 </section>
 
 <!-- ─── PREÇOS ─── -->
-<section class="section pricing-section" id="pricing">
+<section class="section alt pricing-section" id="pricing">
   <div class="container">
     <div class="tag">Planos e Preços</div>
     <h2 class="section-title">Simples, justo e<br><span class="grad">sem surpresas</span></h2>
@@ -736,10 +746,12 @@
     <div class="pricing-grid">
       <!-- Equipamento -->
       <div class="price-card equip fade-up">
-        <div class="price-card-label">Passo 1 — Compra única</div>
+        <span class="step-pill"><i class="fas fa-shopping-bag"></i> Passo 1 — No Mercado Livre</span>
         <div class="price-card-title">Equipamento Rastreador 4G</div>
         <img src="./assets/equipamento.png" alt="Equipamento Rastreador">
-        <div class="price-big">R$ 159,90</div>
+        <div class="price-big">
+          <span class="moeda">R$</span><span class="inteiro">159</span><span class="cents">,90</span>
+        </div>
         <p class="price-note">Pagamento único via Mercado Livre</p>
         <ul class="feature-list">
           <li><i class="fas fa-check-circle"></i> Aparelho rastreador 4G</li>
@@ -761,9 +773,11 @@
 
       <!-- Mensalidade -->
       <div class="price-card monthly fade-up">
-        <div class="price-card-label">Passo 2 — Mensalidade</div>
+        <span class="step-pill"><i class="fas fa-headset"></i> Passo 2 — Ativação</span>
         <div class="price-card-title">Plataforma + App + Suporte</div>
-        <div class="price-big green-price">R$ 39,90<span class="price-period">/mês</span></div>
+        <div class="price-big">
+          <span class="moeda">R$</span><span class="inteiro">39</span><span class="cents">,90</span><span class="periodo">/mês</span>
+        </div>
         <p class="price-note">Ativado após a compra do equipamento</p>
         <ul class="feature-list">
           <li><i class="fas fa-check-circle"></i> App Android e iOS ilimitado 24h</li>
@@ -836,10 +850,10 @@
 </section>
 
 <!-- ─── APP DOWNLOAD ─── -->
-<div class="app-section">
+<div class="app-section alt">
   <div class="container">
     <div class="app-inner">
-      <span style="font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; color:var(--muted); letter-spacing:1px; text-transform:uppercase;">Baixe o App:</span>
+      <span style="font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; color:var(--ink); letter-spacing:1px; text-transform:uppercase;">Baixe o App:</span>
       <a href="https://play.google.com/store/apps/details?id=com.rastreandogpsrastreamento.br"
          class="app-btn android" target="_blank" rel="noopener">
         <i class="fab fa-google-play"></i> Baixar para Android
@@ -897,11 +911,11 @@
 </section>
 
 <!-- ─── RECUPERAÇÕES ─── -->
-<section class="section recovery-section" id="recovery">
+<section class="section alt recovery-section" id="recovery">
   <div class="container text-center">
     <div class="tag">Provas Reais</div>
     <h2 class="section-title">Veículos recuperados com<br><span class="grad">nosso rastreador</span></h2>
-    <p class="section-sub" style="margin: 12px auto 0;">Veja registros reais de veículos recuperados graças ao nosso sistema de rastreamento.</p>
+    <p class="section-sub" style="margin: 14px auto 0;">Veja registros reais de veículos recuperados graças ao nosso sistema de rastreamento.</p>
     <div class="recovery-carousel">
       <div class="carousel" id="rec-car">
         <div class="carousel-track" id="rec-track">
@@ -928,7 +942,7 @@
   <div class="container text-center">
     <div class="tag">Depoimentos</div>
     <h2 class="section-title">Clientes que <span class="grad">aprovam</span></h2>
-    <p class="section-sub" style="margin: 12px auto 0;">Veja o que nossos clientes estão dizendo sobre o rastreador.</p>
+    <p class="section-sub" style="margin: 14px auto 0;">Veja o que nossos clientes estão dizendo sobre o rastreador.</p>
     <div class="depo-carousel">
       <div class="carousel" id="depo-car">
         <div class="carousel-track" id="depo-track">
@@ -983,7 +997,7 @@
 </section>
 
 <!-- ─── FROTAS ─── -->
-<section class="section fleet-section" id="fleet">
+<section class="section alt fleet-section" id="fleet">
   <div class="container">
     <div class="tag">Para Empresas</div>
     <h2 class="section-title">Solução completa para<br><span class="grad">gestão de frotas</span></h2>
@@ -1042,7 +1056,7 @@
   <div class="container">
     <div class="tag text-center">Profissionais de Instalação</div>
     <h2 class="section-title text-center">Quem pode<br><span class="grad">instalar para você</span></h2>
-    <p class="section-sub text-center" style="margin: 12px auto 0;">Se não se sentir confiante, estes profissionais podem instalar com segurança.</p>
+    <p class="section-sub text-center" style="margin: 14px auto 0;">Se não se sentir confiante, estes profissionais podem instalar com segurança.</p>
 
     <div class="pros-grid">
       <div class="pro-card fade-up">
@@ -1093,7 +1107,7 @@
 </section>
 
 <!-- ─── FAQ ─── -->
-<section class="section faq-section" id="faq">
+<section class="section alt faq-section" id="faq">
   <div class="container">
     <div class="tag text-center">Dúvidas Frequentes</div>
     <h2 class="section-title text-center">Perguntas <span class="grad">frequentes</span></h2>
@@ -1138,7 +1152,7 @@
         </div>
       </div>
       <p style="margin-top:16px; color:var(--muted); text-align:center; font-size:15px;">
-        <strong style="color:var(--white);">+6 anos de mercado</strong> em monitoramento veicular de alta qualidade — rastreamento com e sem bloqueio via aplicativo e web.
+        <strong style="color:var(--ink);">+6 anos de mercado</strong> em monitoramento veicular de alta qualidade — rastreamento com e sem bloqueio via aplicativo e web.
       </p>
     </div>
   </div>

@@ -101,18 +101,15 @@
     .btn-ml {
       background: var(--blue); color: #fff;
       box-shadow: 0 6px 22px var(--blue-glow);
-      transform-origin: center bottom;
-      animation: mlSway 2.6s ease-in-out infinite;
+      animation: mlFloat 2.8s ease-in-out infinite;
     }
     .btn-ml:hover {
       background: var(--blue-dark); box-shadow: 0 10px 30px var(--blue-glow);
       animation-play-state: paused;
     }
-    @keyframes mlSway {
-      0%, 100% { transform: rotate(0deg) translateY(0); }
-      25%      { transform: rotate(-2.5deg) translateY(-1px); }
-      50%      { transform: rotate(0deg) translateY(0); }
-      75%      { transform: rotate(2.5deg) translateY(-1px); }
+    @keyframes mlFloat {
+      0%, 100% { transform: translateY(0); box-shadow: 0 6px 22px var(--blue-glow); }
+      50%      { transform: translateY(-7px); box-shadow: 0 16px 26px var(--blue-glow); }
     }
     @media (prefers-reduced-motion: reduce) {
       .btn-ml { animation: none; }

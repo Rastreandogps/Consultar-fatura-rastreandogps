@@ -4,14 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Rastreador 4G com Bloqueio — Rastreando GPS</title>
-  <meta name="description" content="Rastreador 4G com bloqueio remoto pelo celular. Chip Vivo incluso, app Android/iOS, suporte especializado. Compre pelo Mercado Livre.">
+  <meta name="description" content="Rastreador 4G com bloqueio remoto pelo celular. Chip Vivo incluso, app Android/iOS, suporte especializado. Compre diretamente conosco.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
     /* ============================================================
-       PALETA — inspirada no Mercado Livre
+       PALETA
        Amarelo (header/destaque) + Azul (ação/compra) + Verde (confiança)
        Fundo claro, igual ao ambiente onde o cliente já está comprando.
        ============================================================ */
@@ -23,15 +23,15 @@
       --ink:        #232323;
       --muted:      #6b6f76;
 
-      --yellow:      #ffe600;  /* amarelo Mercado Livre */
+      --yellow:      #ffe600;  /* amarelo destaque */
       --yellow-deep: #ffd100;
       --yellow-line: #f0c400;
 
-      --blue:       #3483fa;  /* azul de "Comprar agora" do Mercado Livre */
+      --blue:       #3483fa;  /* azul de ação */
       --blue-dark:  #2968c8;
       --blue-glow:  rgba(52,131,250,0.22);
 
-      --green:      #00a650;  /* verde de confiança/desconto do Mercado Livre */
+      --green:      #00a650;  /* verde de confiança */
       --green-soft: rgba(0,166,80,0.10);
 
       --wa:         #25d366;
@@ -66,7 +66,7 @@
       color: var(--blue-dark);
     }
 
-    /* ─── TOPBAR (igual ao header amarelo do Mercado Livre) ─── */
+    /* ─── TOPBAR ─── */
     .topbar {
       position: sticky; top: 0; z-index: 100;
       background: var(--yellow);
@@ -97,13 +97,13 @@
     }
     .btn:hover { transform: translateY(-2px); }
 
-    /* Botão principal de compra — azul, igual ao "Comprar agora" do ML */
-    .btn-ml {
+    /* Botão principal de compra */
+    .btn-comprar {
       background: var(--blue); color: #fff;
       box-shadow: 0 6px 22px var(--blue-glow);
       animation: mlFloat 2.8s ease-in-out infinite;
     }
-    .btn-ml:hover {
+    .btn-comprar:hover {
       background: var(--blue-dark); box-shadow: 0 10px 30px var(--blue-glow);
       animation-play-state: paused;
     }
@@ -112,7 +112,7 @@
       50%      { transform: translateY(-7px); box-shadow: 0 16px 26px var(--blue-glow); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .btn-ml { animation: none; }
+      .btn-comprar { animation: none; }
     }
 
     .btn-wa {
@@ -655,8 +655,8 @@
       <span>Rastreando GPS</span>
     </a>
     <div class="topbar-cta">
-      <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM" class="btn btn-ml" target="_blank" rel="noopener">
-        <i class="fas fa-shopping-cart"></i> Comprar no ML
+      <a href="checkout.html" class="btn btn-comprar">
+        <i class="fas fa-shopping-cart"></i> Comprar Agora
       </a>
       <a href="https://wa.me/5521980886087?text=Quero+saber+mais+sobre+o+rastreador." class="btn btn-wa" target="_blank" rel="noopener">
         <i class="fab fa-whatsapp"></i> WhatsApp
@@ -678,12 +678,11 @@
         com <span class="grad">Bloqueio Remoto</span>
       </h1>
       <p class="hero-sub">
-        Monitore e bloqueie seu veículo pelo celular, 24h por dia. Compre direto no Mercado Livre, instale você mesmo em minutos e ative com nosso suporte.
+        Monitore e bloqueie seu veículo pelo celular, 24h por dia. Compre diretamente conosco, instale você mesmo em minutos e ative com nosso suporte.
       </p>
       <div class="hero-btns">
-        <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM"
-           class="btn btn-ml btn-lg" target="_blank" rel="noopener">
-          <i class="fas fa-shopping-cart"></i> Comprar no Mercado Livre
+        <a href="checkout.html" class="btn btn-comprar btn-lg">
+          <i class="fas fa-shopping-cart"></i> Comprar Agora
         </a>
         <a href="https://wa.me/5521980886087?text=Quero+saber+mais+sobre+o+rastreador."
            class="btn btn-wa btn-lg" target="_blank" rel="noopener">
@@ -700,7 +699,6 @@
 
     <div class="hero-image">
       <div class="carousel" id="hero-car">
-        <span class="ml-corner-badge"><i class="fas fa-shopping-bag"></i> Vendido no Mercado Livre</span>
         <div class="carousel-track" id="hero-track">
           <div class="carousel-slide"><img src="./assets/hero.jpg" alt="Rastreador 4G"></div>
           <div class="carousel-slide"><img src="./assets/hero2.jpg" alt="Rastreador 4G"></div>
@@ -725,7 +723,7 @@
       <div class="trust-item"><i class="fas fa-shield-alt"></i> +6 anos de mercado</div>
       <div class="trust-item"><i class="fas fa-headset"></i> Suporte humanizado</div>
       <div class="trust-item"><i class="fas fa-map-marker-alt"></i> Rastreamento 24/7</div>
-      <div class="trust-item"><i class="fas fa-shopping-bag"></i> Compra no Mercado Livre</div>
+      <div class="trust-item"><i class="fas fa-shopping-bag"></i> Compra 100% segura</div>
       <div class="trust-item"><i class="fas fa-lock"></i> Bloqueio pelo celular</div>
     </div>
   </div>
@@ -745,9 +743,8 @@
       </div>
     </div>
     <div style="margin-top:28px;">
-      <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM"
-         class="btn btn-ml btn-lg" target="_blank" rel="noopener">
-        <i class="fas fa-shopping-cart"></i> Comprar Agora no Mercado Livre
+      <a href="checkout.html" class="btn btn-comprar btn-lg">
+        <i class="fas fa-shopping-cart"></i> Comprar Agora
       </a>
     </div>
   </div>
@@ -758,18 +755,18 @@
   <div class="container">
     <div class="tag">Planos e Preços</div>
     <h2 class="section-title">Simples, justo e<br><span class="grad">sem surpresas</span></h2>
-    <p class="section-sub">Adquira o equipamento pelo Mercado Livre e ative a plataforma diretamente conosco.</p>
+    <p class="section-sub">Adquira o equipamento diretamente conosco e ative a plataforma em minutos.</p>
 
     <div class="pricing-grid">
       <!-- Equipamento -->
       <div class="price-card equip fade-up">
-        <span class="step-pill"><i class="fas fa-shopping-bag"></i> Passo 1 — No Mercado Livre</span>
+        <span class="step-pill"><i class="fas fa-shopping-cart"></i> Equipamento</span>
         <div class="price-card-title">Equipamento Rastreador 4G</div>
         <img src="./assets/equipamento.png" alt="Equipamento Rastreador">
         <div class="price-big">
           <span class="moeda">R$</span><span class="inteiro">159</span><span class="cents">,90</span>
         </div>
-        <p class="price-note">Pagamento único via Mercado Livre</p>
+        <p class="price-note">Pagamento único via Pix</p>
         <ul class="feature-list">
           <li><i class="fas fa-check-circle"></i> Aparelho rastreador 4G</li>
           <li><i class="fas fa-check-circle"></i> Chicote de instalação completo</li>
@@ -777,9 +774,8 @@
           <li><i class="fas fa-check-circle"></i> Chip M2M de telemetria</li>
         </ul>
         <div class="price-btns">
-          <a href="https://produto.mercadolivre.com.br/MLB-3552694147-rastreador-veicular-4g-com-e-sem-bloqueio-instalaco-faci-_JM"
-             class="btn btn-ml btn-full" target="_blank" rel="noopener">
-            <i class="fas fa-shopping-cart"></i> Comprar no Mercado Livre
+          <a href="checkout.html" class="btn btn-comprar btn-full">
+            <i class="fas fa-shopping-cart"></i> Comprar Agora
           </a>
           <a href="https://wa.me/5521980886087?text=Quero+saber+mais+sobre+o+equipamento."
              class="btn btn-wa btn-full" target="_blank" rel="noopener">
@@ -815,7 +811,7 @@
     </div>
 
     <div class="combo-note">
-      <strong>Equipamento + 1º mês:</strong> Compre o rastreador no ML e entre em contato pelo WhatsApp para ativar. Nosso time cuida de tudo remotamente.
+      <strong>Equipamento + 1º mês:</strong> Compre o rastreador direto aqui e entre em contato pelo WhatsApp para ativar. Nosso time cuida de tudo remotamente.
     </div>
 
     <!-- Instaladores -->
@@ -869,7 +865,7 @@
         <div class="step-num">1</div>
         <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
         <div class="step-title">Compre o Equipamento</div>
-        <p class="step-desc">Adquira pelo Mercado Livre com segurança. Receba em casa rapidamente e com garantia.</p>
+        <p class="step-desc">Compre diretamente conosco com segurança. Receba em casa rapidamente e com garantia.</p>
       </div>
       <div class="step-card fade-up">
         <div class="step-num">2</div>

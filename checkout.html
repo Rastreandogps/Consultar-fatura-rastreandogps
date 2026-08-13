@@ -895,21 +895,25 @@ document.getElementById('telefone').addEventListener('input', function() {
   else if(v.length>2)v=v.replace(/(\d{2})(\d{1,4})/,'($1) $2');
   this.value=v;
 });
-document.getElementById('cep').addEventListener('input', function() {
-  let v=this.value.replace(/\D/g,'').slice(0,8);
-  if(v.length>5)v=v.replace(/(\d{5})(\d{1,3})/,'$1-$2');
-  this.value=v;
-  // Busca automática ao completar 8 dígitos
-  if(v.length===8) {
-    buscarCepAuto(v);
+function processarCep() {
+  const cepEl = document.getElementById('cep');
+  let v = cepEl.value.replace(/\D/g,'').slice(0,8);
+  if(v.length>5) v=v.replace(/(\d{5})(\d{1,3})/,'$1-$2');
+  cepEl.value = v;
+  const digitos = v.replace(/\D/g,'');
+  if(digitos.length===8) {
+    buscarCepAuto(digitos);
   } else {
-    // Limpa campos e frete se apagar o CEP
-    if(v.length < 8) {
-      document.getElementById('cep-status').style.display='none';
-      document.getElementById('cep-hint').textContent='Preenchimento automático ao digitar o CEP completo.';
-    }
+    document.getElementById('cep-status').style.display='none';
+    const hintEl = document.getElementById('cep-hint');
+    hintEl.textContent='Preenchimento automático ao digitar o CEP completo.';
+    hintEl.style.color='var(--muted)';
+    cepEl.style.borderColor='';
   }
-});
+}
+
+document.getElementById('cep').addEventListener('input',  processarCep);
+document.getElementById('cep').addEventListener('change', processarCep);
 document.getElementById('cartao-numero').addEventListener('input', function() {
   let v=this.value.replace(/\D/g,'').slice(0,16);
   v=v.replace(/(\d{4})(?=\d)/g,'$1 ');

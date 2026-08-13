@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rastreadores Portáteis — Rastreando GPS</title>
+  <meta name="description" content="Rastreadores portáteis GPS. Sem instalação, monitore pelo celular. Rastreador Portátil 4G e Tag GPS com plano anual.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* ============================================================
+       PALETA
+       Amarelo (header/destaque) + Azul (ação/compra) + Verde (confiança)
+       Fundo claro, igual ao ambiente onde o cliente já está comprando.
+       ============================================================ */
+    :root {
+      --bg:         #ffffff;
+      --bg-soft:    #fff9df;   /* amarelo bem clarinho, pro "zebrado" das seções */
+      --card:       #ffffff;
+      --border:     #ececec;
+      --ink:        #232323;
+      --muted:      #6b6f76;
+
+      --yellow:      #ffe600;  /* amarelo destaque */
+      --yellow-deep: #ffd100;
+      --yellow-line: #f0c400;
+
+      --blue:       #3483fa;  /* azul de ação */
+      --blue-dark:  #2968c8;
+      --blue-glow:  rgba(52,131,250,0.22);
+
+      --green:      #00a650;  /* verde de confiança */
+      --green-soft: rgba(0,166,80,0.10);
+
+      --wa:         #25d366;
+      --shadow-sm:  0 6px 18px rgba(35,35,35,0.06);
+      --shadow-md:  0 14px 40px rgba(35,35,35,0.10);
+      --shadow-lg:  0 24px 60px rgba(35,35,35,0.14);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container { width: min(1200px, 94vw); margin: 0 auto; position: relative; z-index: 1; }
+
+    /* ─── DESTAQUE "MARCA-TEXTO" (assinatura visual da página) ─── */
+    .grad {
+      background: linear-gradient(180deg, transparent 58%, var(--yellow) 58%);
+      color: var(--ink);
+      padding: 0 6px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .grad.blue-mark {
+      background: linear-gradient(180deg, transparent 58%, rgba(52,131,250,0.25) 58%);
+      color: var(--blue-dark);
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--yellow);
+      border-bottom: 1px solid var(--yellow-line);
+      box-shadow: 0 2px 14px rgba(0,0,0,0.08);
+      padding: 12px 0;
+    }
+    .topbar-inner {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--ink); text-decoration: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px; font-weight: 800; letter-spacing: 0.5px;
+    }
+    .brand img { width: 38px; height: 38px; border-radius: 8px; }
+    .topbar-cta { display: flex; gap: 10px; align-items: center; }
+
+    /* ─── BOTÕES ─── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 22px; border-radius: 10px; font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 700; letter-spacing: 0.5px;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s;
+      white-space: nowrap;
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    /* Botão principal de compra */
+    .btn-comprar {
+      background: var(--blue); color: #fff;
+      box-shadow: 0 6px 22px var(--blue-glow);
+      animation: mlFloat 2.8s ease-in-out infinite;
+    }
+    .btn-comprar:hover {
+      background: var(--blue-dark); box-shadow: 0 10px 30px var(--blue-glow);
+      animation-play-state: paused;
+    }
+    @keyframes mlFloat {
+      0%, 100% { transform: translateY(0); box-shadow: 0 6px 22px var(--blue-glow); }
+      50%      { transform: translateY(-7px); box-shadow: 0 16px 26px var(--blue-glow); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .btn-comprar { animation: none; }
+    }
+
+    .btn-wa {
+      background: var(--wa); color: #fff;
+      box-shadow: 0 6px 22px rgba(37,211,102,0.28);
+    }
+    .btn-wa:hover { box-shadow: 0 10px 30px rgba(37,211,102,0.4); }
+
+    .btn-blue {
+      background: transparent; color: var(--blue-dark);
+      border: 1.5px solid var(--blue);
+    }
+    .btn-blue:hover { background: rgba(52,131,250,0.08); }
+
+    .btn-outline {
+      background: transparent; color: var(--ink);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { background: #f7f7f7; }
+
+    .btn-lg { padding: 17px 30px; font-size: 18px; border-radius: 12px; }
+    .btn-full { width: 100%; }
+
+    /* ─── SEÇÃO BASE ─── */
+    .section { padding: 80px 0; scroll-margin-top: 80px; }
+    .section.alt { background: var(--bg-soft); }
+
+    .tag {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--blue-dark);
+      background: rgba(52,131,250,0.08);
+      border: 1px solid rgba(52,131,250,0.22);
+      padding: 4px 14px; border-radius: 50px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 900; line-height: 1.06;
+      text-transform: uppercase; letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+    .section-sub {
+      color: var(--muted); font-size: 17px; margin-top: 14px;
+      max-width: 620px;
+    }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 14px auto 0; }
+
+    /* Pílulas de confiança usadas em vários pontos da página */
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--yellow); color: var(--ink);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 12.5px; letter-spacing: 0.4px;
+      text-transform: uppercase;
+      padding: 7px 14px; border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .pill.pill-blue { background: rgba(52,131,250,0.1); color: var(--blue-dark); }
+    .pill.pill-green { background: var(--green-soft); color: var(--green); }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 64px 0 70px;
+      background:
+        radial-gradient(ellipse 70% 55% at 78% 25%, rgba(255,230,0,0.35) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 50% at 10% 85%, rgba(52,131,250,0.10) 0%, transparent 65%);
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+    }
+    .hero-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform: scale(1); }
+      50% { opacity:0.5; transform: scale(1.4); }
+    }
+    .hero-eyebrow-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--green);
+    }
+    .hero-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(40px, 6vw, 66px);
+      font-weight: 900; line-height: 1.02;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      color: var(--ink);
+    }
+    .hero-sub {
+      color: var(--muted); font-size: 18px; line-height: 1.6;
+      margin-bottom: 30px; max-width: 480px;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; }
+    .hero-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+    .badge {
+      display: flex; align-items: center; gap: 7px;
+      padding: 7px 14px; border-radius: 50px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-size: 13px; color: var(--muted);
+      box-shadow: var(--shadow-sm);
+    }
+    .badge i { color: var(--green); font-size: 12px; }
+
+    /* Carrossel Hero */
+    .hero-image { position: relative; }
+    .carousel { position: relative; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); }
+    .carousel-track { display: flex; transition: transform 0.5s cubic-bezier(.4,0,.2,1); }
+    .carousel-slide { min-width: 100%; }
+    .carousel-slide img { width: 100%; display: block; border-radius: 16px; }
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.08);
+      color: var(--ink); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 10; transition: background 0.2s, transform 0.2s;
+      font-size: 18px;
+    }
+    .carousel-btn:hover { background: var(--yellow); transform: translateY(-50%) scale(1.06); }
+    .carousel-btn.prev { left: 12px; }
+    .carousel-btn.next { right: 12px; }
+    .carousel-dots {
+      position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 7px;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.55); border: 1px solid rgba(0,0,0,0.1);
+      cursor: pointer; transition: background 0.3s, transform 0.3s;
+    }
+    .dot.active { background: var(--blue); transform: scale(1.3); border-color: var(--blue); }
+
+    .ml-corner-badge {
+      position: absolute; top: 14px; left: 14px; z-index: 11;
+      background: var(--yellow); color: var(--ink);
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 12.5px; letter-spacing: 0.4px; text-transform: uppercase;
+      padding: 7px 14px; border-radius: 50px;
+      box-shadow: var(--shadow-sm);
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ─── STRIP DE CONFIANÇA ─── */
+    .trust-strip {
+      background: var(--bg-soft);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    .trust-items { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
+    .trust-item {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 700; letter-spacing: 0.3px;
+      color: var(--ink);
+    }
+    .trust-item i { color: var(--green); font-size: 18px; }
+
+    /* ─── PREÇOS ─── */
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+    .price-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px;
+      position: relative; overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .price-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .price-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    }
+    .price-card.equip::before   { background: linear-gradient(90deg, var(--yellow), var(--yellow-deep)); }
+    .price-card.monthly::before { background: linear-gradient(90deg, var(--blue), var(--green)); }
+
+    .step-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12.5px; font-weight: 800; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #fff;
+      background: var(--blue); padding: 5px 14px; border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .price-card.equip .step-pill { background: var(--ink); }
+
+    .price-card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px; font-weight: 800; margin-bottom: 20px;
+    }
+    .price-card img {
+      width: 100%; max-width: 280px; display: block; margin: 0 auto 24px;
+    }
+
+    /* Preço estilo "vitrine brasileira": número grande + centavos sobrescritos */
+    .price-big {
+      display: flex; align-items: flex-start; gap: 2px;
+      font-family: 'Barlow Condensed', sans-serif;
+      line-height: 1; margin-bottom: 6px;
+    }
+    .price-big .moeda { font-size: 26px; font-weight: 800; margin-top: 6px; color: var(--ink); }
+    .price-big .inteiro {
+      font-size: 60px; font-weight: 900; color: var(--ink);
+      background: linear-gradient(180deg, transparent 60%, var(--yellow) 60%);
+      padding: 0 4px;
+    }
+    .price-card.monthly .price-big .inteiro {
+      background: none; color: var(--blue-dark);
+    }
+    .price-big .cents { font-size: 24px; font-weight: 800; margin-top: 6px; color: var(--ink); }
+    .price-card.monthly .price-big .cents { color: var(--blue-dark); }
+    .price-big .periodo { font-size: 18px; color: var(--muted); font-weight: 500; margin: auto 0 4px 4px; }
+
+    .price-note { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+
+    .feature-list { list-style: none; margin: 22px 0; display: flex; flex-direction: column; gap: 10px; }
+    .feature-list li { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--ink); }
+    .feature-list li i { color: var(--green); font-size: 13px; flex-shrink: 0; }
+
+    .price-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; }
+
+    .combo-note {
+      background: var(--green-soft);
+      border: 1px solid rgba(0,166,80,0.25);
+      border-radius: 12px; padding: 16px 20px;
+      text-align: center; margin-top: 24px;
+      font-size: 15px; color: var(--ink);
+    }
+    .combo-note strong { color: var(--green); }
+
+    /* Instaladores (caixa dentro da seção de preços) */
+    .installer-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 36px; text-align: center; max-width: 700px; margin: 40px auto 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .installer-box h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 12px; }
+    .installer-box p { color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    .installer-note { font-size: 13px; color: var(--muted); margin-top: 20px; font-style: italic; line-height: 1.6; }
+
+    /* ─── COMO FUNCIONA ─── */
+    .steps-wrapper { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-top: 48px; }
+    .step-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px 24px;
+      position: relative; box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .step-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+    .step-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 64px; font-weight: 900;
+      line-height: 1; color: var(--border);
+      position: absolute; top: 12px; right: 16px;
+    }
+    .step-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 18px;
+    }
+    .step-card:nth-child(1) .step-icon { background: rgba(255,209,0,0.18); color: #b8860b; }
+    .step-card:nth-child(2) .step-icon { background: rgba(52,131,250,0.1); color: var(--blue); }
+    .step-card:nth-child(3) .step-icon { background: var(--green-soft); color: var(--green); }
+    .step-card:nth-child(4) .step-icon { background: rgba(168,85,247,0.1); color: #a855f7; }
+    .step-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+    .step-desc { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+    /* ─── APP DOWNLOAD ─── */
+    .app-section { padding: 40px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .app-inner { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .app-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 14px 24px; border-radius: 12px;
+      text-decoration: none; color: #fff; font-weight: 600; font-size: 15px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .app-btn:hover { transform: translateY(-2px); }
+    .app-btn i { font-size: 24px; }
+    .app-btn.android { background: var(--blue); box-shadow: 0 4px 20px var(--blue-glow); }
+    .app-btn.ios     { background: var(--ink); box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
+    .app-btn.pc      { background: #fff; color: var(--ink); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+
+    /* ─── BENEFÍCIOS ─── */
+    .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 48px; }
+    .feat-card {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .feat-card:hover { transform: translateY(-3px); border-color: rgba(52,131,250,0.3); }
+    .feat-icon {
+      width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(52,131,250,0.1); color: var(--blue);
+      font-size: 17px; margin-bottom: 0;
+    }
+    .feat-text { min-width: 0; }
+    .feat-title { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 800; margin-bottom: 3px; }
+    .feat-desc { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+
+    /* ─── CARROSSÉIS (recuperação / depoimentos) ─── */
+    .recovery-carousel, .depo-carousel { max-width: 760px; margin: 40px auto 0; }
+
+    /* ─── DEPOIMENTOS EM TEXTO ─── */
+    .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 40px; }
+    .testi-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; box-shadow: var(--shadow-sm);
+    }
+    .testi-text {
+      color: var(--ink); font-size: 15px; line-height: 1.65;
+      position: relative; padding-left: 20px; margin-bottom: 20px;
+    }
+    .testi-text::before {
+      content: '"'; position: absolute; left: 0; top: -8px;
+      font-size: 40px; color: var(--yellow-deep); line-height: 1;
+    }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(52,131,250,0.12); display: flex;
+      align-items: center; justify-content: center; color: var(--blue);
+    }
+    .testi-name { font-weight: 700; font-size: 15px; }
+    .testi-role { font-size: 13px; color: var(--muted); }
+
+    /* ─── FROTAS ─── */
+    .fleet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 48px; }
+    .fleet-item {
+      display: flex; gap: 16px; padding: 18px;
+      background: var(--card); border-radius: 12px;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--blue); margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s;
+    }
+    .fleet-item:hover { transform: translateX(3px); }
+    .fleet-item-icon {
+      width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(52,131,250,0.1); color: var(--blue); font-size: 18px;
+    }
+    .fleet-item-title { font-weight: 700; margin-bottom: 4px; font-size: 16px; }
+    .fleet-item-desc { color: var(--muted); font-size: 14px; }
+    .fleet-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; }
+    .fleet-stat {
+      background: var(--green-soft); border: 1px solid rgba(0,166,80,0.2);
+      border-radius: 12px; padding: 18px; text-align: center;
+    }
+    .fleet-stat-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 36px; font-weight: 900; color: var(--green);
+    }
+    .fleet-stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .fleet-gif { border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+    .fleet-gif img { width: 100%; display: block; }
+
+    /* ─── INSTALADORES ─── */
+    .pros-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 40px; }
+    .pro-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, border-color 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .pro-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+    }
+    .pro-card:hover { transform: translateY(-4px); border-color: rgba(52,131,250,0.25); }
+    .pro-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(52,131,250,0.1); color: var(--blue);
+      font-size: 18px; margin-bottom: 14px;
+    }
+    .pro-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .pro-desc { color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
+    .pro-tip { font-size: 12px; color: var(--blue-dark); font-weight: 600; }
+
+    /* ─── FAQ ─── */
+    .faq-wrap { max-width: 780px; margin: 40px auto 0; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%; background: none; border: none; color: var(--ink);
+      font-family: 'Barlow', sans-serif; font-size: 16px; font-weight: 600;
+      padding: 20px 0; display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; gap: 16px; text-align: left;
+    }
+    .faq-q .icon {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(52,131,250,0.1); color: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; transition: transform 0.3s;
+    }
+    .faq-q.open .icon { transform: rotate(45deg); background: var(--blue); color: #fff; }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; color: var(--muted); font-size: 15px; line-height: 1.65; }
+    .faq-a-inner { padding-bottom: 20px; }
+
+    /* ─── EMPRESA ─── */
+    .company-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px; margin-top: 60px;
+      box-shadow: var(--shadow-sm);
+    }
+    .company-box h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 20px; }
+    .company-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .company-grid p { color: var(--muted); font-size: 15px; }
+    .company-grid strong { color: var(--ink); }
+
+    /* ─── VÍDEO ─── */
+    .video-wrap { max-width: 420px; margin: 40px auto 0; }
+    .video-inner {
+      position: relative; padding-top: 177.77%;
+      border-radius: 20px; overflow: hidden;
+      box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+    }
+    .video-inner iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+    /* ─── FOOTER (único contraste escuro da página) ─── */
+    .footer { background: #1a1a1a; color: #c7c9cc; padding: 60px 0 30px; }
+    .footer .brand { color: #fff; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-about p { color: #9a9da3; font-size: 14px; line-height: 1.65; margin-top: 14px; max-width: 280px; }
+    .footer-col-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 800; letter-spacing: 0.5px;
+      text-transform: uppercase; margin-bottom: 16px; color: var(--yellow);
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { color: #c7c9cc; text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--yellow); }
+    .footer-bottom {
+      border-top: 1px solid #333; padding-top: 24px;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy { color: #87898e; font-size: 13px; }
+
+    /* ─── WHATSAPP FLUTUANTE ─── */
+    .wa-float {
+      position: fixed; bottom: 28px; right: 28px; z-index: 200;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: var(--wa); display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 26px rgba(37,211,102,0.45);
+      text-decoration: none; transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .wa-float:hover { transform: translateY(-3px) scale(1.07); box-shadow: 0 10px 34px rgba(37,211,102,0.6); }
+    .wa-float img { width: 30px; height: 30px; }
+
+    /* ─── MODAL ─── */
+    .modal {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(20,20,20,0.6); backdrop-filter: blur(6px);
+      overflow-y: auto;
+    }
+    .modal-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; max-width: 760px; width: 92%; margin: 5% auto;
+      padding: 36px; position: relative; box-shadow: var(--shadow-lg);
+    }
+    .modal-close {
+      position: absolute; top: 14px; right: 18px;
+      background: none; border: none; color: var(--muted);
+      font-size: 26px; cursor: pointer; transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--ink); }
+    .modal-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px; font-weight: 800; margin-bottom: 20px;
+      border-bottom: 1px solid var(--border); padding-bottom: 12px;
+    }
+    .modal-body { color: var(--muted); line-height: 1.65; max-height: 65vh; overflow-y: auto; }
+    .modal-body p { margin-bottom: 14px; }
+    .modal-body strong { color: var(--ink); }
+    .modal-body ul { padding-left: 18px; margin-bottom: 14px; }
+
+    /* ─── ANIMAÇÕES SCROLL ─── */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── RESPONSIVO ─── */
+    @media (max-width: 1024px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-content { text-align: center; }
+      .hero-btns { justify-content: center; }
+      .hero-badges { justify-content: center; }
+      .hero-sub { margin: 0 auto 30px; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .steps-wrapper { grid-template-columns: 1fr 1fr; }
+      .fleet-grid { grid-template-columns: 1fr; }
+      .testi-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .topbar-cta { display: none; }
+      .steps-wrapper { grid-template-columns: 1fr; }
+      .pros-grid { grid-template-columns: 1fr 1fr; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .company-grid { grid-template-columns: 1fr; }
+      .trust-items { gap: 20px; }
+      .section { padding: 60px 0; }
+      .price-big .inteiro { font-size: 48px; }
+    }
+    @media (max-width: 480px) {
+      .pros-grid { grid-template-columns: 1fr; }
+      .hero-btns .btn { width: 100%; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .fleet-stats { grid-template-columns: 1fr 1fr; }
+      .features-grid { gap: 10px; }
+      .feat-card { padding: 14px; gap: 10px; }
+      .feat-icon { width: 36px; height: 36px; font-size: 15px; border-radius: 9px; }
+      .feat-title { font-size: 14.5px; margin-bottom: 2px; }
+      .feat-desc { font-size: 12.5px; line-height: 1.42; }
+    }
+  
+    /* ── Portáteis ─────────────────────────────────────── */
+    .port-hero{background:var(--yellow);padding:48px 0 36px;text-align:center}
+    .port-hero h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(32px,6vw,52px);font-weight:900;margin-bottom:10px;line-height:1.05}
+    .port-hero p{font-size:17px;color:rgba(35,35,35,.75);max-width:540px;margin:0 auto 20px}
+    .port-badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+    .port-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;width:min(1100px,94vw);margin:0 auto;padding:48px 0 60px}
+    .port-card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-md);display:flex;flex-direction:column}
+    .port-img{background:var(--bg-soft);padding:32px;display:flex;align-items:center;justify-content:center;min-height:240px;position:relative}
+    .port-img img{max-width:100%;max-height:200px;object-fit:contain}
+    .port-top-badge{position:absolute;top:16px;right:16px;background:var(--blue);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;padding:4px 12px;border-radius:20px}
+    .port-body{padding:28px;flex:1;display:flex;flex-direction:column}
+    .port-nome{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;margin-bottom:6px}
+    .port-sub{color:var(--muted);font-size:14px;margin-bottom:20px}
+    .port-features{list-style:none;margin-bottom:20px;display:flex;flex-direction:column;gap:8px}
+    .port-features li{display:flex;align-items:flex-start;gap:8px;font-size:14px}
+    .port-features li i{color:var(--green);margin-top:2px;flex-shrink:0;width:16px}
+    .port-precos{background:var(--bg-soft);border:1px solid var(--yellow-line);border-radius:14px;padding:18px;margin-bottom:20px}
+    .port-pl{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:14px}
+    .port-pl:last-child{border-bottom:none}
+    .port-pl .lb{color:var(--muted)}
+    .port-pl .vl{font-weight:700}
+    .port-total{display:flex;justify-content:space-between;align-items:center;padding-top:10px;font-weight:800;font-size:18px}
+    .port-total-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;color:var(--green)}
+    .port-qtd{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+    .port-qtd-btn{width:40px;height:40px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:20px;font-weight:700;cursor:pointer;color:var(--ink);transition:all .2s;display:flex;align-items:center;justify-content:center}
+    .port-qtd-btn:hover{border-color:var(--blue);color:var(--blue)}
+    .port-qtd-input{width:60px;height:40px;text-align:center;font-size:16px;font-weight:700;border:1.5px solid var(--border);border-radius:10px;font-family:'Barlow',sans-serif}
+    .port-btn{width:100%;height:54px;background:linear-gradient(90deg,#00a650,#0ea5e9);color:#fff;border:none;border-radius:14px;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 28px rgba(0,166,80,.3);transition:all .2s;text-decoration:none;margin-top:auto}
+    .port-btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,166,80,.4)}
+    .port-pix-note{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);justify-content:center;margin-top:10px}
+    .port-pix-note i{color:var(--green)}
+    .comp-section{width:min(1100px,94vw);margin:0 auto;padding:0 0 60px}
+    .comp-section h2{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;margin-bottom:20px;text-align:center}
+    .comp-table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+    .comp-table th{background:var(--yellow);padding:14px 16px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-align:left}
+    .comp-table td{padding:12px 16px;font-size:14px;border-bottom:1px solid var(--border)}
+    .comp-table tr:last-child td{border-bottom:none}
+    .comp-table tr:nth-child(even) td{background:#fafafa}
+    .ci{color:var(--green);font-size:16px}
+    .cx{color:var(--red);font-size:16px}
+    @media(max-width:768px){.port-grid{grid-template-columns:1fr;padding:24px 16px 40px}}
+  </style>
+<body>
+
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="index.html">
+      <img src="./assets/logo.png" alt="Rastreando GPS">
+      <span>Rastreando GPS</span>
+    </a>
+    <div class="topbar-cta">
+      <a href="index.html" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i> Rastreador 4G
+      </a>
+      <a href="https://wa.me/5521980886087?text=Quero+saber+mais+sobre+os+rastreadores+portáteis." class="btn btn-wa" target="_blank" rel="noopener">
+        <i class="fab fa-whatsapp"></i> WhatsApp
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<div class="port-hero">
+  <div class="container">
+    <h1>Rastreadores Portáteis</h1>
+    <p>Sem instalação, sem fio. Coloque onde quiser e monitore pelo celular em tempo real.</p>
+    <div class="port-badges">
+      <span class="badge"><i class="fas fa-battery-full"></i> Bateria longa duração</span>
+      <span class="badge"><i class="fas fa-mobile-alt"></i> App Android e iOS</span>
+      <span class="badge"><i class="fas fa-map-marker-alt"></i> GPS em tempo real</span>
+      <span class="badge"><i class="fas fa-truck"></i> Entrega pelos Correios</span>
+    </div>
+  </div>
+</div>
+
+<!-- Produtos -->
+<div class="port-grid">
+
+  <!-- Rastreador Portátil -->
+  <div class="port-card">
+    <div class="port-img">
+      <span class="port-top-badge">MAIS VENDIDO</span>
+      <img src="./assets/ml po.jpg" alt="Rastreador Portátil 4G">
+    </div>
+    <div class="port-body">
+      <div class="port-nome">Rastreador Portátil 4G</div>
+      <div class="port-sub">Ideal para motos, carros, malas, animais e muito mais</div>
+      <ul class="port-features">
+        <li><i class="fas fa-check-circle"></i> Tecnologia 4G — rastreamento preciso</li>
+        <li><i class="fas fa-check-circle"></i> Sem instalação — coloque e pronto</li>
+        <li><i class="fas fa-check-circle"></i> App Android e iOS incluso</li>
+        <li><i class="fas fa-check-circle"></i> Bateria recarregável de longa duração</li>
+        <li><i class="fas fa-check-circle"></i> Histórico de rotas completo</li>
+        <li><i class="fas fa-check-circle"></i> Plano anual sem mensalidade surpresa</li>
+      </ul>
+      <div class="port-precos">
+        <div class="port-pl"><span class="lb">Equipamento</span><span class="vl">R$ 320,00</span></div>
+        <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl">R$ 320,00</span></div>
+        <div class="port-total"><span>Total</span><span class="port-total-val" id="total-port">R$ 640,00</span></div>
+      </div>
+      <div class="port-qtd">
+        <button class="port-qtd-btn" onclick="portQtd('port',-1)">−</button>
+        <input class="port-qtd-input" type="number" id="qtd-port" value="1" min="1" max="10" onchange="portTotal('port')">
+        <button class="port-qtd-btn" onclick="portQtd('port',1)">+</button>
+        <span style="font-size:13px;color:var(--muted)">máx. 10</span>
+      </div>
+      <a id="btn-port" href="checkout-portatil.html?produto=portatil&qtd=1" class="port-btn">
+        <i class="fas fa-qrcode"></i> Comprar Agora — Pix
+      </a>
+      <p class="port-pix-note"><i class="fas fa-shield-alt"></i> Pagamento 100% seguro via Pix</p>
+    </div>
+  </div>
+
+  <!-- Tag GPS -->
+  <div class="port-card">
+    <div class="port-img">
+      <img src="./assets/k-tag.jpeg" alt="Tag GPS">
+    </div>
+    <div class="port-body">
+      <div class="port-nome">Tag GPS</div>
+      <div class="port-sub">Compacto e discreto — perfeito para itens pessoais e pets</div>
+      <ul class="port-features">
+        <li><i class="fas fa-check-circle"></i> Ultra compacto e leve</li>
+        <li><i class="fas fa-check-circle"></i> Rastreamento via GPS + WiFi</li>
+        <li><i class="fas fa-check-circle"></i> App Android e iOS incluso</li>
+        <li><i class="fas fa-check-circle"></i> Ideal para chaves, bolsas e pets</li>
+        <li><i class="fas fa-check-circle"></i> Alertas de zona segura</li>
+        <li><i class="fas fa-check-circle"></i> Plano anual econômico</li>
+      </ul>
+      <div class="port-precos">
+        <div class="port-pl"><span class="lb">Equipamento</span><span class="vl">R$ 99,00</span></div>
+        <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl">R$ 118,80</span></div>
+        <div class="port-total"><span>Total</span><span class="port-total-val" id="total-tag">R$ 217,80</span></div>
+      </div>
+      <div class="port-qtd">
+        <button class="port-qtd-btn" onclick="portQtd('tag',-1)">−</button>
+        <input class="port-qtd-input" type="number" id="qtd-tag" value="1" min="1" max="10" onchange="portTotal('tag')">
+        <button class="port-qtd-btn" onclick="portQtd('tag',1)">+</button>
+        <span style="font-size:13px;color:var(--muted)">máx. 10</span>
+      </div>
+      <a id="btn-tag" href="checkout-portatil.html?produto=tag&qtd=1" class="port-btn">
+        <i class="fas fa-qrcode"></i> Comprar Agora — Pix
+      </a>
+      <p class="port-pix-note"><i class="fas fa-shield-alt"></i> Pagamento 100% seguro via Pix</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Comparativo -->
+<div class="comp-section">
+  <h2>Qual escolher?</h2>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Característica</th>
+        <th>Rastreador Portátil 4G</th>
+        <th>Tag GPS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Tecnologia</td><td>4G</td><td>GPS + WiFi</td></tr>
+      <tr><td>Sem instalação</td><td><i class="fas fa-check-circle ci"></i></td><td><i class="fas fa-check-circle ci"></i></td></tr>
+      <tr><td>Ideal para veículos</td><td><i class="fas fa-check-circle ci"></i></td><td><i class="fas fa-times-circle cx"></i></td></tr>
+      <tr><td>Ideal para itens pessoais</td><td><i class="fas fa-check-circle ci"></i></td><td><i class="fas fa-check-circle ci"></i></td></tr>
+      <tr><td>Preço total</td><td><strong>R$ 640,00</strong></td><td><strong>R$ 217,80</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer class="footer" id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <a class="brand" href="#hero">
+          <img src="./assets/logo.png" alt="Rastreando GPS">
+          <span>Rastreando GPS</span>
+        </a>
+        <p>Tecnologia em segurança veicular com instalação simples e controle total pelo aplicativo. Mais de 6 anos protegendo veículos no Rio de Janeiro.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Navegação</div>
+        <ul class="footer-links">
+          <li><a href="#pricing">Preços</a></li>
+          <li><a href="#how-it-works">Como Funciona</a></li>
+          <li><a href="#features">Benefícios</a></li>
+          <li><a href="#recovery">Recuperações</a></li>
+          <li><a href="#fleet">Para Empresas</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Contato</div>
+        <ul class="footer-links">
+          <li><a href="https://wa.me/5521980886087" target="_blank"><i class="fab fa-whatsapp"></i> (21) 9 8088-6087</a></li>
+          <li><a href="https://wa.me/5521969312625" target="_blank"><i class="fab fa-whatsapp"></i> (21) 9 6931-2625</a></li>
+          <li><a href="mailto:rastreandogpsbr@gmail.com"><i class="fas fa-envelope"></i> rastreandogpsbr@gmail.com</a></li>
+          <li><a href="#"><i class="fas fa-map-marker-alt"></i> Rio de Janeiro, RJ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#" id="terms-btn">Termos de Uso</a></li>
+          <li><a href="#">Política de Privacidade</a></li>
+          <li><a href="#">Trocas e Devoluções</a></li>
+          <li><a href="#">Garantia</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© <span id="year"></span> Rastreando GPS. Todos os direitos reservados.</p>
+      <p class="footer-copy">CNPJ: 29.488.621/0001-48</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const PORT_PRECOS = {
+    port: { equip: 320.00, plano: 320.00 },
+    tag:  { equip:  99.00, plano: 118.80 },
+  };
+  function portQtd(p, d) {
+    const el = document.getElementById('qtd-' + p);
+    el.value = Math.max(1, Math.min(10, parseInt(el.value) + d));
+    portTotal(p);
+  }
+  function portTotal(p) {
+    const qtd   = Math.max(1, Math.min(10, parseInt(document.getElementById('qtd-' + p).value) || 1));
+    const pr    = PORT_PRECOS[p];
+    const total = (pr.equip + pr.plano) * qtd;
+    document.getElementById('total-' + p).textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+    const chave = p === 'port' ? 'portatil' : 'tag';
+    document.getElementById('btn-' + p).href = 'checkout-portatil.html?produto=' + chave + '&qtd=' + qtd;
+  }
+  document.getElementById('ano').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

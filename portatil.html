@@ -685,7 +685,13 @@
     .comp-table tr:nth-child(even) td{background:#fafafa}
     .ci{color:var(--green);font-size:16px}
     .cx{color:var(--red);font-size:16px}
-    @media(max-width:768px){.port-grid{grid-template-columns:1fr;padding:24px 16px 40px}}
+    @media(max-width:768px){
+      .port-grid{grid-template-columns:1fr;padding:24px 16px 40px}
+      /* No mobile mostra só o botão voltar */
+      .topbar-cta { display: flex !important; }
+      .btn-wa { display: none !important; }
+      .btn-outline { display: flex !important; }
+    }
   </style>
 <body>
 

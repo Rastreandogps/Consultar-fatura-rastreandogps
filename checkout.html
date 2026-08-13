@@ -343,17 +343,15 @@
     <div class="etapa" id="etapa-2">
       <div class="etapa-titulo"><i class="fas fa-map-marker-alt"></i> Endereço de Entrega</div>
 
-      <div class="form-row">
+      <div class="form-row full">
         <div class="field">
           <label>CEP <span class="req">*</span></label>
-          <input type="text" id="cep" placeholder="00000-000" maxlength="9" autocomplete="postal-code">
-          <span class="hint">Digite o CEP para preencher automaticamente.</span>
+          <div style="position:relative">
+            <input type="text" id="cep" placeholder="00000-000" maxlength="9" autocomplete="postal-code" inputmode="numeric" style="padding-right:44px">
+            <span id="cep-status" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;display:none"></span>
+          </div>
+          <span class="hint" id="cep-hint">Preenchimento automático ao digitar o CEP completo.</span>
           <span class="msg-erro">CEP inválido.</span>
-        </div>
-        <div class="field" style="justify-content:flex-end">
-          <button type="button" id="btn-buscar-cep" style="height:46px;padding:0 18px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;cursor:pointer">
-            <i class="fas fa-search"></i> Buscar CEP
-          </button>
         </div>
       </div>
       <div class="form-row full">
@@ -788,27 +786,50 @@ function atualizarResumo() {
 }
 
 // ── CEP ───────────────────────────────────────────────────────
-async function buscarCep() {
-  const cep = document.getElementById('cep').value.replace(/\D/g,'');
-  if (cep.length !== 8) { alert('Digite um CEP válido com 8 dígitos.'); return; }
-  const btn = document.getElementById('btn-buscar-cep');
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando…'; btn.disabled = true;
+async function buscarCepAuto(cep) {
+  const statusEl = document.getElementById('cep-status');
+  const hintEl   = document.getElementById('cep-hint');
+  const cepEl    = document.getElementById('cep');
+
+  // Spinner
+  statusEl.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:var(--blue)"></i>';
+  statusEl.style.display = 'inline';
+  hintEl.textContent = 'Buscando endereço…';
+  cepEl.style.borderColor = 'var(--blue)';
+
   try {
     const r = await fetch('https://viacep.com.br/ws/'+cep+'/json/');
     const d = await r.json();
-    if (d.erro) { alert('CEP não encontrado.'); return; }
+
+    if (d.erro) {
+      statusEl.innerHTML = '<i class="fas fa-times-circle" style="color:var(--red)"></i>';
+      hintEl.textContent  = 'CEP não encontrado. Verifique e tente novamente.';
+      cepEl.style.borderColor = 'var(--red)';
+      return;
+    }
+
     document.getElementById('endereco').value = d.logradouro || '';
     document.getElementById('bairro').value   = d.bairro     || '';
     document.getElementById('cidade').value   = d.localidade || '';
     const sel = document.getElementById('estado');
     for (let o of sel.options) { if (o.value === d.uf) { sel.value = d.uf; break; } }
+
+    // Sucesso visual
+    statusEl.innerHTML = '<i class="fas fa-check-circle" style="color:var(--green)"></i>';
+    hintEl.textContent  = (d.logradouro ? d.logradouro + ' — ' : '') + d.localidade + '/' + d.uf;
+    hintEl.style.color  = 'var(--green)';
+    cepEl.style.borderColor = 'var(--green)';
+
+    // Foca no número e calcula frete
     document.getElementById('numero').focus();
     calcularFrete(cep);
-  } catch { alert('Erro ao buscar CEP.'); }
-  finally { btn.innerHTML = '<i class="fas fa-search"></i> Buscar CEP'; btn.disabled = false; }
+
+  } catch {
+    statusEl.innerHTML = '<i class="fas fa-times-circle" style="color:var(--red)"></i>';
+    hintEl.textContent  = 'Erro ao buscar CEP. Verifique sua conexão.';
+    cepEl.style.borderColor = 'var(--red)';
+  }
 }
-document.getElementById('btn-buscar-cep').addEventListener('click', buscarCep);
-document.getElementById('cep').addEventListener('keydown', e => { if(e.key==='Enter'){e.preventDefault();buscarCep();} });
 
 // ── Frete ─────────────────────────────────────────────────────
 async function calcularFrete(cepDestino) {
@@ -869,6 +890,16 @@ document.getElementById('cep').addEventListener('input', function() {
   let v=this.value.replace(/\D/g,'').slice(0,8);
   if(v.length>5)v=v.replace(/(\d{5})(\d{1,3})/,'$1-$2');
   this.value=v;
+  // Busca automática ao completar 8 dígitos
+  if(v.length===8) {
+    buscarCepAuto(v);
+  } else {
+    // Limpa campos e frete se apagar o CEP
+    if(v.length < 8) {
+      document.getElementById('cep-status').style.display='none';
+      document.getElementById('cep-hint').textContent='Preenchimento automático ao digitar o CEP completo.';
+    }
+  }
 });
 document.getElementById('cartao-numero').addEventListener('input', function() {
   let v=this.value.replace(/\D/g,'').slice(0,16);

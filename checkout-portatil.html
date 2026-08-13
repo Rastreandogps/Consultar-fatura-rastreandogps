@@ -512,11 +512,11 @@
     </div>
     <div class="resumo-linha">
       <span>Qtd / Unitário</span>
-      <span id="resumo-qtd">1x R$ 159,90</span>
+      <span id="resumo-qtd">1x R$ 640,00</span>
     </div>
     <div class="resumo-linha">
       <span>Equipamento(s)</span>
-      <span id="resumo-equip">R$ 159,90</span>
+      <span id="resumo-equip">R$ 640,00</span>
     </div>
     <div class="resumo-linha">
       <span>Frete</span>
@@ -649,14 +649,8 @@ document.getElementById('quantidade').addEventListener('change', function() {
 
 // ── Pagamento ─────────────────────────────────────────────────
 function selecionarPagamento(forma) {
-  formaPagamento = forma;
-  document.getElementById('tab-pix').classList.toggle('ativo', forma === 'pix');
-  document.getElementById('tab-cartao').classList.toggle('ativo', forma === 'cartao');
-  document.getElementById('bloco-pix').style.display    = forma === 'pix'    ? '' : 'none';
-  document.getElementById('bloco-cartao').style.display = forma === 'cartao' ? '' : 'none';
-  document.getElementById('badge-pix-lateral').style.display = forma === 'pix' ? '' : 'none';
-  document.getElementById('resumo-pagamento').textContent = forma === 'pix' ? 'Pix' : 'Cartão de Crédito';
-  if (forma === 'cartao') gerarParcelas();
+  // Portátil — sempre Pix, sem cartão
+  formaPagamento = 'pix';
   atualizarResumo();
 }
 
@@ -707,14 +701,8 @@ function gerarParcelas() {
 }
 // ── Seleciona pagamento ───────────────────────────────────────
 function selecionarPagamento(forma) {
-  formaPagamento = forma;
-  document.getElementById('tab-pix').classList.toggle('ativo', forma === 'pix');
-  document.getElementById('tab-cartao').classList.toggle('ativo', forma === 'cartao');
-  document.getElementById('bloco-pix').style.display    = forma === 'pix'    ? '' : 'none';
-  document.getElementById('bloco-cartao').style.display = forma === 'cartao' ? '' : 'none';
-  document.getElementById('badge-pix-lateral').style.display = forma === 'pix' ? '' : 'none';
-  document.getElementById('resumo-pagamento').textContent = forma === 'pix' ? 'Pix' : 'Cartão de Crédito';
-  if (forma === 'cartao') gerarParcelas();
+  // Portátil — sempre Pix, sem cartão
+  formaPagamento = 'pix';
   atualizarResumo();
 }
 
@@ -725,32 +713,16 @@ function atualizarResumo() {
   const freteEl = document.getElementById('resumo-frete');
   const totalEl = document.getElementById('resumo-total');
 
-  if (formaPagamento === 'pix') {
-    const economia = (equipCartao() - equipPix());
-    qtdEl.textContent   = quantidade + 'x R$ ' + PRECO_UNIT_PIX.toFixed(2).replace('.',',');
-    equipEl.innerHTML   = '<s style="color:var(--muted);font-size:11px">R$\u00a0'+equipCartao().toFixed(2).replace('.',',')+'</s> <strong style="color:var(--green)">R$\u00a0'+equipPix().toFixed(2).replace('.',',')+'</strong>';
-    totalEl.textContent = 'R$ ' + totalPix().toFixed(2).replace('.',',');
-    // Atualiza economia
-    const econEl = document.getElementById('pix-economia');
-    if (econEl) econEl.textContent = 'R$ ' + economia.toFixed(2).replace('.',',');
-    const b = document.getElementById('badge-pix-texto');
-    if (b) {
-      if (freteValor > 0)
-        b.innerHTML = quantidade+'x por <strong>R$\u00a0'+equipPix().toFixed(2).replace('.',',')+'</strong> + frete <strong>R$\u00a0'+freteValor.toFixed(2).replace('.',',')+'</strong> = <strong>R$\u00a0'+totalPix().toFixed(2).replace('.',',')+'</strong>';
-      else
-        b.innerHTML = quantidade+'x por <strong>R$\u00a0'+equipPix().toFixed(2).replace('.',',')+'</strong> + frete a calcular.';
-    }
-  } else {
-    qtdEl.textContent   = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',');
-    equipEl.textContent = 'R$ ' + equipCartao().toFixed(2).replace('.',',');
-    totalEl.textContent = 'R$ ' + totalCartao.toFixed(2).replace('.',',');
-  }
-  // Mostra/oculta linha de economia no resumo lateral
-  const linhaEcon  = document.getElementById('linha-economia');
-  const resumoEcon = document.getElementById('resumo-economia');
-  if (linhaEcon) {
-    linhaEcon.style.display = formaPagamento === 'pix' ? '' : 'none';
-    if (resumoEcon) resumoEcon.textContent = 'R$ ' + (equipCartao() - equipPix()).toFixed(2).replace('.',',');
+  // Portátil — apenas Pix, sem desconto, sem cartão
+  qtdEl.textContent   = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',');
+  equipEl.textContent = 'R$ ' + equipPix().toFixed(2).replace('.',',');
+  totalEl.textContent = 'R$ ' + totalPix().toFixed(2).replace('.',',');
+  const b = document.getElementById('badge-pix-texto');
+  if (b) {
+    if (freteValor > 0)
+      b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + ' + frete R$ ' + freteValor.toFixed(2).replace('.',',') + ' = R$ ' + totalPix().toFixed(2).replace('.',',');
+    else
+      b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + ' + frete a calcular.';
   }
 
   if (freteValor > 0) {
@@ -990,19 +962,11 @@ function preencherConfirmacao() {
   document.getElementById('cf-cep').textContent    = document.getElementById('cep').value;
   document.getElementById('cf-frete').textContent  = freteSelecionado + ' — R$ ' + freteValor.toFixed(2).replace('.',',');
   document.getElementById('cf-frete2').textContent = 'R$ ' + freteValor.toFixed(2).replace('.',',');
-  if(formaPagamento==='pix'){
-    document.getElementById('cf-equip').innerHTML =
-      '<s style="color:var(--muted);font-size:12px">R$\u00a0'+equipCartao().toFixed(2).replace('.',',')+'</s> <strong style="color:var(--green)">R$\u00a0'+equipPix().toFixed(2).replace('.',',')+'</strong> (Pix -20%)';
-    document.getElementById('cf-pagamento').textContent = 'Pix';
-    document.getElementById('cf-total').textContent     = 'R$ ' + totalPix().toFixed(2).replace('.',',');
-    document.getElementById('btn-confirmar-txt').textContent = 'Gerar Pix e Pagar';
-  } else {
-    document.getElementById('cf-equip').textContent = 'R$ ' + equipCartao().toFixed(2).replace('.',',');
-    document.getElementById('cf-pagamento').textContent =
-      'Cartão — ' + parcelasSel + 'x' + (parcelasSel>1?' (juros 2,99%/mês)':' sem juros');
-    document.getElementById('cf-total').textContent = 'R$ ' + totalCartao.toFixed(2).replace('.',',');
-    document.getElementById('btn-confirmar-txt').textContent = 'Confirmar Pagamento no Cartão';
-  }
+  // Portátil — apenas Pix, sem desconto
+  document.getElementById('cf-equip').textContent     = 'R$ ' + equipPix().toFixed(2).replace('.',',');
+  document.getElementById('cf-pagamento').textContent = 'Pix';
+  document.getElementById('cf-total').textContent     = 'R$ ' + totalPix().toFixed(2).replace('.',',');
+  document.getElementById('btn-confirmar-txt').textContent = 'Gerar Pix e Pagar';
 }
 
 // ── Confirmar pedido ──────────────────────────────────────────
@@ -1030,21 +994,9 @@ async function confirmarPedido() {
     formaPagamento:formaPagamento,
     quantidade:quantidade,
   };
-  if(formaPagamento==='pix'){
-    dados.valorEquipamento=equipPix();
-    dados.totalPedido=totalPix();
-  } else {
-    dados.valorEquipamento=equipCartao();
-    dados.parcelas=parcelasSel;
-    dados.totalPedido=totalCartao;
-    dados.cartao={
-      numero:document.getElementById('cartao-numero').value.replace(/\D/g,''),
-      nome:document.getElementById('cartao-nome').value.trim(),
-      cpf:document.getElementById('cartao-cpf').value.replace(/\D/g,''),
-      validade:document.getElementById('cartao-validade').value,
-      cvv:document.getElementById('cartao-cvv').value,
-    };
-  }
+  // Portátil — apenas Pix
+  dados.valorEquipamento = equipPix();
+  dados.totalPedido      = totalPix();
   document.getElementById('overlay-msg').textContent = formaPagamento==='pix'?'Gerando seu Pix…':'Processando pagamento…';
   document.getElementById('overlay').classList.add('ativo');
   try {

@@ -794,41 +794,49 @@ async function buscarCepAuto(cep) {
   // Spinner
   statusEl.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:var(--blue)"></i>';
   statusEl.style.display = 'inline';
-  hintEl.textContent = 'Buscando endereço…';
+  hintEl.textContent  = 'Buscando endereço…';
+  hintEl.style.color  = 'var(--muted)';
   cepEl.style.borderColor = 'var(--blue)';
 
+  // ── Busca ViaCEP (isolado) ──────────────────────────────────
+  let dadosCep = null;
   try {
     const r = await fetch('https://viacep.com.br/ws/'+cep+'/json/');
-    const d = await r.json();
-
-    if (d.erro) {
-      statusEl.innerHTML = '<i class="fas fa-times-circle" style="color:var(--red)"></i>';
-      hintEl.textContent  = 'CEP não encontrado. Verifique e tente novamente.';
-      cepEl.style.borderColor = 'var(--red)';
-      return;
-    }
-
-    document.getElementById('endereco').value = d.logradouro || '';
-    document.getElementById('bairro').value   = d.bairro     || '';
-    document.getElementById('cidade').value   = d.localidade || '';
-    const sel = document.getElementById('estado');
-    for (let o of sel.options) { if (o.value === d.uf) { sel.value = d.uf; break; } }
-
-    // Sucesso visual
-    statusEl.innerHTML = '<i class="fas fa-check-circle" style="color:var(--green)"></i>';
-    hintEl.textContent  = (d.logradouro ? d.logradouro + ' — ' : '') + d.localidade + '/' + d.uf;
-    hintEl.style.color  = 'var(--green)';
-    cepEl.style.borderColor = 'var(--green)';
-
-    // Foca no número e calcula frete
-    document.getElementById('numero').focus();
-    calcularFrete(cep);
-
+    dadosCep  = await r.json();
   } catch {
-    statusEl.innerHTML = '<i class="fas fa-times-circle" style="color:var(--red)"></i>';
-    hintEl.textContent  = 'Erro ao buscar CEP. Verifique sua conexão.';
+    statusEl.innerHTML  = '<i class="fas fa-times-circle" style="color:var(--red)"></i>';
+    hintEl.textContent  = 'Erro de conexão ao buscar CEP.';
+    hintEl.style.color  = 'var(--red)';
     cepEl.style.borderColor = 'var(--red)';
+    return;
   }
+
+  if (!dadosCep || dadosCep.erro) {
+    statusEl.innerHTML  = '<i class="fas fa-times-circle" style="color:var(--red)"></i>';
+    hintEl.textContent  = 'CEP não encontrado. Verifique e tente novamente.';
+    hintEl.style.color  = 'var(--red)';
+    cepEl.style.borderColor = 'var(--red)';
+    return;
+  }
+
+  // Preenche os campos
+  document.getElementById('endereco').value = dadosCep.logradouro || '';
+  document.getElementById('bairro').value   = dadosCep.bairro     || '';
+  document.getElementById('cidade').value   = dadosCep.localidade || '';
+  const sel = document.getElementById('estado');
+  for (let o of sel.options) { if (o.value === dadosCep.uf) { sel.value = dadosCep.uf; break; } }
+
+  // Sucesso visual no CEP
+  statusEl.innerHTML  = '<i class="fas fa-check-circle" style="color:var(--green)"></i>';
+  hintEl.textContent  = (dadosCep.logradouro ? dadosCep.logradouro + ' — ' : '') + dadosCep.localidade + '/' + dadosCep.uf;
+  hintEl.style.color  = 'var(--green)';
+  cepEl.style.borderColor = 'var(--green)';
+
+  // Foca no número
+  document.getElementById('numero').focus();
+
+  // ── Calcula frete separado (erro não afeta o CEP) ───────────
+  calcularFrete(cep);
 }
 
 // ── Frete ─────────────────────────────────────────────────────

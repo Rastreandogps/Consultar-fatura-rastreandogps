@@ -189,6 +189,9 @@
 
     footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;font-size:13px;color:var(--muted);background:#fff;margin-top:40px}
 
+    /* Resumo oculto nas etapas 1 e 2 */
+    .main.sem-resumo{grid-template-columns:1fr;max-width:680px}
+
     @media(max-width:860px){
       .main{grid-template-columns:1fr;padding:20px 0 60px}
       .resumo{position:static;order:-1}
@@ -282,7 +285,7 @@
 </div>
 
 <!-- Layout principal -->
-<div class="main" id="form-area">
+<div class="main sem-resumo" id="form-area">
   <div>
 
     <!-- ETAPA 1: Dados pessoais -->
@@ -537,7 +540,7 @@
   </div>
 
   <!-- Resumo lateral -->
-  <aside class="resumo">
+  <aside class="resumo" id="resumo-lateral" style="display:none">
     <div class="resumo-title">Resumo do Pedido</div>
     <div class="resumo-prod">
       <img src="./assets/equipamento.png" alt="Rastreador 4G">
@@ -624,6 +627,18 @@ function avancar(de) {
   document.getElementById('step-' + (de + 1)).classList.add('ativo');
 
   etapaAtual = de + 1;
+
+  // Mostra resumo lateral só a partir da etapa 3
+  const resumo  = document.getElementById('resumo-lateral');
+  const mainEl  = document.getElementById('form-area');
+  if (etapaAtual >= 3) {
+    resumo.style.display = '';
+    mainEl.classList.remove('sem-resumo');
+  } else {
+    resumo.style.display = 'none';
+    mainEl.classList.add('sem-resumo');
+  }
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -637,6 +652,18 @@ function voltar(de) {
   document.getElementById('line-' + (de - 1)).classList.remove('concluido');
 
   etapaAtual = de - 1;
+
+  // Oculta resumo lateral nas etapas 1 e 2
+  const resumo = document.getElementById('resumo-lateral');
+  const mainEl = document.getElementById('form-area');
+  if (etapaAtual >= 3) {
+    resumo.style.display = '';
+    mainEl.classList.remove('sem-resumo');
+  } else {
+    resumo.style.display = 'none';
+    mainEl.classList.add('sem-resumo');
+  }
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -670,6 +697,7 @@ function gerarParcelas() {
   const base  = equipCartao() + freteValor;
   const lista = document.getElementById('lista-parcelas');
   lista.innerHTML = '';
+
   for (let n = 1; n <= 3; n++) {
     let valorParc, total;
     if (n === 1) { valorParc = base; total = base; }
@@ -677,22 +705,34 @@ function gerarParcelas() {
       valorParc = base * JUROS_MES / (1 - Math.pow(1 + JUROS_MES, -n));
       total = valorParc * n;
     }
-    const card = document.createElement('label');
+
+    const card  = document.createElement('div');
     card.className = 'parcela-card' + (n === 1 ? ' selecionado' : '');
+    card.dataset.n     = n;
+    card.dataset.total = total.toFixed(2);
+
     card.innerHTML =
-      '<input type="radio" name="parcelas" value="'+n+'" '+(n===1?'checked':'')+'>'+
+      '<input type="radio" name="parcelas" value="'+n+'" '+(n===1?'checked':'')+' style="pointer-events:none">'+
       '<div class="parcela-info">'+
-        '<div class="parcela-label">'+n+'x de R$ '+valorParc.toFixed(2).replace('.',',')+
+        '<div class="parcela-label">'+n+'x de R$ '+valorParc.toFixed(2).replace('.',',')+
         (n===1?' <small style="color:var(--green);font-size:11px">sem juros</small>':' <small style="color:var(--muted);font-size:11px">juros 2,99%/mês</small>')+'</div>'+
-        '<div class="parcela-total">Total: R$ '+total.toFixed(2).replace('.',',')+'</div>'+
+        '<div class="parcela-total">Total: R$ '+total.toFixed(2).replace('.',',')+'</div>'+
       '</div>'+
-      '<div class="parcela-valor">R$ '+valorParc.toFixed(2).replace('.',',')+'</div>';
-    lista.appendChild(card);
-    card.querySelector('input').addEventListener('change', function() {
-      document.querySelectorAll('.parcela-card').forEach(c => c.classList.remove('selecionado'));
-      card.classList.add('selecionado');
-      parcelasSel = n; totalCartao = total; atualizarResumo();
+      '<div class="parcela-valor">R$ '+valorParc.toFixed(2).replace('.',',')+'</div>';
+
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.parcela-card').forEach(c => {
+        c.classList.remove('selecionado');
+        c.querySelector('input').checked = false;
+      });
+      this.classList.add('selecionado');
+      this.querySelector('input').checked = true;
+      parcelasSel = parseInt(this.dataset.n);
+      totalCartao = parseFloat(this.dataset.total);
+      atualizarResumo();
     });
+
+    lista.appendChild(card);
     if (n === 1) { parcelasSel = 1; totalCartao = total; }
   }
 }

@@ -1049,21 +1049,20 @@ async function confirmarPedido() {
   document.getElementById('overlay-msg').textContent = formaPagamento==='pix'?'Gerando seu Pix…':'Processando pagamento…';
   document.getElementById('overlay').classList.add('ativo');
   try {
-    let resp;
-    if (formaPagamento === 'cartao') {
-      // Cartão usa POST pois os dados são grandes demais para URL
-      resp = await fetch(CHECKOUT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dados),
-        redirect: 'follow',
-      });
-    } else {
-      // Pix usa GET (funciona sem CORS no GAS)
-      const dadosEnc = encodeURIComponent(JSON.stringify(dados));
-      resp = await fetch(CHECKOUT_URL + '?acao=pedido&dados=' + dadosEnc);
+    // Tudo via GET — GAS não suporta CORS em POST
+    // Dados sensíveis do cartão são removidos e enviados separado
+    const dadosSemCartao = Object.assign({}, dados);
+    let cartaoEnc = '';
+    if (formaPagamento === 'cartao' && dados.cartao) {
+      // Codifica dados do cartão em Base64 separado
+      cartaoEnc = btoa(unescape(encodeURIComponent(JSON.stringify(dados.cartao))));
+      delete dadosSemCartao.cartao;
     }
-    const res = await resp.json();
+    const dadosEnc = encodeURIComponent(JSON.stringify(dadosSemCartao));
+    let url = CHECKOUT_URL + '?acao=pedido&dados=' + dadosEnc;
+    if (cartaoEnc) url += '&cartao=' + encodeURIComponent(cartaoEnc);
+    const resp = await fetch(url);
+    const res  = await resp.json();
     if(!res.ok)throw new Error(res.erro||'Erro desconhecido.');
     const msg=encodeURIComponent(
       'Olá! Fiz um pedido do Rastreador.\n'+

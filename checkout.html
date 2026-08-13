@@ -645,7 +645,7 @@
 // ═══════════════════════════════════════════════════════════════
 //  CONFIGURAÇÃO
 // ═══════════════════════════════════════════════════════════════
-const CHECKOUT_URL = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSLlgqpNmKtDReupm0QsXcUj0Ulv-rlOR1iftSzirr3486rt7aBBtWM/exec';
+const CHECKOUT_URL = 'COLE_AQUI_A_URL_DO_SEU_GAS';
 
 const PRECO_EQUIPAMENTO = 159.90;
 let freteValor = 0;
@@ -869,12 +869,11 @@ document.getElementById('btn-finalizar').addEventListener('click', async () => {
   document.getElementById('btn-finalizar').disabled = true;
 
   try {
-    const resp = await fetch(CHECKOUT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(dados),
-    });
-    const res = await resp.json();
+    // Envia via GET para evitar CORS do GAS
+    const dadosEnc = encodeURIComponent(JSON.stringify(dados));
+    const url      = CHECKOUT_URL + '?acao=pedido&dados=' + dadosEnc;
+    const resp     = await fetch(url);
+    const res      = await resp.json();
 
     if (!res.ok) throw new Error(res.erro || 'Erro desconhecido.');
 

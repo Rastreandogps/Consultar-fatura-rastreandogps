@@ -274,6 +274,13 @@
     <p>Enviamos o rastreador em até 2 dias úteis após a identificação do Pix. Você receberá o código de rastreio pelo WhatsApp.</p>
   </div>
   <a id="wa-pedido-pix" href="#" class="wa-final" target="_blank"><i class="fab fa-whatsapp"></i> Avisar que paguei pelo WhatsApp</a>
+
+  <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:16px">
+    O Pix <strong>não cobra automaticamente</strong> — só é confirmado se você pagar.<br>
+    <a href="#" onclick="cancelarPix();return false;" style="color:var(--muted);font-size:12px;margin-top:6px;display:inline-block">
+      ← Escolher outra forma de pagamento
+    </a>
+  </p>
 </div>
 
 <!-- Tela sucesso Cartão -->
@@ -1138,6 +1145,19 @@ async function confirmarPedido() {
     );
     const waHref='https://wa.me/5521980886087?text='+msg;
     if(formaPagamento==='pix'){
+      // Salva no sessionStorage para recuperar se a página for recarregada
+      try {
+        sessionStorage.setItem('pix_pendente', JSON.stringify({
+          qrCode:     res.pixQrCode,
+          copiaCola:  res.pixCopiaCola,
+          valor:      res.valor,
+          vencimento: res.vencimento,
+          cobrancaId: res.cobrancaId,
+          waHref:     waHref,
+          geradoEm:   Date.now(),
+        }));
+      } catch(e) {}
+
       document.getElementById('qr-img').src='data:image/png;base64,'+res.pixQrCode;
       document.getElementById('qr-valor').textContent='R$ '+Number(res.valor).toFixed(2).replace('.',',');
       document.getElementById('qr-venc').textContent='Válido até '+formatarData(res.vencimento);
@@ -1165,6 +1185,47 @@ async function confirmarPedido() {
 }
 
 // ── Copiar Pix ────────────────────────────────────────────────
+// ── Cancela Pix e reinicia o checkout ────────────────────────
+function cancelarPix() {
+  if (!confirm('Tem certeza que deseja cancelar este Pix e fazer um novo pedido?')) return;
+  try { sessionStorage.removeItem('pix_pendente'); } catch(e) {}
+
+  // Esconde tela de sucesso e mostra formulário do zero
+  document.getElementById('tela-sucesso').classList.remove('ativo');
+  document.getElementById('form-area').style.display = '';
+
+  // Volta para etapa 1
+  document.querySelectorAll('.etapa').forEach(function(e) { e.classList.remove('ativa'); });
+  document.getElementById('etapa-1').classList.add('ativa');
+
+  // Reseta barra de progresso
+  for (let i = 1; i <= 4; i++) {
+    const step = document.getElementById('step-' + i);
+    if (step) { step.classList.remove('ativo', 'concluido'); }
+    const line = document.getElementById('line-' + i);
+    if (line) line.classList.remove('concluido');
+  }
+  document.getElementById('step-1').classList.add('ativo');
+
+  // Oculta resumo lateral
+  const resumo = document.getElementById('resumo-lateral');
+  const mainEl = document.getElementById('form-area');
+  if (resumo) resumo.style.display = 'none';
+  if (mainEl) mainEl.classList.add('sem-resumo');
+
+  // Reseta variáveis
+  freteValor = 0; freteSelecionado = null; etapaAtual = 1;
+  document.getElementById('secao-frete').style.display = 'none';
+  document.getElementById('frete-conteudo').innerHTML = '';
+
+  window.scrollTo(0, 0);
+}
+
+// Limpa Pix salvo quando cliente confirma pelo WhatsApp (pedido foi tratado)
+document.getElementById('wa-pedido-pix').addEventListener('click', function() {
+  try { sessionStorage.removeItem('pix_pendente'); } catch(e) {}
+});
+
 document.getElementById('btn-copiar').addEventListener('click', async function() {
   const txt=document.getElementById('pix-texto').textContent;
   try {
@@ -1183,6 +1244,36 @@ function formatarData(iso) {
 
 // Inicializa
 atualizarResumo();
+
+// ── Recupera Pix pendente se página foi recarregada ───────────
+(function() {
+  try {
+    const salvo = sessionStorage.getItem('pix_pendente');
+    if (!salvo) return;
+    const pix = JSON.parse(salvo);
+
+    // Considera válido se gerado há menos de 48h (2 dias = vencimento padrão)
+    const horas = (Date.now() - pix.geradoEm) / 1000 / 3600;
+    if (horas > 48) { sessionStorage.removeItem('pix_pendente'); return; }
+
+    // Restaura a tela de sucesso
+    document.getElementById('qr-img').src        = 'data:image/png;base64,' + pix.qrCode;
+    document.getElementById('qr-valor').textContent = 'R$ ' + Number(pix.valor).toFixed(2).replace('.',',');
+    document.getElementById('qr-venc').textContent  = 'Válido até ' + formatarData(pix.vencimento);
+    document.getElementById('pix-texto').textContent = pix.copiaCola;
+    document.getElementById('wa-pedido-pix').href    = pix.waHref || '#';
+    document.getElementById('form-area').style.display = 'none';
+    document.getElementById('tela-sucesso').classList.add('ativo');
+
+    // Avisa o cliente que o Pix foi recuperado
+    const aviso = document.createElement('div');
+    aviso.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px 16px;font-size:13px;color:#856404;margin-bottom:16px;display:flex;gap:8px;align-items:center';
+    aviso.innerHTML = '<i class="fas fa-info-circle"></i> <span>Seu Pix ainda está válido! Use o código abaixo para pagar.</span>';
+    const qrWrap = document.querySelector('.qr-wrap');
+    if (qrWrap) qrWrap.parentElement.insertBefore(aviso, qrWrap);
+
+  } catch(e) {}
+})();
 </script>
 </body>
 </html>

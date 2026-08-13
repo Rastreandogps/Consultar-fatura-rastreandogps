@@ -423,33 +423,19 @@
     <div class="etapa" id="etapa-3">
       <div class="etapa-titulo"><i class="fas fa-lock"></i> Forma de Pagamento</div>
 
-      <div class="pagamento-tabs">
-        <div class="pagamento-tab ativo" id="tab-pix" onclick="selecionarPagamento('pix')">
-          <span class="desconto-tag">20% OFF</span>
-          <i class="fas fa-qrcode"></i>
-          <strong>Pix</strong>
-          <span>Aprovação imediata</span>
-        </div>
-        <div class="pagamento-tab" id="tab-cartao" onclick="selecionarPagamento('cartao')">
-          <i class="fas fa-credit-card"></i>
-          <strong>Cartão de Crédito</strong>
-          <span>Em até 3x</span>
+      <!-- Apenas Pix — sem cartão -->
+      <div style="background:var(--green-soft);border:1px solid var(--green);border-radius:14px;padding:16px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px">
+        <i class="fas fa-qrcode" style="font-size:24px;color:var(--green)"></i>
+        <div>
+          <strong style="font-size:15px">Pagamento via Pix</strong><br>
+          <span style="font-size:13px;color:var(--muted)">Aprovação imediata após o pagamento</span>
         </div>
       </div>
 
-      <!-- Bloco Pix -->
-      <div id="bloco-pix">
-        <div style="background:var(--green-soft);border:1px solid var(--green);border-radius:12px;padding:14px 16px;font-size:14px;color:var(--green);margin-bottom:16px">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-            <span><i class="fas fa-tag"></i> <strong>20% de desconto no Pix!</strong></span>
-            <span style="background:var(--green);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;padding:4px 12px;border-radius:20px">
-              🎉 Você economiza <span id="pix-economia">R$ 31,98</span>
-            </span>
-          </div>
-          <div style="margin-top:8px;font-size:13px" id="badge-pix-texto">Carregando…</div>
-        </div>
-        <p style="color:var(--muted);font-size:14px;line-height:1.6">Após confirmar, você receberá o QR Code e o código Copia e Cola na tela seguinte.</p>
-      </div>
+      <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:16px">
+        Após confirmar, você receberá o QR Code e o código Copia e Cola na tela seguinte.
+      </p>
+      <p style="font-size:13px;color:var(--green)" id="badge-pix-texto"></p>
 
       <div class="msg-erro-global" id="msg-erro-pag">
         <i class="fas fa-exclamation-circle" style="flex-shrink:0;margin-top:2px"></i>

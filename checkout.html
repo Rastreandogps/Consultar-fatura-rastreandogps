@@ -668,7 +668,15 @@ async function calcularFrete(cepDestino){
 }
 
 // ── Validação ─────────────────────────────────────────────────
-function vCampo(id,cond){const el=document.getElementById(id);const ok=cond(el.value);el.classList.toggle('erro',!ok);return ok;}
+function vCampo(id,cond){
+  const el=document.getElementById(id);
+  const ok=cond(el.value);
+  el.classList.toggle('erro',!ok);
+  // Mostra/esconde mensagem de erro inline
+  const msgEl = el.parentElement.querySelector('.msg-erro');
+  if(msgEl) msgEl.style.display = ok ? 'none' : 'block';
+  return ok;
+}
 function cpfOk(cpf){
   const n=cpf.replace(/\D/g,'');if(n.length!==11||/^(\d)\1{10}$/.test(n))return false;
   let s=0;for(let i=0;i<9;i++)s+=parseInt(n[i])*(10-i);let r=(s*10)%11;if(r===10||r===11)r=0;if(r!==parseInt(n[9]))return false;
@@ -676,22 +684,46 @@ function cpfOk(cpf){
 }
 function validarForm(){
   let ok=true;
-  if(!vCampo('nome',v=>v.trim().split(' ').length>=2))ok=false;
-  if(!vCampo('cpf',v=>cpfOk(v)))ok=false;
-  if(!vCampo('email',v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)))ok=false;
-  if(!vCampo('telefone',v=>v.replace(/\D/g,'').length>=10))ok=false;
-  if(!vCampo('cep',v=>v.replace(/\D/g,'').length===8))ok=false;
-  if(!vCampo('endereco',v=>v.trim().length>3))ok=false;
-  if(!vCampo('numero',v=>v.trim().length>0))ok=false;
-  if(!vCampo('cidade',v=>v.trim().length>2))ok=false;
-  if(!vCampo('estado',v=>v.length===2))ok=false;
-  if(formaPagamento==='cartao'){
-    if(!vCampo('cartao-numero',v=>v.replace(/\D/g,'').length>=15))ok=false;
-    if(!vCampo('cartao-nome',v=>v.trim().split(' ').length>=2))ok=false;
-    if(!vCampo('cartao-cpf',v=>cpfOk(v)))ok=false;
-    if(!vCampo('cartao-validade',v=>/^\d{2}\/\d{2}$/.test(v)))ok=false;
-    if(!vCampo('cartao-cvv',v=>v.length>=3))ok=false;
+  let primeiroErro=null;
+
+  function checar(id, cond) {
+    const passou = vCampo(id, cond);
+    if (!passou && !primeiroErro) primeiroErro = id;
+    if (!passou) ok = false;
   }
+
+  checar('nome',     v=>v.trim().split(' ').length>=2);
+  checar('cpf',      v=>cpfOk(v));
+  checar('email',    v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
+  checar('telefone', v=>v.replace(/\D/g,'').length>=10);
+  checar('cep',      v=>v.replace(/\D/g,'').length===8);
+  checar('endereco', v=>v.trim().length>3);
+  checar('numero',   v=>v.trim().length>0);
+  checar('cidade',   v=>v.trim().length>2);
+  checar('estado',   v=>v.length===2);
+
+  if(formaPagamento==='cartao'){
+    checar('cartao-numero',   v=>v.replace(/\D/g,'').length>=15);
+    checar('cartao-nome',     v=>v.trim().split(' ').length>=2);
+    checar('cartao-cpf',      v=>cpfOk(v));
+    checar('cartao-validade', v=>/^\d{2}\/\d{2}$/.test(v));
+    checar('cartao-cvv',      v=>v.length>=3);
+  }
+
+  // Rola até o primeiro campo com erro e foca nele
+  if (primeiroErro) {
+    const el = document.getElementById(primeiroErro);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => {
+        el.focus();
+        // Pisca a borda para chamar atenção
+        el.style.boxShadow = '0 0 0 4px rgba(229,57,53,0.3)';
+        setTimeout(() => { el.style.boxShadow = ''; }, 2000);
+      }, 400);
+    }
+  }
+
   return ok;
 }
 

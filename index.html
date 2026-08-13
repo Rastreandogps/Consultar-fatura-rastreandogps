@@ -1507,8 +1507,21 @@
     document.getElementById('secao-portateis').style.display = aba === 'portateis' ? 'block' : 'none';
     document.getElementById('aba-4g').classList.toggle('ativa',        aba === '4g');
     document.getElementById('aba-portateis').classList.toggle('ativa', aba === 'portateis');
+    // Atualiza a URL sem recarregar — usa ?aba= para funcionar no GitHub Pages
+    const novaUrl = aba === 'portateis'
+      ? window.location.pathname + '?aba=portateis'
+      : window.location.pathname;
+    history.replaceState(null, '', novaUrl);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // Abre aba correta conforme a URL ao carregar
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('aba') === 'portateis') {
+      trocarAba('portateis');
+    }
+  })();
 
   // ── Portáteis: quantidade ──
   const PORT_PRECOS = {
@@ -1529,8 +1542,7 @@
     document.getElementById('btn-' + p).href = 'checkout-portatil.html?produto=' + chave + '&qtd=' + qtd;
   }
 
-  // Abre aba portáteis se URL tiver #portateis
-  if (window.location.hash === '#portateis') trocarAba('portateis');
+
 </script>
 </body>
 </html>

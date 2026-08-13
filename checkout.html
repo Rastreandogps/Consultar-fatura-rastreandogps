@@ -1,0 +1,792 @@
+<!--
+  ═══════════════════════════════════════════════════════════════
+  RASTREANDO GPS — Checkout Próprio
+  checkout.html
+
+  Como usar:
+  1. Implante o gas_checkout.js como Web App no Google Apps Script
+  2. Cole a URL gerada na variável CHECKOUT_URL abaixo
+  3. Coloque este arquivo na mesma pasta do seu index.html
+  4. Adicione na seção #pricing do index.html, ANTES do btn-ml:
+     <a href="checkout.html" class="btn btn-ml btn-full">
+       <i class="fas fa-shopping-cart"></i> Comprar Direto — Sem ML
+     </a>
+  ═══════════════════════════════════════════════════════════════
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Finalizar Compra — Rastreando GPS</title>
+  <meta name="description" content="Compre seu rastreador 4G com bloqueio diretamente da Rastreando GPS. Pagamento seguro via Pix.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* ── Mesma paleta do index ──────────────────────────────── */
+    :root {
+      --bg:         #ffffff;
+      --bg-soft:    #fff9df;
+      --card:       #ffffff;
+      --border:     #ececec;
+      --ink:        #232323;
+      --muted:      #6b6f76;
+      --yellow:      #ffe600;
+      --yellow-deep: #ffd100;
+      --yellow-line: #f0c400;
+      --blue:       #3483fa;
+      --blue-dark:  #2968c8;
+      --blue-glow:  rgba(52,131,250,0.22);
+      --green:      #00a650;
+      --green-soft: rgba(0,166,80,0.10);
+      --red:        #e53935;
+      --wa:         #25d366;
+      --shadow-sm:  0 6px 18px rgba(35,35,35,0.06);
+      --shadow-md:  0 14px 40px rgba(35,35,35,0.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Topbar ─────────────────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--yellow);
+      border-bottom: 1px solid var(--yellow-line);
+      box-shadow: 0 2px 14px rgba(0,0,0,0.08);
+      padding: 12px 0;
+    }
+    .topbar-inner {
+      width: min(1100px,94vw); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--ink); text-decoration: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px; font-weight: 800;
+    }
+    .brand img { width: 38px; height: 38px; border-radius: 8px; }
+    .back-link {
+      color: var(--ink); text-decoration: none;
+      font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    /* ── Layout principal ───────────────────────────────────── */
+    .main {
+      width: min(1100px,94vw); margin: 0 auto;
+      padding: 40px 0 80px;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* ── Resumo lateral ─────────────────────────────────────── */
+    .resumo {
+      background: var(--bg-soft);
+      border: 1px solid var(--yellow-line);
+      border-radius: 20px;
+      padding: 28px;
+      position: sticky;
+      top: 88px;
+    }
+    .resumo-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 20px;
+      padding-bottom: 12px; border-bottom: 2px solid var(--yellow-deep);
+    }
+    .resumo-prod {
+      display: flex; gap: 14px; align-items: center; margin-bottom: 20px;
+    }
+    .resumo-prod img {
+      width: 80px; height: 80px; object-fit: contain;
+      border-radius: 12px; background: #fff;
+      border: 1px solid var(--border); padding: 8px;
+    }
+    .resumo-prod-info strong { display: block; font-size: 15px; margin-bottom: 4px; }
+    .resumo-prod-info span { color: var(--muted); font-size: 13px; }
+    .resumo-linha {
+      display: flex; justify-content: space-between;
+      font-size: 14px; color: var(--muted);
+      padding: 6px 0; border-bottom: 1px solid var(--border);
+    }
+    .resumo-linha:last-of-type { border-bottom: none; }
+    .resumo-total {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 16px; padding-top: 16px;
+      border-top: 2px solid var(--yellow-deep);
+      font-weight: 800; font-size: 18px;
+    }
+    .resumo-total .preco {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px; color: var(--green);
+    }
+    .pix-badge {
+      margin-top: 16px;
+      background: var(--green-soft); border: 1px solid var(--green);
+      border-radius: 10px; padding: 12px 14px;
+      font-size: 13px; color: var(--green);
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .pix-badge i { margin-top: 2px; flex-shrink: 0; }
+    .trust-lista {
+      margin-top: 20px; list-style: none;
+    }
+    .trust-lista li {
+      font-size: 13px; color: var(--muted);
+      padding: 5px 0; display: flex; align-items: center; gap: 8px;
+    }
+    .trust-lista li i { color: var(--green); width: 16px; }
+
+    /* ── Formulário ─────────────────────────────────────────── */
+    .form-wrap { display: flex; flex-direction: column; gap: 28px; }
+
+    .form-section {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    .form-section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 20px;
+      padding-bottom: 12px; border-bottom: 2px solid var(--yellow-deep);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .form-section-title i { color: var(--blue); }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .form-row.full { grid-template-columns: 1fr; }
+    .form-row.tri  { grid-template-columns: 1fr 1fr 1fr; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label {
+      font-size: 13px; font-weight: 600; color: var(--ink);
+    }
+    .field .req { color: var(--red); margin-left: 2px; }
+    .field input, .field select {
+      height: 46px; padding: 0 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 15px; color: var(--ink);
+      background: #fff;
+      transition: border-color .2s;
+      outline: none;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(52,131,250,0.12);
+    }
+    .field input.erro { border-color: var(--red); }
+    .field .hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .field .msg-erro {
+      font-size: 12px; color: var(--red); margin-top: 2px;
+      display: none;
+    }
+    .field input.erro ~ .msg-erro { display: block; }
+
+    /* ── Botão de compra ────────────────────────────────────── */
+    .btn-comprar {
+      width: 100%; height: 58px;
+      background: linear-gradient(90deg, #00a650, #0ea5e9);
+      color: #fff; border: none; border-radius: 14px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px; font-weight: 800; letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 8px 28px rgba(0,166,80,0.3);
+      transition: transform .18s, box-shadow .18s;
+    }
+    .btn-comprar:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(0,166,80,0.4);
+    }
+    .btn-comprar:disabled {
+      opacity: .65; cursor: not-allowed;
+    }
+    .lgpd-note {
+      font-size: 12px; color: var(--muted); text-align: center;
+      margin-top: 10px; line-height: 1.5;
+    }
+    .lgpd-note a { color: var(--blue); }
+
+    /* ── Overlay de carregamento ────────────────────────────── */
+    #overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.55);
+      place-items: center;
+    }
+    #overlay.ativo { display: grid; }
+    .spinner-box {
+      background: #fff; border-radius: 20px;
+      padding: 40px 48px; text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+    }
+    .spinner {
+      width: 52px; height: 52px; margin: 0 auto 16px;
+      border: 4px solid #e5e7eb;
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner-box p { font-weight: 600; color: var(--ink); }
+
+    /* ── Tela de sucesso (Pix gerado) ───────────────────────── */
+    #tela-sucesso {
+      display: none;
+      max-width: 580px; margin: 60px auto 80px;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 24px; padding: 40px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+    #tela-sucesso.ativo { display: block; }
+    .sucesso-icon {
+      width: 72px; height: 72px; background: var(--green-soft);
+      border-radius: 50%; margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; color: var(--green);
+    }
+    #tela-sucesso h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px; font-weight: 900; margin-bottom: 8px;
+    }
+    #tela-sucesso p { color: var(--muted); margin-bottom: 24px; }
+    .qr-wrap {
+      background: var(--bg-soft); border: 1px solid var(--yellow-line);
+      border-radius: 16px; padding: 24px; margin-bottom: 24px;
+    }
+    .qr-wrap img {
+      width: 200px; height: 200px; margin: 0 auto 16px; display: block;
+    }
+    .qr-valor {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 32px; font-weight: 900; color: var(--green); margin-bottom: 6px;
+    }
+    .qr-venc { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+
+    .copia-cola-box {
+      background: #fff; border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 12px 14px;
+      font-size: 12px; color: var(--muted);
+      word-break: break-all; text-align: left; margin-bottom: 14px;
+      max-height: 80px; overflow-y: auto;
+    }
+    .btn-copiar {
+      width: 100%; height: 46px;
+      background: var(--blue); color: #fff;
+      border: none; border-radius: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 800; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .2s;
+    }
+    .btn-copiar:hover { background: var(--blue-dark); }
+    .btn-copiar.copiado { background: var(--green); }
+
+    .proximo-passo {
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      border-radius: 14px; padding: 18px; text-align: left;
+      margin-top: 20px;
+    }
+    .proximo-passo strong { display: block; margin-bottom: 6px; color: var(--ink); }
+    .proximo-passo p { color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .wa-final {
+      margin-top: 20px; display: block; width: 100%;
+      background: var(--wa); color: #fff;
+      border: none; border-radius: 12px; height: 52px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px; font-weight: 800;
+      text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: opacity .2s;
+    }
+    .wa-final:hover { opacity: .9; }
+
+    /* ── Tela de erro ───────────────────────────────────────── */
+    #msg-erro-global {
+      display: none;
+      background: #fff0f0; border: 1.5px solid #fca5a5;
+      border-radius: 12px; padding: 16px 18px;
+      color: var(--red); font-size: 14px; margin-top: 14px;
+    }
+    #msg-erro-global.ativo { display: flex; gap: 10px; align-items: flex-start; }
+
+    /* ── Footer simples ─────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 0; text-align: center;
+      font-size: 13px; color: var(--muted);
+    }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .main {
+        grid-template-columns: 1fr;
+        padding: 24px 0 60px;
+      }
+      .resumo { position: static; order: -1; }
+      .form-row.tri { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 540px) {
+      .form-row { grid-template-columns: 1fr; }
+      .form-row.tri { grid-template-columns: 1fr; }
+      .form-section { padding: 20px 16px; }
+      .resumo { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="brand">
+      <img src="./assets/logo.png" alt="Rastreando GPS">
+      Rastreando GPS
+    </a>
+    <a href="index.html" class="back-link">
+      <i class="fas fa-arrow-left"></i> Voltar ao site
+    </a>
+  </div>
+</header>
+
+<!-- Overlay de carregamento -->
+<div id="overlay">
+  <div class="spinner-box">
+    <div class="spinner"></div>
+    <p>Gerando seu Pix…</p>
+  </div>
+</div>
+
+<!-- Tela de sucesso -->
+<div id="tela-sucesso">
+  <div class="sucesso-icon"><i class="fas fa-check-circle"></i></div>
+  <h2>Pedido gerado com sucesso!</h2>
+  <p>Pague o Pix abaixo para confirmar seu pedido. Assim que o pagamento for identificado, entraremos em contato para combinar a entrega.</p>
+
+  <div class="qr-wrap">
+    <img id="qr-img" src="" alt="QR Code Pix">
+    <div class="qr-valor" id="qr-valor">R$ 159,90</div>
+    <div class="qr-venc" id="qr-venc"></div>
+    <div class="copia-cola-box" id="pix-texto"></div>
+    <button class="btn-copiar" id="btn-copiar">
+      <i class="fas fa-copy"></i> Copiar código Pix (Copia e Cola)
+    </button>
+  </div>
+
+  <div class="proximo-passo">
+    <strong><i class="fas fa-truck" style="color:var(--blue);margin-right:6px;"></i>Próximo passo após o pagamento</strong>
+    <p>Você receberá uma confirmação. Enviamos o rastreador em até 2 dias úteis após a identificação do Pix. Acompanhe pelo WhatsApp — enviaremos o código de rastreio dos Correios.</p>
+  </div>
+
+  <a id="wa-pedido" href="#" class="wa-final" target="_blank">
+    <i class="fab fa-whatsapp"></i> Avisar que paguei pelo WhatsApp
+  </a>
+</div>
+
+<!-- Formulário principal -->
+<div class="main" id="form-area">
+
+  <!-- Coluna esquerda: formulário -->
+  <div class="form-wrap">
+
+    <!-- Dados pessoais -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <i class="fas fa-user"></i> Seus Dados
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Nome completo <span class="req">*</span></label>
+          <input type="text" id="nome" placeholder="Ex: João Silva" autocomplete="name">
+          <span class="msg-erro">Preencha seu nome completo.</span>
+        </div>
+        <div class="field">
+          <label>CPF <span class="req">*</span></label>
+          <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off">
+          <span class="msg-erro">CPF inválido.</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>E-mail <span class="req">*</span></label>
+          <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
+          <span class="msg-erro">E-mail inválido.</span>
+        </div>
+        <div class="field">
+          <label>Celular / WhatsApp <span class="req">*</span></label>
+          <input type="tel" id="telefone" placeholder="(21) 9 0000-0000" maxlength="16" autocomplete="tel">
+          <span class="msg-erro">Número inválido.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Endereço de entrega -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <i class="fas fa-map-marker-alt"></i> Endereço de Entrega
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>CEP <span class="req">*</span></label>
+          <input type="text" id="cep" placeholder="00000-000" maxlength="9" autocomplete="postal-code">
+          <span class="hint">Digite o CEP para preencher o endereço automaticamente.</span>
+          <span class="msg-erro">CEP inválido.</span>
+        </div>
+        <div class="field" style="justify-content:flex-end;">
+          <button type="button" id="btn-buscar-cep"
+            style="height:46px; padding:0 18px; background:var(--blue); color:#fff; border:none; border-radius:10px; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; cursor:pointer;">
+            <i class="fas fa-search"></i> Buscar CEP
+          </button>
+        </div>
+      </div>
+
+      <div class="form-row full">
+        <div class="field">
+          <label>Rua / Logradouro <span class="req">*</span></label>
+          <input type="text" id="endereco" placeholder="Ex: Rua das Flores" autocomplete="address-line1">
+          <span class="msg-erro">Preencha o endereço.</span>
+        </div>
+      </div>
+
+      <div class="form-row tri">
+        <div class="field">
+          <label>Número <span class="req">*</span></label>
+          <input type="text" id="numero" placeholder="Ex: 123" autocomplete="address-line2">
+          <span class="msg-erro">Informe o número.</span>
+        </div>
+        <div class="field">
+          <label>Complemento</label>
+          <input type="text" id="complemento" placeholder="Apto, bloco..." autocomplete="address-line3">
+        </div>
+        <div class="field">
+          <label>Bairro</label>
+          <input type="text" id="bairro" placeholder="Ex: Centro">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Cidade <span class="req">*</span></label>
+          <input type="text" id="cidade" placeholder="Ex: Rio de Janeiro" autocomplete="address-level2">
+          <span class="msg-erro">Informe a cidade.</span>
+        </div>
+        <div class="field">
+          <label>Estado <span class="req">*</span></label>
+          <select id="estado" autocomplete="address-level1">
+            <option value="">Selecione…</option>
+            <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+            <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+            <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+            <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+            <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+            <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+            <option>SP</option><option>SE</option><option>TO</option>
+          </select>
+          <span class="msg-erro">Selecione o estado.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumo e finalização -->
+    <div class="form-section">
+      <div class="form-section-title">
+        <i class="fas fa-qrcode"></i> Pagamento via Pix
+      </div>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:20px; line-height:1.6;">
+        Após clicar em <strong>"Gerar Pix e Finalizar"</strong>, você receberá um QR Code e o código Pix Copia e Cola. O pedido é confirmado automaticamente assim que o pagamento for identificado.
+      </p>
+
+      <div id="msg-erro-global">
+        <i class="fas fa-exclamation-circle" style="margin-top:2px;flex-shrink:0;"></i>
+        <span id="msg-erro-texto">Erro ao gerar o pedido.</span>
+      </div>
+
+      <button class="btn-comprar" id="btn-finalizar">
+        <i class="fas fa-qrcode"></i> Gerar Pix e Finalizar Pedido
+      </button>
+      <p class="lgpd-note">
+        Seus dados são protegidos conforme a LGPD e usados exclusivamente para processar seu pedido e entrega.<br>
+        Dúvidas? <a href="https://wa.me/5521980886087" target="_blank">Fale no WhatsApp</a>.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Coluna direita: resumo -->
+  <aside class="resumo">
+    <div class="resumo-title">Resumo do Pedido</div>
+
+    <div class="resumo-prod">
+      <img src="./assets/equipamento.png" alt="Rastreador 4G">
+      <div class="resumo-prod-info">
+        <strong>Rastreador 4G com Bloqueio</strong>
+        <span>Chip Vivo incluso • Relé 12V • Chicote</span>
+      </div>
+    </div>
+
+    <div class="resumo-linha">
+      <span>Equipamento</span><span>R$ 159,90</span>
+    </div>
+    <div class="resumo-linha">
+      <span>Frete</span><span style="color:var(--green);">A combinar via WhatsApp</span>
+    </div>
+    <div class="resumo-linha">
+      <span>Forma de pagamento</span><span>Pix</span>
+    </div>
+
+    <div class="resumo-total">
+      <span>Total</span>
+      <span class="preco">R$ 159,90</span>
+    </div>
+
+    <div class="pix-badge">
+      <i class="fas fa-shield-alt"></i>
+      <span>Pagamento seguro via <strong>Pix</strong>. Sem dados de cartão expostos.</span>
+    </div>
+
+    <ul class="trust-lista">
+      <li><i class="fas fa-check-circle"></i> Entrega pelos Correios com rastreio</li>
+      <li><i class="fas fa-check-circle"></i> Suporte pós-venda via WhatsApp</li>
+      <li><i class="fas fa-check-circle"></i> Garantia de 7 dias contra defeito</li>
+      <li><i class="fas fa-check-circle"></i> Ativação do plano feita por nós</li>
+      <li><i class="fas fa-check-circle"></i> CNPJ 29.488.621/0001-48</li>
+      <li><i class="fas fa-check-circle"></i> +6 anos de mercado</li>
+    </ul>
+  </aside>
+
+</div>
+
+<footer>
+  <p>© <span id="ano"></span> Rastreando GPS — CNPJ 29.488.621/0001-48 — Duque de Caxias, RJ</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO — cole aqui a URL do seu Google Apps Script
+// ═══════════════════════════════════════════════════════════════
+const CHECKOUT_URL = 'COLE_AQUI_A_URL_DO_SEU_GAS';
+
+// ══════════════════════════════════════════════════════════════
+document.getElementById('ano').textContent = new Date().getFullYear();
+
+// ── Máscara CPF ───────────────────────────────────────────────
+document.getElementById('cpf').addEventListener('input', function () {
+  let v = this.value.replace(/\D/g, '').slice(0, 11);
+  if (v.length > 9)      v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+  else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+  else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+  this.value = v;
+});
+
+// ── Máscara Telefone ──────────────────────────────────────────
+document.getElementById('telefone').addEventListener('input', function () {
+  let v = this.value.replace(/\D/g, '').slice(0, 11);
+  if (v.length > 10)     v = v.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4');
+  else if (v.length > 6) v = v.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
+  else if (v.length > 2) v = v.replace(/(\d{2})(\d{1,4})/, '($1) $2');
+  this.value = v;
+});
+
+// ── Máscara CEP ───────────────────────────────────────────────
+document.getElementById('cep').addEventListener('input', function () {
+  let v = this.value.replace(/\D/g, '').slice(0, 8);
+  if (v.length > 5) v = v.replace(/(\d{5})(\d{1,3})/, '$1-$2');
+  this.value = v;
+});
+
+// ── Busca CEP (ViaCEP) ────────────────────────────────────────
+async function buscarCep() {
+  const cep = document.getElementById('cep').value.replace(/\D/g, '');
+  if (cep.length !== 8) { alert('Digite um CEP válido com 8 dígitos.'); return; }
+
+  const btn = document.getElementById('btn-buscar-cep');
+  btn.textContent = 'Buscando…'; btn.disabled = true;
+
+  try {
+    const r = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const d = await r.json();
+    if (d.erro) { alert('CEP não encontrado. Verifique e tente novamente.'); return; }
+
+    document.getElementById('endereco').value   = d.logradouro || '';
+    document.getElementById('bairro').value     = d.bairro     || '';
+    document.getElementById('cidade').value     = d.localidade || '';
+    // Seleciona o estado no select
+    const sel = document.getElementById('estado');
+    for (let opt of sel.options) {
+      if (opt.value === d.uf) { sel.value = d.uf; break; }
+    }
+    document.getElementById('numero').focus();
+  } catch {
+    alert('Erro ao buscar CEP. Verifique sua conexão.');
+  } finally {
+    btn.innerHTML = '<i class="fas fa-search"></i> Buscar CEP';
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('btn-buscar-cep').addEventListener('click', buscarCep);
+document.getElementById('cep').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); buscarCep(); }
+});
+
+// ── Validação dos campos ──────────────────────────────────────
+function validarCampo(id, condicao) {
+  const el = document.getElementById(id);
+  if (condicao(el.value)) {
+    el.classList.remove('erro'); return true;
+  } else {
+    el.classList.add('erro'); el.focus(); return false;
+  }
+}
+
+function cpfValido(cpf) {
+  const n = cpf.replace(/\D/g, '');
+  if (n.length !== 11 || /^(\d)\1{10}$/.test(n)) return false;
+  let soma = 0;
+  for (let i = 0; i < 9; i++) soma += parseInt(n[i]) * (10 - i);
+  let r = (soma * 10) % 11; if (r === 10 || r === 11) r = 0;
+  if (r !== parseInt(n[9])) return false;
+  soma = 0;
+  for (let i = 0; i < 10; i++) soma += parseInt(n[i]) * (11 - i);
+  r = (soma * 10) % 11; if (r === 10 || r === 11) r = 0;
+  return r === parseInt(n[10]);
+}
+
+function validarFormulario() {
+  let ok = true;
+
+  if (!validarCampo('nome',     v => v.trim().split(' ').length >= 2))   ok = false;
+  if (!validarCampo('cpf',      v => cpfValido(v)))                        ok = false;
+  if (!validarCampo('email',    v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))) ok = false;
+  if (!validarCampo('telefone', v => v.replace(/\D/g,'').length >= 10))   ok = false;
+  if (!validarCampo('cep',      v => v.replace(/\D/g,'').length === 8))   ok = false;
+  if (!validarCampo('endereco', v => v.trim().length > 3))                ok = false;
+  if (!validarCampo('numero',   v => v.trim().length > 0))                ok = false;
+  if (!validarCampo('cidade',   v => v.trim().length > 2))                ok = false;
+  if (!validarCampo('estado',   v => v.length === 2))                     ok = false;
+
+  return ok;
+}
+
+// ── Envio do pedido ───────────────────────────────────────────
+document.getElementById('btn-finalizar').addEventListener('click', async () => {
+  // Esconde erro global
+  document.getElementById('msg-erro-global').classList.remove('ativo');
+
+  if (!validarFormulario()) return;
+
+  const dados = {
+    nome:        document.getElementById('nome').value.trim(),
+    cpf:         document.getElementById('cpf').value,
+    email:       document.getElementById('email').value.trim(),
+    telefone:    document.getElementById('telefone').value,
+    cep:         document.getElementById('cep').value,
+    endereco:    document.getElementById('endereco').value.trim(),
+    numero:      document.getElementById('numero').value.trim(),
+    complemento: document.getElementById('complemento').value.trim(),
+    bairro:      document.getElementById('bairro').value.trim(),
+    cidade:      document.getElementById('cidade').value.trim(),
+    estado:      document.getElementById('estado').value,
+  };
+
+  // Ativa overlay
+  document.getElementById('overlay').classList.add('ativo');
+  document.getElementById('btn-finalizar').disabled = true;
+
+  try {
+    const resp = await fetch(CHECKOUT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados),
+    });
+    const res = await resp.json();
+
+    if (!res.ok) throw new Error(res.erro || 'Erro desconhecido.');
+
+    // Monta tela de sucesso
+    document.getElementById('qr-img').src = 'data:image/png;base64,' + res.pixQrCode;
+    document.getElementById('qr-valor').textContent = 'R$ ' + Number(res.valor).toFixed(2).replace('.', ',');
+    document.getElementById('qr-venc').textContent  = 'Válido até ' + formatarData(res.vencimento);
+    document.getElementById('pix-texto').textContent = res.pixCopiaCola;
+
+    // Link WhatsApp com aviso de pagamento
+    const msg = encodeURIComponent(
+      `Olá! Acabei de fazer o pedido do Rastreador e paguei o Pix.\n` +
+      `Nome: ${dados.nome}\n` +
+      `CPF: ${dados.cpf}\n` +
+      `ID do pedido: ${res.cobrancaId}\n` +
+      `Endereço: ${dados.endereco}, ${dados.numero} — ${dados.cidade}/${dados.estado}, CEP ${dados.cep}`
+    );
+    document.getElementById('wa-pedido').href =
+      `https://wa.me/5521980886087?text=${msg}`;
+
+    // Exibe tela de sucesso, oculta formulário
+    document.getElementById('form-area').style.display = 'none';
+    document.getElementById('tela-sucesso').classList.add('ativo');
+    window.scrollTo(0, 0);
+
+  } catch (err) {
+    const msgEl = document.getElementById('msg-erro-global');
+    document.getElementById('msg-erro-texto').textContent =
+      err.message || 'Falha ao gerar o Pix. Tente novamente ou fale pelo WhatsApp.';
+    msgEl.classList.add('ativo');
+    msgEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } finally {
+    document.getElementById('overlay').classList.remove('ativo');
+    document.getElementById('btn-finalizar').disabled = false;
+  }
+});
+
+// ── Copiar código Pix ─────────────────────────────────────────
+document.getElementById('btn-copiar').addEventListener('click', async () => {
+  const txt = document.getElementById('pix-texto').textContent;
+  try {
+    await navigator.clipboard.writeText(txt);
+    const btn = document.getElementById('btn-copiar');
+    btn.classList.add('copiado');
+    btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+    setTimeout(() => {
+      btn.classList.remove('copiado');
+      btn.innerHTML = '<i class="fas fa-copy"></i> Copiar código Pix (Copia e Cola)';
+    }, 3000);
+  } catch {
+    alert('Não foi possível copiar automaticamente. Copie o código manualmente.');
+  }
+});
+
+// ── Helpers ───────────────────────────────────────────────────
+function formatarData(iso) {
+  if (!iso) return '';
+  const [a, m, d] = iso.split('-');
+  return `${d}/${m}/${a}`;
+}
+</script>
+</body>
+</html>

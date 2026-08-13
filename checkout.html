@@ -1049,9 +1049,21 @@ async function confirmarPedido() {
   document.getElementById('overlay-msg').textContent = formaPagamento==='pix'?'Gerando seu Pix…':'Processando pagamento…';
   document.getElementById('overlay').classList.add('ativo');
   try {
-    const dadosEnc=encodeURIComponent(JSON.stringify(dados));
-    const resp=await fetch(CHECKOUT_URL+'?acao=pedido&dados='+dadosEnc);
-    const res=await resp.json();
+    let resp;
+    if (formaPagamento === 'cartao') {
+      // Cartão usa POST pois os dados são grandes demais para URL
+      resp = await fetch(CHECKOUT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados),
+        redirect: 'follow',
+      });
+    } else {
+      // Pix usa GET (funciona sem CORS no GAS)
+      const dadosEnc = encodeURIComponent(JSON.stringify(dados));
+      resp = await fetch(CHECKOUT_URL + '?acao=pedido&dados=' + dadosEnc);
+    }
+    const res = await resp.json();
     if(!res.ok)throw new Error(res.erro||'Erro desconhecido.');
     const msg=encodeURIComponent(
       'Olá! Fiz um pedido do Rastreador.\n'+

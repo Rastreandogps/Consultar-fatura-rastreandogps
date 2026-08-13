@@ -643,6 +643,77 @@
       .feat-title { font-size: 14.5px; margin-bottom: 2px; }
       .feat-desc { font-size: 12.5px; line-height: 1.42; }
     }
+
+    /* ── Abas de produtos ────────────────────────────────── */
+    .produto-abas {
+      background: var(--yellow);
+      border-bottom: 3px solid var(--yellow-deep);
+      padding: 0;
+    }
+    .produto-abas-inner {
+      width: min(1100px,94vw);
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+    }
+    .produto-aba {
+      padding: 14px 28px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: rgba(35,35,35,.6);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -3px;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      user-select: none;
+    }
+    .produto-aba:hover { color: var(--ink); }
+    .produto-aba.ativa {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+      background: rgba(255,255,255,.25);
+    }
+    /* Seção portáteis oculta por padrão */
+    #secao-portateis { display: none; background: #f5f5f5; }
+    #secao-4g { display: block; }
+
+    /* Cards de produtos portáteis */
+    .port-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; width: min(1100px,94vw); margin: 0 auto; padding: 48px 0 60px; }
+    .port-card { background: #fff; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-md); display: flex; flex-direction: column; }
+    .port-img { background: var(--bg-soft); padding: 32px; display: flex; align-items: center; justify-content: center; min-height: 240px; position: relative; }
+    .port-img img { max-width: 100%; max-height: 200px; object-fit: contain; }
+    .port-top-badge { position: absolute; top: 16px; right: 16px; background: var(--blue); color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 800; padding: 4px 12px; border-radius: 20px; }
+    .port-body { padding: 28px; flex: 1; display: flex; flex-direction: column; }
+    .port-nome { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 900; margin-bottom: 6px; }
+    .port-sub { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+    .port-features { list-style: none; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+    .port-features li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; }
+    .port-features li i { color: var(--green); margin-top: 2px; flex-shrink: 0; width: 16px; }
+    .port-precos { background: var(--bg-soft); border: 1px solid var(--yellow-line); border-radius: 14px; padding: 18px; margin-bottom: 20px; }
+    .port-preco-linha { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,.06); font-size: 14px; }
+    .port-preco-linha:last-child { border-bottom: none; }
+    .port-preco-linha .lb { color: var(--muted); }
+    .port-preco-linha .vl { font-weight: 700; }
+    .port-total-linha { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; font-weight: 800; font-size: 18px; }
+    .port-total-val { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; color: var(--green); }
+    .port-qtd-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .port-qtd-btn { width: 40px; height: 40px; border: 1.5px solid var(--border); border-radius: 10px; background: #fff; font-size: 20px; font-weight: 700; cursor: pointer; color: var(--ink); transition: all .2s; display: flex; align-items: center; justify-content: center; }
+    .port-qtd-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .port-qtd-input { width: 60px; height: 40px; text-align: center; font-size: 16px; font-weight: 700; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Barlow', sans-serif; }
+    .port-btn-comprar { width: 100%; height: 54px; background: linear-gradient(90deg,#00a650,#0ea5e9); color: #fff; border: none; border-radius: 14px; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 28px rgba(0,166,80,.3); transition: all .2s; text-decoration: none; margin-top: auto; }
+    .port-btn-comprar:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0,166,80,.4); }
+    .port-pix-note { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); justify-content: center; margin-top: 10px; }
+    .port-pix-note i { color: var(--green); }
+    .port-hero { background: var(--yellow); padding: 40px 0 32px; text-align: center; }
+    .port-hero h2 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(28px,5vw,44px); font-weight: 900; margin-bottom: 10px; }
+    .port-hero p { font-size: 16px; color: rgba(35,35,35,.75); max-width: 520px; margin: 0 auto; }
+    @media(max-width:768px) { .port-grid { grid-template-columns: 1fr; padding: 24px 16px 40px; } }
   </style>
 </head>
 <body>
@@ -665,6 +736,20 @@
   </div>
 </header>
 
+
+<!-- ── Abas de produtos ────────────────────────────── -->
+<div class="produto-abas">
+  <div class="produto-abas-inner">
+    <div class="produto-aba ativa" id="aba-4g" onclick="trocarAba('4g')">
+      <i class="fas fa-car"></i> Rastreador 4G
+    </div>
+    <div class="produto-aba" id="aba-portateis" onclick="trocarAba('portateis')">
+      <i class="fas fa-satellite-dish"></i> Portáteis
+    </div>
+  </div>
+</div>
+
+<div id="secao-4g">
 <!-- ─── HERO ─── -->
 <section class="hero" id="hero">
   <div class="container hero-grid">
@@ -1184,6 +1269,94 @@
 </section>
 
 <!-- ─── FOOTER ─── -->
+</div><!-- fim secao-4g -->
+
+<!-- ── Seção Portáteis ─────────────────────────── -->
+<div id="secao-portateis">
+
+  <!-- Hero portáteis -->
+  <div class="port-hero">
+    <div class="container">
+      <h2>Rastreadores Portáteis</h2>
+      <p>Sem instalação, sem fio. Coloque onde quiser e monitore pelo celular em tempo real.</p>
+    </div>
+  </div>
+
+  <!-- Produtos -->
+  <div class="port-grid">
+
+    <!-- Rastreador Portátil -->
+    <div class="port-card">
+      <div class="port-img">
+        <span class="port-top-badge">MAIS VENDIDO</span>
+        <img src="./assets/ml po.jpg" alt="Rastreador Portátil 4G">
+      </div>
+      <div class="port-body">
+        <div class="port-nome">Rastreador Portátil 4G</div>
+        <div class="port-sub">Ideal para motos, carros, malas, animais e muito mais</div>
+        <ul class="port-features">
+          <li><i class="fas fa-check-circle"></i> Tecnologia 4G — rastreamento preciso</li>
+          <li><i class="fas fa-check-circle"></i> Sem instalação — coloque e pronto</li>
+          <li><i class="fas fa-check-circle"></i> App Android e iOS incluso</li>
+          <li><i class="fas fa-check-circle"></i> Bateria recarregável de longa duração</li>
+          <li><i class="fas fa-check-circle"></i> Histórico de rotas completo</li>
+          <li><i class="fas fa-check-circle"></i> Plano anual sem mensalidade surpresa</li>
+        </ul>
+        <div class="port-precos">
+          <div class="port-preco-linha"><span class="lb">Equipamento</span><span class="vl">R$ 320,00</span></div>
+          <div class="port-preco-linha"><span class="lb">Plano anual (12 meses)</span><span class="vl">R$ 320,00</span></div>
+          <div class="port-total-linha"><span>Total</span><span class="port-total-val" id="total-port">R$ 640,00</span></div>
+        </div>
+        <div class="port-qtd-wrap">
+          <button class="port-qtd-btn" onclick="portAlterarQtd('port',-1)">−</button>
+          <input class="port-qtd-input" type="number" id="qtd-port" value="1" min="1" max="10" onchange="portAtualizarTotal('port')">
+          <button class="port-qtd-btn" onclick="portAlterarQtd('port',1)">+</button>
+          <span style="font-size:13px;color:var(--muted)">máx. 10</span>
+        </div>
+        <a id="btn-port" href="checkout-portatil.html?produto=portatil&qtd=1" class="port-btn-comprar">
+          <i class="fas fa-qrcode"></i> Comprar Agora — Pix
+        </a>
+        <p class="port-pix-note"><i class="fas fa-shield-alt"></i> Pagamento 100% seguro via Pix</p>
+      </div>
+    </div>
+
+    <!-- Tag GPS -->
+    <div class="port-card">
+      <div class="port-img">
+        <img src="./assets/k-tag.jpeg" alt="Tag GPS">
+      </div>
+      <div class="port-body">
+        <div class="port-nome">Tag GPS</div>
+        <div class="port-sub">Compacto e discreto — perfeito para itens pessoais e pets</div>
+        <ul class="port-features">
+          <li><i class="fas fa-check-circle"></i> Ultra compacto e leve</li>
+          <li><i class="fas fa-check-circle"></i> Rastreamento via GPS + WiFi</li>
+          <li><i class="fas fa-check-circle"></i> App Android e iOS incluso</li>
+          <li><i class="fas fa-check-circle"></i> Ideal para chaves, bolsas e pets</li>
+          <li><i class="fas fa-check-circle"></i> Alertas de zona segura</li>
+          <li><i class="fas fa-check-circle"></i> Plano anual econômico</li>
+        </ul>
+        <div class="port-precos">
+          <div class="port-preco-linha"><span class="lb">Equipamento</span><span class="vl">R$ 99,00</span></div>
+          <div class="port-preco-linha"><span class="lb">Plano anual (12 meses)</span><span class="vl">R$ 118,80</span></div>
+          <div class="port-total-linha"><span>Total</span><span class="port-total-val" id="total-tag">R$ 217,80</span></div>
+        </div>
+        <div class="port-qtd-wrap">
+          <button class="port-qtd-btn" onclick="portAlterarQtd('tag',-1)">−</button>
+          <input class="port-qtd-input" type="number" id="qtd-tag" value="1" min="1" max="10" onchange="portAtualizarTotal('tag')">
+          <button class="port-qtd-btn" onclick="portAlterarQtd('tag',1)">+</button>
+          <span style="font-size:13px;color:var(--muted)">máx. 10</span>
+        </div>
+        <a id="btn-tag" href="checkout-portatil.html?produto=tag&qtd=1" class="port-btn-comprar">
+          <i class="fas fa-qrcode"></i> Comprar Agora — Pix
+        </a>
+        <p class="port-pix-note"><i class="fas fa-shield-alt"></i> Pagamento 100% seguro via Pix</p>
+      </div>
+    </div>
+
+  </div>
+</div><!-- fim secao-portateis -->
+
 <footer class="footer" id="contact">
   <div class="container">
     <div class="footer-grid">
@@ -1327,6 +1500,37 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
   }, { threshold: 0.12 });
   document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+  // ── Abas de produtos ──
+  function trocarAba(aba) {
+    document.getElementById('secao-4g').style.display        = aba === '4g'        ? 'block' : 'none';
+    document.getElementById('secao-portateis').style.display = aba === 'portateis' ? 'block' : 'none';
+    document.getElementById('aba-4g').classList.toggle('ativa',        aba === '4g');
+    document.getElementById('aba-portateis').classList.toggle('ativa', aba === 'portateis');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Portáteis: quantidade ──
+  const PORT_PRECOS = {
+    port: { equip: 320.00, plano: 320.00 },
+    tag:  { equip:  99.00, plano: 118.80 },
+  };
+  function portAlterarQtd(p, d) {
+    const el = document.getElementById('qtd-' + p);
+    el.value = Math.max(1, Math.min(10, parseInt(el.value) + d));
+    portAtualizarTotal(p);
+  }
+  function portAtualizarTotal(p) {
+    const qtd   = Math.max(1, Math.min(10, parseInt(document.getElementById('qtd-' + p).value) || 1));
+    const pr    = PORT_PRECOS[p];
+    const total = (pr.equip + pr.plano) * qtd;
+    document.getElementById('total-' + p).textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+    const chave = p === 'port' ? 'portatil' : 'tag';
+    document.getElementById('btn-' + p).href = 'checkout-portatil.html?produto=' + chave + '&qtd=' + qtd;
+  }
+
+  // Abre aba portáteis se URL tiver #portateis
+  if (window.location.hash === '#portateis') trocarAba('portateis');
 </script>
 </body>
 </html>

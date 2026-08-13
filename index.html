@@ -623,8 +623,8 @@
       .footer-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 768px) {
-      .topbar-cta { display: none; }
-      .mobile-portatil-bar { display: flex; }
+      .topbar-cta { display: flex; }
+      .btn-wa, .btn-comprar { display: none; }
       .steps-wrapper { grid-template-columns: 1fr; }
       .pros-grid { grid-template-columns: 1fr 1fr; }
       .testi-grid { grid-template-columns: 1fr; }
@@ -655,6 +655,9 @@
       <img src="./assets/logo.png" alt="Rastreando GPS">
       <span>Rastreando GPS</span>
     </a>
+    <a href="portatil.html" style="margin-left:10px;background:var(--ink);color:var(--yellow);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;padding:5px 12px;border-radius:20px;text-decoration:none;white-space:nowrap;letter-spacing:.3px" id="btn-portateis-topbar">
+      Portáteis
+    </a>
     <div class="topbar-cta">
       <a href="portatil.html" class="btn btn-blue" style="display:flex;align-items:center;gap:6px;font-weight:700">
         <i class="fas fa-satellite-dish"></i> Portáteis
@@ -668,12 +671,6 @@
     </div>
   </div>
 </header>
-
-<!-- Faixa portáteis — visível só no mobile -->
-<a href="portatil.html" class="mobile-portatil-bar">
-  <i class="fas fa-satellite-dish"></i> Ver Rastreadores Portáteis
-  <i class="fas fa-arrow-right"></i>
-</a>
 
 <!-- ─── HERO ─── -->
 <section class="hero" id="hero">

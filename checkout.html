@@ -433,8 +433,13 @@
       <!-- Bloco Pix -->
       <div id="bloco-pix">
         <div style="background:var(--green-soft);border:1px solid var(--green);border-radius:12px;padding:14px 16px;font-size:14px;color:var(--green);margin-bottom:16px">
-          <i class="fas fa-tag"></i> <strong>20% de desconto no Pix!</strong><br>
-          <span id="badge-pix-texto">Carregando…</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <span><i class="fas fa-tag"></i> <strong>20% de desconto no Pix!</strong></span>
+            <span style="background:var(--green);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;padding:4px 12px;border-radius:20px">
+              🎉 Você economiza <span id="pix-economia">R$ 31,98</span>
+            </span>
+          </div>
+          <div style="margin-top:8px;font-size:13px" id="badge-pix-texto">Carregando…</div>
         </div>
         <p style="color:var(--muted);font-size:14px;line-height:1.6">Após confirmar, você receberá o QR Code e o código Copia e Cola na tela seguinte.</p>
       </div>
@@ -566,6 +571,10 @@
     <div class="resumo-linha">
       <span>Pagamento</span>
       <span id="resumo-pagamento">Pix</span>
+    </div>
+    <div class="resumo-linha" id="linha-economia" style="color:var(--green);font-weight:700">
+      <span>🎉 Economia no Pix</span>
+      <span id="resumo-economia">R$ 31,98</span>
     </div>
     <div class="resumo-total">
       <span>Total</span>
@@ -760,9 +769,13 @@ function atualizarResumo() {
   const totalEl = document.getElementById('resumo-total');
 
   if (formaPagamento === 'pix') {
+    const economia = (equipCartao() - equipPix());
     qtdEl.textContent   = quantidade + 'x R$ ' + PRECO_UNIT_PIX.toFixed(2).replace('.',',');
     equipEl.innerHTML   = '<s style="color:var(--muted);font-size:11px">R$\u00a0'+equipCartao().toFixed(2).replace('.',',')+'</s> <strong style="color:var(--green)">R$\u00a0'+equipPix().toFixed(2).replace('.',',')+'</strong>';
     totalEl.textContent = 'R$ ' + totalPix().toFixed(2).replace('.',',');
+    // Atualiza economia
+    const econEl = document.getElementById('pix-economia');
+    if (econEl) econEl.textContent = 'R$ ' + economia.toFixed(2).replace('.',',');
     const b = document.getElementById('badge-pix-texto');
     if (b) {
       if (freteValor > 0)
@@ -774,6 +787,13 @@ function atualizarResumo() {
     qtdEl.textContent   = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',');
     equipEl.textContent = 'R$ ' + equipCartao().toFixed(2).replace('.',',');
     totalEl.textContent = 'R$ ' + totalCartao.toFixed(2).replace('.',',');
+  }
+  // Mostra/oculta linha de economia no resumo lateral
+  const linhaEcon  = document.getElementById('linha-economia');
+  const resumoEcon = document.getElementById('resumo-economia');
+  if (linhaEcon) {
+    linhaEcon.style.display = formaPagamento === 'pix' ? '' : 'none';
+    if (resumoEcon) resumoEcon.textContent = 'R$ ' + (equipCartao() - equipPix()).toFixed(2).replace('.',',');
   }
 
   if (freteValor > 0) {

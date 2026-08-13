@@ -645,7 +645,7 @@
 // ═══════════════════════════════════════════════════════════════
 //  CONFIGURAÇÃO
 // ═══════════════════════════════════════════════════════════════
-const CHECKOUT_URL = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSLlgqpNmKtDReupm0QsXcUj0Ulv-rlOR1iftSzirr3486rt7aBBtWM/exec';
+const CHECKOUT_URL = 'COLE_AQUI_A_URL_DO_SEU_GAS';
 
 const PRECO_EQUIPAMENTO = 159.90;
 let freteValor = 0;
@@ -725,13 +725,11 @@ async function calcularFrete(cepDestino) {
   atualizarTotal();
 
   try {
-    // Chama o GAS — o token do Melhor Envio fica seguro no servidor
-    const resp = await fetch(CHECKOUT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ acao: 'calcularFrete', cep: cepDestino }),
-    });
-    const res = await resp.json();
+    // GET resolve o problema de CORS do GAS
+    const cepLimpo = cepDestino.replace(/\D/g, '');
+    const url      = CHECKOUT_URL + '?acao=frete&cep=' + cepLimpo;
+    const resp     = await fetch(url);
+    const res      = await resp.json();
 
     if (!res.ok || !res.fretes || res.fretes.length === 0) {
       conteudo.innerHTML = '<div class="frete-erro"><i class="fas fa-exclamation-triangle"></i> Não foi possível calcular o frete para este CEP. Entre em contato pelo WhatsApp.</div>';
@@ -742,19 +740,18 @@ async function calcularFrete(cepDestino) {
     const lista = document.getElementById('lista-frete');
 
     res.fretes.forEach((s, i) => {
-      const prazo    = s.prazo ? `${s.prazo} dias úteis` : 'Consulte o prazo';
+      const prazo    = s.prazo ? s.prazo + ' dias úteis' : 'Consulte o prazo';
       const precoFmt = s.preco.toFixed(2).replace('.', ',');
-      const nomeFull = `${s.empresa} — ${s.nome}`;
+      const nomeFull = s.empresa + ' — ' + s.nome;
       const card     = document.createElement('label');
       card.className = 'frete-card' + (i === 0 ? ' selecionado' : '');
-      card.innerHTML = `
-        <input type="radio" name="frete" value="${s.preco}" data-nome="${nomeFull}" ${i === 0 ? 'checked' : ''}>
-        <div class="frete-info">
-          <div class="frete-nome">${nomeFull}</div>
-          <div class="frete-prazo"><i class="fas fa-clock"></i> ${prazo}</div>
-        </div>
-        <div class="frete-preco">R$ ${precoFmt}</div>
-      `;
+      card.innerHTML =
+        '<input type="radio" name="frete" value="' + s.preco + '" data-nome="' + nomeFull + '" ' + (i === 0 ? 'checked' : '') + '>' +
+        '<div class="frete-info">' +
+          '<div class="frete-nome">' + nomeFull + '</div>' +
+          '<div class="frete-prazo"><i class="fas fa-clock"></i> ' + prazo + '</div>' +
+        '</div>' +
+        '<div class="frete-preco">R$ ' + precoFmt + '</div>';
       lista.appendChild(card);
 
       card.querySelector('input').addEventListener('change', function() {
@@ -766,9 +763,8 @@ async function calcularFrete(cepDestino) {
       });
     });
 
-    // Seleciona automaticamente o mais barato
     freteValor       = res.fretes[0].preco;
-    freteSelecionado = `${res.fretes[0].empresa} — ${res.fretes[0].nome}`;
+    freteSelecionado = res.fretes[0].empresa + ' — ' + res.fretes[0].nome;
     atualizarTotal();
 
   } catch (err) {

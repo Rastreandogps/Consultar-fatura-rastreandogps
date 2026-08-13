@@ -246,6 +246,18 @@
           <span class="msg-erro">Número inválido.</span>
         </div>
       </div>
+      <!-- Quantidade -->
+      <div class="form-row full">
+        <div class="field">
+          <label>Quantidade de equipamentos <span class="req">*</span></label>
+          <div style="display:flex;align-items:center;gap:12px">
+            <button type="button" id="btn-menos" style="width:42px;height:46px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:20px;font-weight:700;cursor:pointer;color:var(--ink)">−</button>
+            <input type="number" id="quantidade" value="1" min="1" max="10" style="width:80px;text-align:center;font-size:18px;font-weight:700">
+            <button type="button" id="btn-mais" style="width:42px;height:46px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:20px;font-weight:700;cursor:pointer;color:var(--ink)">+</button>
+            <span style="font-size:13px;color:var(--muted)">unidade(s) — máx. 10</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Endereço -->
@@ -335,9 +347,9 @@
 
       <!-- Bloco PIX -->
       <div id="bloco-pix">
-        <div style="background:var(--green-soft);border:1px solid var(--green);border-radius:12px;padding:14px 16px;font-size:14px;color:var(--green);margin-bottom:16px">
-          <i class="fas fa-tag"></i> <strong>20% de desconto no Pix!</strong>
-          Equipamento de <s style="color:var(--muted)">R$ 159,90</s> por <strong>R$ 127,92</strong> + frete.
+        <div style="background:var(--green-soft);border:1px solid var(--green);border-radius:12px;padding:14px 16px;font-size:14px;color:var(--green);margin-bottom:16px" id="badge-pix-info">
+          <i class="fas fa-tag"></i> <strong>20% de desconto no Pix!</strong><br>
+          <span id="badge-pix-texto">Equipamento por <strong id="badge-equip-pix">R$ 127,92</strong> + frete a calcular.</span>
         </div>
         <p style="color:var(--muted);font-size:14px;line-height:1.6">
           Após clicar em <strong>"Gerar Pix"</strong>, você receberá o QR Code e o código Copia e Cola. O pedido é confirmado automaticamente assim que o pagamento for identificado.
@@ -415,7 +427,11 @@
       </div>
     </div>
     <div class="resumo-linha">
-      <span>Equipamento</span>
+      <span>Qtd. / Unitário</span>
+      <span id="resumo-qtd-unit">1x R$ 159,90</span>
+    </div>
+    <div class="resumo-linha">
+      <span>Equipamento(s)</span>
       <span id="resumo-equip">R$ 159,90</span>
     </div>
     <div class="resumo-linha">
@@ -451,17 +467,35 @@
 <script>
 const CHECKOUT_URL = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSLlgqpNmKtDReupm0QsXcUj0Ulv-rlOR1iftSzirr3486rt7aBBtWM/exec';
 
-const PRECO_ORIGINAL  = 159.90;
-const PRECO_PIX       = 127.92; // 20% desconto
-const JUROS_MES       = 0.0299; // 2,99% ao mês
+const PRECO_UNIT_ORIGINAL = 159.90;
+const PRECO_UNIT_PIX      = 127.92; // 20% desconto
+const JUROS_MES           = 0.0299; // 2,99% ao mês
 
 let freteValor      = 0;
 let freteSelecionado= null;
 let formaPagamento  = 'pix';
 let parcelasSel     = 1;
-let totalCartao     = PRECO_ORIGINAL;
+let totalCartao     = PRECO_UNIT_ORIGINAL;
+let quantidade      = 1;
+
+// Helpers de preço
+function precoEquipPix()    { return PRECO_UNIT_PIX      * quantidade; }
+function precoEquipCartao() { return PRECO_UNIT_ORIGINAL * quantidade; }
 
 document.getElementById('ano').textContent = new Date().getFullYear();
+
+// ── Quantidade ────────────────────────────────────────────────
+document.getElementById('btn-menos').addEventListener('click', () => {
+  if (quantidade > 1) { quantidade--; document.getElementById('quantidade').value = quantidade; atualizarTotal(); }
+});
+document.getElementById('btn-mais').addEventListener('click', () => {
+  if (quantidade < 10) { quantidade++; document.getElementById('quantidade').value = quantidade; atualizarTotal(); }
+});
+document.getElementById('quantidade').addEventListener('change', function() {
+  quantidade = Math.max(1, Math.min(10, parseInt(this.value) || 1));
+  this.value = quantidade;
+  atualizarTotal();
+});
 
 // ── Seleciona forma de pagamento ──────────────────────────────
 function selecionarPagamento(forma) {
@@ -486,7 +520,7 @@ function selecionarPagamento(forma) {
 
 // ── Gera opções de parcelas ───────────────────────────────────
 function gerarOpcoesParcelas() {
-  const base   = PRECO_ORIGINAL + freteValor;
+  const base   = precoEquipCartao() + freteValor;
   const lista  = document.getElementById('lista-parcelas');
   lista.innerHTML = '';
 
@@ -527,19 +561,39 @@ function gerarOpcoesParcelas() {
 
 // ── Atualiza resumo ───────────────────────────────────────────
 function atualizarTotal() {
-  const equipEl = document.getElementById('resumo-equip');
-  const freteEl = document.getElementById('resumo-frete');
-  const totalEl = document.getElementById('resumo-total');
+  const equipEl  = document.getElementById('resumo-equip');
+  const freteEl  = document.getElementById('resumo-frete');
+  const totalEl  = document.getElementById('resumo-total');
+  const qtdEl    = document.getElementById('resumo-qtd-unit');
+  const badgeEl  = document.getElementById('badge-pix-texto');
+  const badgeEquipEl = document.getElementById('badge-equip-pix');
 
   if (formaPagamento === 'pix') {
-    equipEl.innerHTML = '<s style="color:var(--muted);font-size:12px">R$ 159,90</s> <strong style="color:var(--green)">R$ 127,92</strong>';
-    const total = PRECO_PIX + freteValor;
+    const equip = precoEquipPix();
+    const total = equip + freteValor;
+
+    qtdEl.textContent  = quantidade + 'x R$ ' + PRECO_UNIT_PIX.toFixed(2).replace('.', ',');
+    equipEl.innerHTML  = '<s style="color:var(--muted);font-size:12px">R$ ' + precoEquipCartao().toFixed(2).replace('.', ',') + '</s> <strong style="color:var(--green)">R$ ' + equip.toFixed(2).replace('.', ',') + '</strong>';
     totalEl.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+
+    // Badge dinâmico do Pix
+    if (badgeEquipEl) badgeEquipEl.textContent = 'R$ ' + equip.toFixed(2).replace('.', ',');
+    if (badgeEl) {
+      if (freteValor > 0) {
+        const fmtFrete = 'R$ ' + freteValor.toFixed(2).replace('.', ',');
+        const fmtTotal = 'R$ ' + total.toFixed(2).replace('.', ',');
+        badgeEl.innerHTML = quantidade + ' equipamento(s) por <strong>R$ ' + equip.toFixed(2).replace('.', ',') + '</strong> + frete <strong>' + fmtFrete + '</strong> = <strong>' + fmtTotal + '</strong>';
+      } else {
+        badgeEl.innerHTML = quantidade + ' equipamento(s) por <strong>R$ ' + equip.toFixed(2).replace('.', ',') + '</strong> + frete a calcular.';
+      }
+    }
+
   } else {
-    equipEl.textContent = 'R$ ' + PRECO_ORIGINAL.toFixed(2).replace('.', ',');
+    const equip = precoEquipCartao();
+    qtdEl.textContent  = quantidade + 'x R$ ' + PRECO_UNIT_ORIGINAL.toFixed(2).replace('.', ',');
+    equipEl.textContent = 'R$ ' + equip.toFixed(2).replace('.', ',');
     gerarOpcoesParcelas();
-    const total = totalCartao;
-    totalEl.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+    totalEl.textContent = 'R$ ' + totalCartao.toFixed(2).replace('.', ',');
   }
 
   if (freteValor > 0) {
@@ -748,14 +802,15 @@ document.getElementById('btn-finalizar').addEventListener('click', async()=>{
     freteNome:freteSelecionado,
     freteValor:freteValor,
     formaPagamento:formaPagamento,
+    quantidade:quantidade,
   };
 
   if(formaPagamento==='pix'){
-    dados.valorEquipamento = PRECO_PIX;
-    dados.totalPedido      = PRECO_PIX + freteValor;
+    dados.valorEquipamento = precoEquipPix();
+    dados.totalPedido      = precoEquipPix() + freteValor;
     dados.acao             = 'pedido';
   } else {
-    dados.valorEquipamento = PRECO_ORIGINAL;
+    dados.valorEquipamento = precoEquipCartao();
     dados.parcelas         = parcelasSel;
     dados.totalPedido      = totalCartao;
     dados.acao             = 'pedido';

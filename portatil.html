@@ -651,8 +651,9 @@
     .port-badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
     .port-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;width:min(1100px,94vw);margin:0 auto;padding:48px 0 60px}
     .port-card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-md);display:flex;flex-direction:column}
-    .port-img{background:var(--bg-soft);padding:24px;display:flex;align-items:center;justify-content:center;min-height:300px;position:relative}
-    .port-img img{max-width:90%;max-height:260px;object-fit:contain}
+    .port-img{background:var(--bg-soft);padding:24px;display:flex;align-items:center;justify-content:center;min-height:280px;position:relative;overflow:hidden}
+    .port-img img{max-width:75%;max-height:220px;object-fit:contain;transition:transform .3s}
+    .port-img img:hover{transform:scale(1.04)}
     .port-top-badge{position:absolute;top:16px;right:16px;background:var(--blue);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;padding:4px 12px;border-radius:20px}
     .port-body{padding:28px;flex:1;display:flex;flex-direction:column}
     .port-nome{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;margin-bottom:6px}
@@ -726,7 +727,7 @@
   <div class="port-card">
     <div class="port-img">
       <span class="port-top-badge">MAIS VENDIDO</span>
-      <img src="./assets/ml-po.jpg" alt="Rastreador Portátil 4G">
+      <img src="./assets/ml%20po.jpg" alt="Rastreador Portátil 4G">
     </div>
     <div class="port-body">
       <div class="port-nome">Rastreador Portátil 4G</div>

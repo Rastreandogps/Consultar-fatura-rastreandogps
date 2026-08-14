@@ -368,13 +368,35 @@
 
     /* Instaladores (caixa dentro da seção de preços) */
     .installer-box {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 36px; text-align: center; max-width: 700px; margin: 40px auto 0;
+      background: linear-gradient(135deg, #eef4ff 0%, #f5f0ff 100%);
+      border: 1.5px solid #d0e2ff;
+      border-radius: 20px; padding: 40px 36px; text-align: center;
+      max-width: 700px; margin: 40px auto 0;
       box-shadow: var(--shadow-sm);
+      position: relative; overflow: hidden;
     }
-    .installer-box h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 12px; }
-    .installer-box p { color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
-    .installer-note { font-size: 13px; color: var(--muted); margin-top: 20px; font-style: italic; line-height: 1.6; }
+    .installer-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--blue), #7b5cf0, var(--green));
+    }
+    .installer-box .inst-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), #5b8def);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; box-shadow: 0 4px 14px rgba(52,131,250,0.35);
+    }
+    .installer-box .inst-icon i { color: #fff; font-size: 22px; }
+    .installer-box h3 {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 800;
+      margin-bottom: 8px; color: var(--ink);
+    }
+    .installer-box .inst-sub { color: var(--muted); margin-bottom: 24px; line-height: 1.6; font-size: 15px; }
+    .installer-note {
+      font-size: 12px; color: var(--muted); margin-top: 20px;
+      line-height: 1.6; background: rgba(255,255,255,0.6);
+      border-radius: 10px; padding: 10px 14px;
+      border: 1px solid #dde8ff;
+    }
 
     /* ─── COMO FUNCIONA ─── */
     .steps-wrapper { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-top: 48px; }
@@ -841,12 +863,13 @@
 
     <!-- Instaladores -->
     <div class="installer-box" style="margin-top: 40px;">
-      <h3><i class="fas fa-search-location" style="color:var(--blue); margin-right:8px;"></i> Precisa de instalador?</h3>
-      <p>Se preferir não instalar sozinho, consulte profissionais disponíveis em todo o Brasil.</p>
+      <div class="inst-icon"><i class="fas fa-tools"></i></div>
+      <h3>Prefere que alguém instale?</h3>
+      <p class="inst-sub">Encontre instaladores certificados em todo o Brasil — rápido, simples e perto de você.</p>
       <a href="https://www.instaladoresderastreador.com.br/#/pesquisa" class="btn btn-blue" target="_blank" rel="noopener">
         <i class="fas fa-map-marker-alt"></i> Buscar Instalador na Minha Região
       </a>
-      <p class="installer-note">⚠️ A Rastreando GPS disponibiliza este link como conveniência. Os instaladores listados são profissionais independentes — verifique valores e experiência diretamente com o técnico.</p>
+      <p class="installer-note">ℹ️ Este link é disponibilizado como conveniência. Os profissionais listados são independentes — verifique valores e experiência diretamente com o técnico.</p>
     </div>
   </div>
 </section>

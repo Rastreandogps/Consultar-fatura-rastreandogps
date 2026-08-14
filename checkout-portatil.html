@@ -691,64 +691,7 @@ document.getElementById('quantidade').addEventListener('change', function() {
   this.value = quantidade; atualizarResumo();
 });
 
-// ── Pagamento ─────────────────────────────────────────────────
-function selecionarPagamento(forma) {
-  // Portátil — sempre Pix, sem cartão
-  formaPagamento = 'pix';
-  atualizarResumo();
-}
 
-// ── Parcelas ──────────────────────────────────────────────────
-function gerarParcelas() {
-  const base  = equipCartao() + freteValor;
-  const lista = document.getElementById('lista-parcelas');
-  lista.innerHTML = '';
-  parcelasSel = 1;
-
-  for (let n = 1; n <= 3; n++) {
-    let valorParc, total;
-    if (n === 1) { valorParc = base; total = base; }
-    else {
-      valorParc = base * JUROS_MES / (1 - Math.pow(1 + JUROS_MES, -n));
-      total = valorParc * n;
-    }
-    if (n === 1) totalCartao = total;
-
-    const jurosTag = n === 1
-      ? '<small style="color:var(--green);font-size:11px"> sem juros</small>'
-      : '<small style="color:var(--muted);font-size:11px"> juros 2,99%/mês</small>';
-
-    const card = document.createElement('div');
-    card.className = 'parcela-card' + (n === 1 ? ' selecionado' : '');
-    card.innerHTML =
-      '<div class="parcela-bolinha"><div class="parcela-bolinha-inner"></div></div>' +
-      '<div class="parcela-info">' +
-        '<div class="parcela-label">' + n + 'x de R$ ' + valorParc.toFixed(2).replace('.',',') + jurosTag + '</div>' +
-        '<div class="parcela-total">Total: R$ ' + total.toFixed(2).replace('.',',') + '</div>' +
-      '</div>' +
-      '<div class="parcela-valor">R$ ' + valorParc.toFixed(2).replace('.',',') + '</div>';
-
-    (function(nLocal, totalLocal) {
-      card.addEventListener('click', function() {
-        lista.querySelectorAll('.parcela-card').forEach(function(c) {
-          c.classList.remove('selecionado');
-        });
-        card.classList.add('selecionado');
-        parcelasSel = nLocal;
-        totalCartao = totalLocal;
-        atualizarResumo();
-      });
-    })(n, total);
-
-    lista.appendChild(card);
-  }
-}
-// ── Seleciona pagamento ───────────────────────────────────────
-function selecionarPagamento(forma) {
-  // Portátil — sempre Pix, sem cartão
-  formaPagamento = 'pix';
-  atualizarResumo();
-}
 
 // ── Seleciona pagamento ───────────────────────────────────────
 function selecionarPagamento(forma) {

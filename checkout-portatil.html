@@ -991,18 +991,7 @@ function validarEtapa2() {
 
 function validarEtapa3() {
   document.getElementById('msg-erro-pag').classList.remove('ativo');
-  if(formaPagamento==='cartao'){
-    const campos=[
-      ['cartao-numero',   function(v){return v.replace(/\D/g,'').length>=15;}],
-      ['cartao-nome',     function(v){return v.trim().split(' ').length>=2;}],
-      ['cartao-cpf',      function(v){return cpfOk(v);}],
-      ['cartao-validade', function(v){return /^\d{2}\/\d{2}$/.test(v);}],
-      ['cartao-cvv',      function(v){return v.length>=3;}],
-    ];
-    for(let i=0;i<campos.length;i++){
-      if(!checar(campos[i][0],campos[i][1])){marcarErro(campos[i][0]);return false;}
-    }
-  }
+  // Dados do cartão são digitados no Asaas — sem validação local necessária
   return true;
 }
 
@@ -1028,11 +1017,17 @@ function preencherConfirmacao() {
   document.getElementById('cf-cep').textContent    = document.getElementById('cep').value;
   document.getElementById('cf-frete').textContent  = freteSelecionado + ' — R$ ' + freteValor.toFixed(2).replace('.',',');
   document.getElementById('cf-frete2').textContent = 'R$ ' + freteValor.toFixed(2).replace('.',',');
-  // Portátil — apenas Pix, sem desconto
-  document.getElementById('cf-equip').textContent     = 'R$ ' + equipPix().toFixed(2).replace('.',',');
-  document.getElementById('cf-pagamento').textContent = 'Pix';
-  document.getElementById('cf-total').textContent     = 'R$ ' + totalPix().toFixed(2).replace('.',',');
-  document.getElementById('btn-confirmar-txt').textContent = 'Gerar Pix e Pagar';
+  if (formaPagamento === 'pix') {
+    document.getElementById('cf-equip').textContent     = 'R$ ' + equipPix().toFixed(2).replace('.',',');
+    document.getElementById('cf-pagamento').textContent = 'Pix';
+    document.getElementById('cf-total').textContent     = 'R$ ' + totalPix().toFixed(2).replace('.',',');
+    document.getElementById('btn-confirmar-txt').textContent = 'Gerar Pix e Pagar';
+  } else {
+    document.getElementById('cf-equip').textContent     = 'R$ ' + (PRECO_UNIT * quantidade).toFixed(2).replace('.',',');
+    document.getElementById('cf-pagamento').textContent = 'Cartão — ' + parcelasSel + 'x' + (parcelasSel > 1 ? ' (juros 2,99%/mês)' : ' sem juros');
+    document.getElementById('cf-total').textContent     = 'R$ ' + totalCartao.toFixed(2).replace('.',',');
+    document.getElementById('btn-confirmar-txt').textContent = 'Confirmar Pagamento no Cartão';
+  }
 }
 
 // ── Confirmar pedido ──────────────────────────────────────────
@@ -1117,16 +1112,16 @@ async function confirmarPedido() {
       document.getElementById('form-area').style.display='none';
       document.getElementById('tela-sucesso').classList.add('ativo');
     } else {
+      // Redireciona para página segura do Asaas
+      if (res.invoiceUrl) {
+        window.location.href = res.invoiceUrl;
+        return;
+      }
       document.getElementById('cartao-sucesso-msg').textContent=
-        'Pagamento de R$ '+Number(res.valor).toFixed(2).replace('.',',')+' em '+parcelasSel+'x aprovado!';
+        'Pedido criado! Você será redirecionado para finalizar o pagamento.';
       document.getElementById('wa-pedido-cartao').href=waHref;
       document.getElementById('form-area').style.display='none';
       document.getElementById('tela-sucesso-cartao').classList.add('ativo');
-    }
-    // Cartão — redireciona para página segura do Asaas
-    if (formaPagamento === 'cartao' && res.invoiceUrl) {
-      window.location.href = res.invoiceUrl;
-      return;
     }
     window.scrollTo(0,0);
   } catch(err) {

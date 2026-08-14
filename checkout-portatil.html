@@ -423,19 +423,40 @@
     <div class="etapa" id="etapa-3">
       <div class="etapa-titulo"><i class="fas fa-lock"></i> Forma de Pagamento</div>
 
-      <!-- Apenas Pix — sem cartão -->
-      <div style="background:var(--green-soft);border:1px solid var(--green);border-radius:14px;padding:16px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px">
-        <i class="fas fa-qrcode" style="font-size:24px;color:var(--green)"></i>
-        <div>
-          <strong style="font-size:15px">Pagamento via Pix</strong><br>
-          <span style="font-size:13px;color:var(--muted)">Aprovação imediata após o pagamento</span>
+      <!-- Tabs Pix / Cartão -->
+      <div class="pagamento-tabs">
+        <div class="pagamento-tab ativo" id="tab-pix" onclick="selecionarPagamento('pix')">
+          <i class="fas fa-qrcode"></i>
+          <strong>Pix</strong>
+          <span>Aprovação imediata</span>
+        </div>
+        <div class="pagamento-tab" id="tab-cartao" onclick="selecionarPagamento('cartao')">
+          <i class="fas fa-credit-card"></i>
+          <strong>Cartão de Crédito</strong>
+          <span>Em até 2x</span>
         </div>
       </div>
 
-      <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:16px">
-        Após confirmar, você receberá o QR Code e o código Copia e Cola na tela seguinte.
-      </p>
-      <p style="font-size:13px;color:var(--green)" id="badge-pix-texto"></p>
+      <!-- Bloco Pix -->
+      <div id="bloco-pix">
+        <div style="background:var(--green-soft);border:1px solid var(--green);border-radius:12px;padding:14px 16px;font-size:14px;color:var(--green);margin-bottom:16px">
+          <i class="fas fa-qrcode"></i> <strong>Pagamento via Pix</strong><br>
+          <span id="badge-pix-texto" style="font-size:13px">Aprovação imediata após o pagamento.</span>
+        </div>
+        <p style="color:var(--muted);font-size:14px;line-height:1.6">Após confirmar, você receberá o QR Code e o código Copia e Cola na tela seguinte.</p>
+      </div>
+
+      <!-- Bloco Cartão -->
+      <div id="bloco-cartao" style="display:none">
+        <div class="parcelas-wrap" id="lista-parcelas"></div>
+        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:16px;font-size:14px;color:#0369a1;display:flex;gap:10px;align-items:flex-start;margin-top:8px">
+          <i class="fas fa-shield-alt" style="margin-top:2px;flex-shrink:0;font-size:18px"></i>
+          <div>
+            <strong>Dados do cartão 100% seguros</strong><br>
+            Você será redirecionado para a página de pagamento do <strong>Asaas</strong> — certificada PCI-DSS — para digitar os dados com total segurança.
+          </div>
+        </div>
+      </div>
 
       <div class="msg-erro-global" id="msg-erro-pag">
         <i class="fas fa-exclamation-circle" style="flex-shrink:0;margin-top:2px"></i>
@@ -562,8 +583,9 @@ const PRODUTOS = {
 const params      = new URLSearchParams(window.location.search);
 const PRODUTO_KEY = params.get('produto') || 'portatil';
 const PRODUTO     = PRODUTOS[PRODUTO_KEY] || PRODUTOS.portatil;
-const PRECO_UNIT  = PRODUTO.equip + PRODUTO.plano; // preço total por unidade
+const PRECO_UNIT     = PRODUTO.equip + PRODUTO.plano; // preço total por unidade
 const PRECO_UNIT_PIX = PRECO_UNIT; // sem desconto Pix
+const JUROS_MES      = 0.0299; // 2,99% ao mês para parcelamento
 const IS_RENOVACAO = PRODUTO_KEY.startsWith('renov-'); // renovação não tem frete
 
 let etapaAtual    = 1;
@@ -571,8 +593,8 @@ let quantidade    = parseInt(params.get('qtd')) || 1;
 let freteValor    = 0;
 let freteSelecionado = null;
 let formaPagamento   = 'pix';
-let parcelasSel      = 1;
-let totalCartao      = PRECO_UNIT;
+
+
 
 document.getElementById('ano').textContent = new Date().getFullYear();
 
@@ -728,6 +750,62 @@ function selecionarPagamento(forma) {
   atualizarResumo();
 }
 
+// ── Seleciona pagamento ───────────────────────────────────────
+function selecionarPagamento(forma) {
+  formaPagamento = forma;
+  document.getElementById('tab-pix').classList.toggle('ativo', forma === 'pix');
+  document.getElementById('tab-cartao').classList.toggle('ativo', forma === 'cartao');
+  document.getElementById('bloco-pix').style.display    = forma === 'pix'    ? '' : 'none';
+  document.getElementById('bloco-cartao').style.display = forma === 'cartao' ? '' : 'none';
+  document.getElementById('resumo-pagamento').textContent = forma === 'pix' ? 'Pix' : 'Cartão de Crédito';
+  if (forma === 'cartao') gerarParcelas();
+  atualizarResumo();
+}
+
+// ── Parcelas (máx 2x) ─────────────────────────────────────────
+function gerarParcelas() {
+  const base  = (equipPix() || PRECO_UNIT * quantidade) + (IS_RENOVACAO ? 0 : freteValor);
+  const lista = document.getElementById('lista-parcelas');
+  lista.innerHTML = '';
+  parcelasSel = 1;
+
+  for (let n = 1; n <= 2; n++) {
+    let valorParc, total;
+    if (n === 1) { valorParc = base; total = base; }
+    else {
+      valorParc = base * JUROS_MES / (1 - Math.pow(1 + JUROS_MES, -n));
+      total = valorParc * n;
+    }
+    if (n === 1) totalCartao = total;
+
+    const jurosTag = n === 1
+      ? '<small style="color:var(--green);font-size:11px"> sem juros</small>'
+      : '<small style="color:var(--muted);font-size:11px"> juros 2,99%/mês</small>';
+
+    const card = document.createElement('div');
+    card.className = 'parcela-card' + (n === 1 ? ' selecionado' : '');
+    card.innerHTML =
+      '<div class="parcela-bolinha"><div class="parcela-bolinha-inner"></div></div>' +
+      '<div class="parcela-info">' +
+        '<div class="parcela-label">' + n + 'x de R$ ' + valorParc.toFixed(2).replace('.',',') + jurosTag + '</div>' +
+        '<div class="parcela-total">Total: R$ ' + total.toFixed(2).replace('.',',') + '</div>' +
+      '</div>' +
+      '<div class="parcela-valor">R$ ' + valorParc.toFixed(2).replace('.',',') + '</div>';
+
+    (function(nLocal, totalLocal) {
+      card.addEventListener('click', function() {
+        lista.querySelectorAll('.parcela-card').forEach(function(c) { c.classList.remove('selecionado'); });
+        card.classList.add('selecionado');
+        parcelasSel = nLocal;
+        totalCartao = totalLocal;
+        atualizarResumo();
+      });
+    })(n, total);
+
+    lista.appendChild(card);
+  }
+}
+
 // ── Resumo lateral ────────────────────────────────────────────
 function atualizarResumo() {
   const qtdEl   = document.getElementById('resumo-qtd');
@@ -735,16 +813,22 @@ function atualizarResumo() {
   const freteEl = document.getElementById('resumo-frete');
   const totalEl = document.getElementById('resumo-total');
 
-  // Portátil — apenas Pix, sem desconto, sem cartão
-  qtdEl.textContent   = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',');
-  equipEl.textContent = 'R$ ' + equipPix().toFixed(2).replace('.',',');
-  totalEl.textContent = 'R$ ' + totalPix().toFixed(2).replace('.',',');
-  const b = document.getElementById('badge-pix-texto');
-  if (b) {
-    if (freteValor > 0)
-      b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + ' + frete R$ ' + freteValor.toFixed(2).replace('.',',') + ' = R$ ' + totalPix().toFixed(2).replace('.',',');
-    else
-      b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + ' + frete a calcular.';
+  qtdEl.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',');
+
+  if (formaPagamento === 'pix') {
+    equipEl.textContent = 'R$ ' + equipPix().toFixed(2).replace('.',',');
+    totalEl.textContent = 'R$ ' + totalPix().toFixed(2).replace('.',',');
+    const b = document.getElementById('badge-pix-texto');
+    if (b) {
+      if (freteValor > 0 && !IS_RENOVACAO)
+        b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + ' + frete R$ ' + freteValor.toFixed(2).replace('.',',') + ' = R$ ' + totalPix().toFixed(2).replace('.',',');
+      else
+        b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + (IS_RENOVACAO ? '' : ' + frete a calcular.');
+    }
+  } else {
+    gerarParcelas();
+    equipEl.textContent = 'R$ ' + (PRECO_UNIT * quantidade).toFixed(2).replace('.',',');
+    totalEl.textContent = 'R$ ' + totalCartao.toFixed(2).replace('.',',');
   }
 
   if (freteValor > 0) {
@@ -1023,9 +1107,14 @@ async function confirmarPedido() {
     formaPagamento:formaPagamento,
     quantidade:quantidade,
   };
-  // Portátil — apenas Pix
-  dados.valorEquipamento = equipPix();
-  dados.totalPedido      = totalPix();
+  if (formaPagamento === 'pix') {
+    dados.valorEquipamento = equipPix();
+    dados.totalPedido      = totalPix();
+  } else {
+    dados.valorEquipamento = PRECO_UNIT * quantidade;
+    dados.parcelas         = parcelasSel;
+    dados.totalPedido      = totalCartao;
+  }
   document.getElementById('overlay-msg').textContent = formaPagamento==='pix'?'Gerando seu Pix…':'Processando pagamento…';
   document.getElementById('overlay').classList.add('ativo');
   try {
@@ -1080,6 +1169,11 @@ async function confirmarPedido() {
       document.getElementById('wa-pedido-cartao').href=waHref;
       document.getElementById('form-area').style.display='none';
       document.getElementById('tela-sucesso-cartao').classList.add('ativo');
+    }
+    // Cartão — redireciona para página segura do Asaas
+    if (formaPagamento === 'cartao' && res.invoiceUrl) {
+      window.location.href = res.invoiceUrl;
+      return;
     }
     window.scrollTo(0,0);
   } catch(err) {

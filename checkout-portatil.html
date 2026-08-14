@@ -332,9 +332,9 @@
           <label>Quantidade de equipamentos <span class="req">*</span></label>
           <div class="qtd-wrap">
             <button type="button" class="qtd-btn" id="btn-menos">−</button>
-            <input type="number" id="quantidade" value="1" min="1" max="10">
+            <input type="number" id="quantidade" value="1" min="1">
             <button type="button" class="qtd-btn" id="btn-mais">+</button>
-            <span class="hint">unidade(s) — máx. 10</span>
+            <span class="hint">unidade(s) — </span>
           </div>
         </div>
       </div>
@@ -504,7 +504,7 @@
   <aside class="resumo" id="resumo-lateral" style="display:none">
     <div class="resumo-title">Resumo do Pedido</div>
     <div class="resumo-prod">
-      <img src="./assets/ml-po.jpg" id="resumo-produto-img" alt="Produto">
+      <img src="./assets/ml%20po.jpg" id="resumo-produto-img" alt="Produto">
       <div class="resumo-prod-info">
         <strong id="resumo-produto-nome">Rastreador Portátil 4G</strong>
         <span id="resumo-produto-sub">Equipamento + Plano Anual</span>
@@ -552,7 +552,7 @@ const CHECKOUT_URL    = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSL
 
 // Produtos portáteis — carregados da URL
 const PRODUTOS = {
-  portatil: { nome: 'Rastreador Portátil 4G',  equip: 320.00, plano: 320.00, img: './assets/ml-po.jpg' },
+  portatil: { nome: 'Rastreador Portátil 4G',  equip: 320.00, plano: 320.00, img: './assets/ml%20po.jpg' },
   tag:      { nome: 'Tag GPS',                  equip: 99.00,  plano: 118.80, img: './assets/k-tag.jpeg' },
 };
 const params      = new URLSearchParams(window.location.search);
@@ -637,13 +637,13 @@ function voltar(de) {
 
 // ── Quantidade ────────────────────────────────────────────────
 document.getElementById('btn-menos').addEventListener('click', () => {
-  if (quantidade > 1) { quantidade--; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
+  { quantidade--; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
 });
 document.getElementById('btn-mais').addEventListener('click', () => {
-  if (quantidade < 10) { quantidade++; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
+  { quantidade++; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
 });
 document.getElementById('quantidade').addEventListener('change', function() {
-  quantidade = Math.max(1, Math.min(10, parseInt(this.value) || 1));
+  quantidade = Math.max(1, parseInt(this.value) || 1);
   this.value = quantidade; atualizarResumo();
 });
 

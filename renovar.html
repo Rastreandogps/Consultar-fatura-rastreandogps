@@ -849,7 +849,6 @@
     let chave;
     if (p === 'port') chave = periodo === 'semestral' ? 'renov-semestral' : 'renov-portatil';
     else              chave = 'renov-tag';
-    document.getElementById('btn-' + p).href = 'checkout-portatil.html?produto=' + chave + '&qtd=' + qtd;
   }
 
   const anoEl = document.getElementById('ano'); if(anoEl) anoEl.textContent = new Date().getFullYear();

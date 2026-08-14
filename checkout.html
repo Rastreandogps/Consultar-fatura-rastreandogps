@@ -607,6 +607,8 @@
 
 <script>
 const CHECKOUT_URL    = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSLlgqpNmKtDReupm0QsXcUj0Ulv-rlOR1iftSzirr3486rt7aBBtWM/exec';
+const APP_SECRET      = '22980b7b62d5a367e61c93b77646d23bccfbc2823ffece6a';
+const ASAAS_URL       = 'https://sandbox.asaas.com'; // trocar para https://www.asaas.com em produção
 const PRECO_UNIT      = 159.90;
 const PRECO_UNIT_PIX  = 127.92; // 20% desconto
 const JUROS_MES       = 0.0299;
@@ -875,7 +877,7 @@ async function calcularFrete(cepDestino) {
   conteudo.innerHTML = '<div class="frete-loading"><div class="frete-spinner"></div> Calculando fretes…</div>';
   freteValor = 0; freteSelecionado = null; atualizarResumo();
   try {
-    const resp = await fetch(CHECKOUT_URL + '?acao=frete&cep=' + cepDestino.replace(/\D/g,'') + '&produto=4g');
+    const resp = await fetch(CHECKOUT_URL + '?secret=' + APP_SECRET + '&acao=frete&cep=' + cepDestino.replace(/\D/g,'') + '&produto=4g');
     const res  = await resp.json();
     if (!res.ok || !res.fretes || res.fretes.length === 0) {
       conteudo.innerHTML = '<div class="frete-erro"><i class="fas fa-exclamation-triangle"></i> Não foi possível calcular o frete. Entre em contato pelo WhatsApp.</div>';
@@ -1130,7 +1132,7 @@ async function confirmarPedido() {
       delete dadosSemCartao.cartao;
     }
     const dadosEnc = encodeURIComponent(JSON.stringify(dadosSemCartao));
-    let url = CHECKOUT_URL + '?acao=pedido&dados=' + dadosEnc;
+    let url = CHECKOUT_URL + '?secret=' + APP_SECRET + '&acao=pedido&dados=' + dadosEnc;
     if (cartaoEnc) url += '&cartao=' + encodeURIComponent(cartaoEnc);
     const resp = await fetch(url);
     const res  = await resp.json();

@@ -874,7 +874,7 @@
         <div class="port-precos">
           <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl">R$ 118,80</span></div>
           
-          <div class="port-total"><span>Total</span><span class="port-total-val">R$ 118,80</span></div>
+          <div class="port-total"><span>Total</span><span class="port-total-val" id="total-renov-tag">R$ 118,80</span></div>
         </div>
         <div class="port-qtd">
           <button class="port-qtd-btn" onclick="portQtd('renov-tag',-1)">−</button>
@@ -968,6 +968,8 @@
     'renov-tag':      { equip:   0,    plano: 118.80 },
     'renov-semestral':{ equip:   0,    plano: 160.00 },
   };
+  let periodoPort = 'anual'; // período selecionado no card de renovação
+
   function portQtd(p, d) {
     const el = document.getElementById('qtd-' + p);
     el.value = Math.max(1, parseInt(el.value) + d);
@@ -993,8 +995,6 @@
   }
   const anoEl = document.getElementById('ano'); if(anoEl) anoEl.textContent = new Date().getFullYear();
 
-  // ── Seletor Anual/Semestral ──
-  let periodoPort = 'anual';
   function selecionarPeriodoPort(periodo) {
     periodoPort = periodo;
     const isAnual = periodo === 'anual';

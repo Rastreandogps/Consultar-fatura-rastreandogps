@@ -706,9 +706,16 @@ function selecionarPagamento(forma) {
 }
 
 // ── Parcelas (máx 2x) ─────────────────────────────────────────
+let _parcelasBase = null;
 function gerarParcelas() {
   const base  = (equipPix() || PRECO_UNIT * quantidade) + (IS_RENOVACAO ? 0 : freteValor);
   const lista = document.getElementById('lista-parcelas');
+  if (_parcelasBase === base && lista.children.length > 0) {
+    const n = parcelasSel;
+    totalCartao = n === 1 ? base : (base * JUROS_MES / (1 - Math.pow(1 + JUROS_MES, -n))) * n;
+    return;
+  }
+  _parcelasBase = base;
   lista.innerHTML = '';
   parcelasSel = 1;
 

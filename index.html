@@ -219,16 +219,25 @@
     }
     .hero-title {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(44px, 7vw, 76px);
-      font-weight: 900; line-height: 1.0;
-      text-transform: uppercase;
-      margin-bottom: 24px;
+      font-size: clamp(36px, 5.5vw, 64px);
+      font-weight: 900; line-height: 1.08;
+      margin-bottom: 20px;
       color: var(--ink);
     }
+    .hero-title .line-normal {
+      display: block; text-transform: none;
+      font-size: clamp(16px, 2vw, 22px);
+      font-weight: 600; letter-spacing: 0.5px;
+      color: var(--muted); text-transform: uppercase;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 8px;
+    }
+    .hero-title .line-main {
+      display: block; text-transform: uppercase; line-height: 1.05;
+    }
     .hero-title .line-accent {
-      display: block;
+      display: inline;
       background: linear-gradient(180deg, transparent 55%, var(--yellow) 55%);
-      width: fit-content; margin: 0 auto;
     }
     .hero-sub {
       font-size: 19px; line-height: 1.65;
@@ -789,8 +798,8 @@
       </div>
 
       <h1 class="hero-title">
-        De onde você estiver,<br>
-        <span class="line-accent">você controla o seu carro pelo celular.</span>
+        <span class="line-normal">De onde você estiver —</span>
+        <span class="line-main">Você controla<br>o seu carro<br><span class="line-accent">pelo celular.</span></span>
       </h1>
 
       <p class="hero-sub">

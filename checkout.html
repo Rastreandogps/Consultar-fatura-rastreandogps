@@ -1014,7 +1014,7 @@ function preencherConfirmacao() {
     document.getElementById('cf-pagamento').textContent =
       'Cartão — ' + parcelasSel + 'x' + (parcelasSel>1?' (juros 2,99%/mês)':' sem juros');
     document.getElementById('cf-total').textContent = 'R$ ' + totalCartao.toFixed(2).replace('.',',');
-    document.getElementById('btn-confirmar-txt').textContent = 'Confirmar Pagamento no Cartão';
+    document.getElementById('btn-confirmar-txt').textContent = 'Ir para Pagamento';
   }
 }
 
@@ -1050,7 +1050,7 @@ async function confirmarPedido() {
     dados.totalPedido=totalCartao;
     // Cartão — dados digitados no Asaas, não precisamos capturar aqui
   }
-  document.getElementById('overlay-msg').textContent = formaPagamento==='pix'?'Gerando seu Pix…':'Processando pagamento…';
+  document.getElementById('overlay-msg').textContent = formaPagamento==='pix'?'Gerando seu Pix…':'Preparando redirecionamento…';
   document.getElementById('overlay').classList.add('ativo');
   try {
     // Tudo via GET — GAS não suporta CORS em POST

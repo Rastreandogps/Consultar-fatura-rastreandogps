@@ -443,7 +443,7 @@
       </div>
 
       <div class="nav-btns">
-        <button class="btn-voltar" onclick="voltar(3)"><i class="fas fa-arrow-left"></i> Voltar</button>
+        <button class="btn-voltar" onclick="IS_RENOVACAO ? voltar(3, true) : voltar(3)"><i class="fas fa-arrow-left"></i> Voltar</button>
         <button class="btn-avancar" onclick="avancar(3)">
           Revisar Pedido <i class="fas fa-arrow-right"></i>
         </button>
@@ -464,8 +464,8 @@
         <div class="confirm-linha"><span class="label">Quantidade</span><span class="valor" id="cf-qtd"></span></div>
       </div>
 
-      <!-- Endereço -->
-      <div class="confirm-bloco">
+      <!-- Endereço — oculto em renovações -->
+      <div class="confirm-bloco" id="bloco-endereco-confirm">
         <h4><i class="fas fa-map-marker-alt"></i> Endereço de Entrega</h4>
         <div class="confirm-linha"><span class="label">Endereço</span><span class="valor" id="cf-endereco"></span></div>
         <div class="confirm-linha"><span class="label">Cidade/Estado</span><span class="valor" id="cf-cidade"></span></div>
@@ -623,16 +623,24 @@ function avancar(de, pularEndereco) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function voltar(de) {
+function voltar(de, pularEndereco) {
+  // Renovação na etapa 3 volta para etapa 1 (pula endereço)
+  let anterior = de - 1;
+  if (IS_RENOVACAO && de === 3) {
+    anterior = 1;
+    document.getElementById('step-2').classList.remove('concluido');
+    document.getElementById('line-2').classList.remove('concluido');
+  }
+
   document.getElementById('etapa-' + de).classList.remove('ativa');
-  document.getElementById('etapa-' + (de - 1)).classList.add('ativa');
+  document.getElementById('etapa-' + anterior).classList.add('ativa');
 
   document.getElementById('step-' + de).classList.remove('ativo');
-  document.getElementById('step-' + (de - 1)).classList.remove('concluido');
-  document.getElementById('step-' + (de - 1)).classList.add('ativo');
-  document.getElementById('line-' + (de - 1)).classList.remove('concluido');
+  document.getElementById('step-' + anterior).classList.remove('concluido');
+  document.getElementById('step-' + anterior).classList.add('ativo');
+  document.getElementById('line-' + anterior).classList.remove('concluido');
 
-  etapaAtual = de - 1;
+  etapaAtual = anterior;
 
   // Oculta resumo lateral nas etapas 1 e 2
   const resumo = document.getElementById('resumo-lateral');
@@ -962,6 +970,10 @@ function validarEtapa3() {
 
 // ── Preenche confirmação ──────────────────────────────────────
 function preencherConfirmacao() {
+  // Oculta bloco de endereço em renovações
+  const blocoEnd = document.getElementById('bloco-endereco-confirm');
+  if (blocoEnd) blocoEnd.style.display = IS_RENOVACAO ? 'none' : '';
+
   document.getElementById('cf-nome').textContent     = document.getElementById('nome').value;
   document.getElementById('cf-cpf').textContent      = document.getElementById('cpf').value;
   document.getElementById('cf-email').textContent    = document.getElementById('email').value;
@@ -996,15 +1008,15 @@ async function confirmarPedido() {
     cpf:document.getElementById('cpf').value,
     email:document.getElementById('email').value.trim(),
     telefone:document.getElementById('telefone').value,
-    cep:document.getElementById('cep').value,
-    endereco:document.getElementById('endereco').value.trim(),
-    numero:document.getElementById('numero').value.trim(),
-    complemento:document.getElementById('complemento').value.trim(),
-    bairro:document.getElementById('bairro').value.trim(),
-    cidade:document.getElementById('cidade').value.trim(),
-    estado:document.getElementById('estado').value,
-    freteNome:freteSelecionado,
-    freteValor:freteValor,
+    cep:         IS_RENOVACAO ? '' : document.getElementById('cep').value,
+    endereco:    IS_RENOVACAO ? 'Ativação Remota' : document.getElementById('endereco').value.trim(),
+    numero:      IS_RENOVACAO ? 'S/N' : document.getElementById('numero').value.trim(),
+    complemento: IS_RENOVACAO ? '' : document.getElementById('complemento').value.trim(),
+    bairro:      IS_RENOVACAO ? '' : document.getElementById('bairro').value.trim(),
+    cidade:      IS_RENOVACAO ? 'Ativação Remota' : document.getElementById('cidade').value.trim(),
+    estado:      IS_RENOVACAO ? 'RJ' : document.getElementById('estado').value,
+    freteNome:   IS_RENOVACAO ? 'Sem frete' : freteSelecionado,
+    freteValor:  IS_RENOVACAO ? 0 : freteValor,
     formaPagamento:formaPagamento,
     quantidade:quantidade,
   };

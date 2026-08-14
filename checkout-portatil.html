@@ -1,1257 +1,875 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Finalizar Compra — Rastreadores Portáteis</title>
-  <meta name="description" content="Compre seu rastreador 4G com bloqueio. Pix com 20% de desconto ou cartão em até 3x.">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Renovar Plano Anual — Rastreando GPS</title>
+  <meta name="description" content="Renove o plano anual do seu rastreador portátil ou Tag GPS. Pagamento via Pix.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    :root{
-      --bg:#fff;--bg-soft:#fff9df;--border:#ececec;--ink:#232323;--muted:#6b6f76;
-      --yellow:#ffe600;--yellow-deep:#ffd100;--yellow-line:#f0c400;
-      --blue:#3483fa;--blue-dark:#2968c8;
-      --green:#00a650;--green-soft:rgba(0,166,80,.10);
-      --red:#e53935;--wa:#25d366;
-      --shadow-sm:0 6px 18px rgba(35,35,35,.06);
-      --shadow-md:0 14px 40px rgba(35,35,35,.10);
+    /* ============================================================
+       PALETA
+       Amarelo (header/destaque) + Azul (ação/compra) + Verde (confiança)
+       Fundo claro, igual ao ambiente onde o cliente já está comprando.
+       ============================================================ */
+    :root {
+      --bg:         #ffffff;
+      --bg-soft:    #fff9df;   /* amarelo bem clarinho, pro "zebrado" das seções */
+      --card:       #ffffff;
+      --border:     #ececec;
+      --ink:        #232323;
+      --muted:      #6b6f76;
+
+      --yellow:      #ffe600;  /* amarelo destaque */
+      --yellow-deep: #ffd100;
+      --yellow-line: #f0c400;
+
+      --blue:       #3483fa;  /* azul de ação */
+      --blue-dark:  #2968c8;
+      --blue-glow:  rgba(52,131,250,0.22);
+
+      --green:      #00a650;  /* verde de confiança */
+      --green-soft: rgba(0,166,80,0.10);
+
+      --wa:         #25d366;
+      --shadow-sm:  0 6px 18px rgba(35,35,35,0.06);
+      --shadow-md:  0 14px 40px rgba(35,35,35,0.10);
+      --shadow-lg:  0 24px 60px rgba(35,35,35,0.14);
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:'Barlow',sans-serif;background:#f5f5f5;color:var(--ink);-webkit-font-smoothing:antialiased}
 
-    /* Topbar */
-    .topbar{position:sticky;top:0;z-index:100;background:var(--yellow);border-bottom:1px solid var(--yellow-line);box-shadow:0 2px 14px rgba(0,0,0,.08);padding:12px 0}
-    .topbar-inner{width:min(1100px,94vw);margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-    .brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800}
-    .brand img{width:38px;height:38px;border-radius:8px}
-    .back-link{color:var(--ink);text-decoration:none;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
-    .back-link:hover{text-decoration:underline}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-    /* Barra de progresso */
-    .progress-wrap{background:#fff;border-bottom:1px solid var(--border);padding:16px 0}
-    .progress-inner{width:min(1100px,94vw);margin:0 auto}
-    .steps{display:flex;align-items:center;justify-content:center;gap:0}
-    .step{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;flex:1;max-width:160px}
-    .step-circle{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--muted);transition:all .3s;position:relative;z-index:1}
-    .step.ativo .step-circle{background:var(--blue);border-color:var(--blue);color:#fff}
-    .step.concluido .step-circle{background:var(--green);border-color:var(--green);color:#fff}
-    .step-label{font-size:11px;font-weight:600;color:var(--muted);text-align:center;white-space:nowrap}
-    .step.ativo .step-label{color:var(--blue);font-weight:700}
-    .step.concluido .step-label{color:var(--green)}
-    .step-line{flex:1;height:2px;background:var(--border);margin:0 -1px;margin-bottom:22px;transition:background .3s}
-    .step-line.concluido{background:var(--green)}
-
-    /* Layout */
-    .main{width:min(1100px,94vw);margin:0 auto;padding:32px 0 80px;display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start}
-
-    /* Card de etapa */
-    .etapa{display:none;background:#fff;border:1px solid var(--border);border-radius:20px;padding:32px;box-shadow:var(--shadow-sm)}
-    .etapa.ativa{display:block}
-    .etapa-titulo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:24px;padding-bottom:14px;border-bottom:2px solid var(--yellow-deep);display:flex;align-items:center;gap:10px}
-    .etapa-titulo i{color:var(--blue)}
-
-    /* Formulário */
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-    .form-row.full{grid-template-columns:1fr}
-    .form-row.tri{grid-template-columns:1fr 1fr 1fr}
-    .field{display:flex;flex-direction:column;gap:6px}
-    .field label{font-size:13px;font-weight:600;color:var(--ink)}
-    .req{color:var(--red);margin-left:2px}
-    .field input,.field select{height:46px;padding:0 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Barlow',sans-serif;font-size:15px;color:var(--ink);background:#fff;transition:border-color .2s;outline:none}
-    .field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(52,131,250,.12)}
-    .field input.erro{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,57,53,.15)}
-    .hint{font-size:12px;color:var(--muted);margin-top:2px}
-    .msg-erro{font-size:12px;color:var(--red);margin-top:2px;display:none}
-    .field input.erro ~ .msg-erro,.field select.erro ~ .msg-erro{display:block}
-
-    /* Quantidade */
-    .qtd-wrap{display:flex;align-items:center;gap:10px}
-    .qtd-btn{width:40px;height:46px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:20px;font-weight:700;cursor:pointer;color:var(--ink);transition:all .2s;display:flex;align-items:center;justify-content:center}
-    .qtd-btn:hover{border-color:var(--blue);color:var(--blue)}
-    #quantidade{width:70px;text-align:center;font-size:18px;font-weight:700}
-
-    /* Frete */
-    .frete-titulo{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-    .frete-opcoes{display:flex;flex-direction:column;gap:10px}
-    .frete-card{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;background:#fff}
-    .frete-card:hover{border-color:var(--blue);background:#f0f6ff}
-    .frete-card.selecionado{border-color:var(--green);background:var(--green-soft)}
-    .frete-card input[type=radio]{accent-color:var(--green);width:18px;height:18px;flex-shrink:0}
-    .frete-info{flex:1}
-    .frete-nome{font-size:14px;font-weight:700;color:var(--ink)}
-    .frete-prazo{font-size:12px;color:var(--muted);margin-top:2px}
-    .frete-preco{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--green)}
-    .frete-loading{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;padding:8px 0}
-    .frete-spinner{width:16px;height:16px;border:2px solid #e5e7eb;border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-    .frete-erro{font-size:13px;color:var(--red);background:#fff0f0;border:1px solid #fca5a5;border-radius:8px;padding:10px 12px}
-
-    /* Pagamento tabs */
-    .pagamento-tabs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
-    .pagamento-tab{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px;border:2px solid var(--border);border-radius:16px;cursor:pointer;transition:all .2s;background:#fff;position:relative}
-    .pagamento-tab:hover{border-color:var(--blue);background:#f0f6ff}
-    .pagamento-tab.ativo{border-color:var(--green);background:var(--green-soft)}
-    .pagamento-tab i{font-size:24px;color:var(--muted)}
-    .pagamento-tab.ativo i{color:var(--green)}
-    .pagamento-tab strong{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800}
-    .pagamento-tab span{font-size:12px;color:var(--muted);text-align:center}
-    .desconto-tag{position:absolute;top:-10px;right:10px;background:var(--green);color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:20px}
-
-    /* Parcelas */
-    .parcelas-wrap{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
-    .parcelas-wrap{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
-    .parcela-card{display:flex;align-items:center;padding:14px 16px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s;gap:12px;user-select:none}
-    .parcela-card:hover{border-color:var(--blue);background:#f0f6ff}
-    .parcela-card.selecionado{border-color:var(--green);background:var(--green-soft)}
-    .parcela-bolinha{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
-    .parcela-card.selecionado .parcela-bolinha{border-color:var(--green);background:var(--green)}
-    .parcela-bolinha-inner{width:8px;height:8px;border-radius:50%;background:#fff;display:none}
-    .parcela-card.selecionado .parcela-bolinha-inner{display:block}
-    .parcela-info{flex:1}
-    .parcela-label{font-size:14px;font-weight:700;color:var(--ink)}
-    .parcela-total{font-size:12px;color:var(--muted);margin-top:2px}
-    .parcela-valor{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--ink)}
-
-    /* Dados cartão */
-    .cartao-numero-wrap{position:relative}
-    .cartao-numero-wrap input{padding-right:50px}
-    .cartao-bandeira{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--muted)}
-
-    /* Confirmação */
-    .confirm-bloco{background:var(--bg-soft);border:1px solid var(--yellow-line);border-radius:14px;padding:20px;margin-bottom:16px}
-    .confirm-bloco h4{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--ink)}
-    .confirm-bloco h4 i{color:var(--blue)}
-    .confirm-linha{display:flex;justify-content:space-between;font-size:14px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06)}
-    .confirm-linha:last-child{border-bottom:none}
-    .confirm-linha .label{color:var(--muted)}
-    .confirm-linha .valor{font-weight:600;color:var(--ink)}
-    .confirm-total{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:2px solid var(--yellow-deep);font-weight:800;font-size:18px}
-    .confirm-total .preco{font-family:'Barlow Condensed',sans-serif;font-size:26px;color:var(--green)}
-
-    /* Botões de navegação */
-    .nav-btns{display:flex;gap:12px;margin-top:24px}
-    .btn-voltar{flex:1;height:50px;background:#fff;border:1.5px solid var(--border);border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;cursor:pointer;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
-    .btn-voltar:hover{border-color:var(--ink);background:#f5f5f5}
-    .btn-avancar{flex:2;height:50px;background:linear-gradient(90deg,#00a650,#0ea5e9);color:#fff;border:none;border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 28px rgba(0,166,80,.3);transition:all .2s}
-    .btn-avancar:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,166,80,.4)}
-    .btn-avancar:disabled{opacity:.65;cursor:not-allowed}
-    .btn-avancar.apenas{flex:1}
-
-    /* Resumo lateral */
-    .resumo{background:#fff;border:1px solid var(--border);border-radius:20px;padding:24px;position:sticky;top:180px;box-shadow:var(--shadow-sm)}
-    .resumo-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--yellow-deep)}
-    .resumo-prod{display:flex;gap:12px;align-items:center;margin-bottom:16px}
-    .resumo-prod img{width:70px;height:70px;object-fit:contain;border-radius:10px;background:var(--bg-soft);border:1px solid var(--border);padding:6px}
-    .resumo-prod-info strong{display:block;font-size:14px;margin-bottom:3px}
-    .resumo-prod-info span{color:var(--muted);font-size:12px}
-    .resumo-linha{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--border)}
-    .resumo-linha:last-of-type{border-bottom:none}
-    .resumo-total{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:2px solid var(--yellow-deep);font-weight:800;font-size:16px}
-    .resumo-total .preco{font-family:'Barlow Condensed',sans-serif;font-size:26px;color:var(--green)}
-    .pix-badge{margin-top:12px;background:var(--green-soft);border:1px solid var(--green);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--green);display:flex;gap:8px;align-items:flex-start;font-weight:600}
-    .trust-lista{margin-top:16px;list-style:none}
-    .trust-lista li{font-size:12px;color:var(--muted);padding:4px 0;display:flex;align-items:center;gap:7px}
-    .trust-lista li i{color:var(--green);width:14px}
-
-    /* Overlay */
-    #overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);place-items:center}
-    #overlay.ativo{display:grid}
-    .spinner-box{background:#fff;border-radius:20px;padding:40px 48px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.2)}
-    .spinner{width:52px;height:52px;margin:0 auto 16px;border:4px solid #e5e7eb;border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .spinner-box p{font-weight:600;color:var(--ink)}
-
-    /* Tela de sucesso Pix */
-    #tela-sucesso{display:none;max-width:580px;margin:60px auto 80px;background:#fff;border:1px solid var(--border);border-radius:24px;padding:40px;box-shadow:var(--shadow-md);text-align:center}
-    #tela-sucesso.ativo{display:block}
-    #tela-sucesso-cartao{display:none;max-width:580px;margin:60px auto 80px;background:#fff;border:1px solid var(--border);border-radius:24px;padding:40px;box-shadow:var(--shadow-md);text-align:center}
-    #tela-sucesso-cartao.ativo{display:block}
-    .sucesso-icon{width:72px;height:72px;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:32px}
-    .sucesso-icon.pix{background:var(--green-soft);color:var(--green)}
-    .sucesso-icon.cartao{background:#e8f4fd;color:var(--blue)}
-    .sucesso-h2{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;margin-bottom:8px}
-    .sucesso-p{color:var(--muted);margin-bottom:24px}
-    .qr-wrap{background:var(--bg-soft);border:1px solid var(--yellow-line);border-radius:16px;padding:24px;margin-bottom:24px}
-    .qr-wrap img{width:200px;height:200px;margin:0 auto 16px;display:block}
-    .qr-valor{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:var(--green);margin-bottom:6px}
-    .qr-venc{font-size:13px;color:var(--muted);margin-bottom:16px}
-    .copia-cola-box{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--muted);word-break:break-all;text-align:left;margin-bottom:14px;max-height:80px;overflow-y:auto}
-    .btn-copiar{width:100%;height:46px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s}
-    .btn-copiar:hover{background:var(--blue-dark)}
-    .btn-copiar.copiado{background:var(--green)}
-    .proximo-passo{background:#f0f9ff;border:1px solid #bae6fd;border-radius:14px;padding:18px;text-align:left;margin-top:20px}
-    .proximo-passo strong{display:block;margin-bottom:6px;color:var(--ink)}
-    .proximo-passo p{color:var(--muted);font-size:14px;line-height:1.5}
-    .wa-final{margin-top:20px;background:var(--wa);color:#fff;border:none;border-radius:12px;height:52px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity .2s}
-    .wa-final:hover{opacity:.9}
-
-    /* Erro global */
-    .msg-erro-global{display:none;background:#fff0f0;border:1.5px solid #fca5a5;border-radius:12px;padding:14px 16px;color:var(--red);font-size:14px;margin-top:14px;gap:10px;align-items:flex-start}
-    .msg-erro-global.ativo{display:flex}
-
-    footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;font-size:13px;color:var(--muted);background:#fff;margin-top:40px}
-
-    /* Resumo oculto nas etapas 1 e 2 */
-    .main.sem-resumo{grid-template-columns:1fr;max-width:680px}
-
-    @media(max-width:860px){
-      .main{grid-template-columns:1fr;padding:20px 0 60px}
-      .resumo{position:static;order:-1}
-      .form-row.tri{grid-template-columns:1fr 1fr}
-      .steps .step-label{display:none}
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
-    @media(max-width:540px){
-      .form-row,.form-row.tri{grid-template-columns:1fr}
-      .etapa{padding:20px 16px}
-      .resumo{padding:18px 14px}
-      .pagamento-tabs{grid-template-columns:1fr}
+
+    .container { width: min(1200px, 94vw); margin: 0 auto; position: relative; z-index: 1; }
+
+    /* ─── DESTAQUE "MARCA-TEXTO" (assinatura visual da página) ─── */
+    .grad {
+      background: linear-gradient(180deg, transparent 58%, var(--yellow) 58%);
+      color: var(--ink);
+      padding: 0 6px;
+      font-weight: 900;
+      white-space: nowrap;
     }
+    .grad.blue-mark {
+      background: linear-gradient(180deg, transparent 58%, rgba(52,131,250,0.25) 58%);
+      color: var(--blue-dark);
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--yellow);
+      border-bottom: 1px solid var(--yellow-line);
+      box-shadow: 0 2px 14px rgba(0,0,0,0.08);
+      padding: 12px 0;
+    }
+    .topbar-inner {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--ink); text-decoration: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px; font-weight: 800; letter-spacing: 0.5px;
+    }
+    .brand img { width: 38px; height: 38px; border-radius: 8px; }
+    .topbar-cta { display: flex; gap: 10px; align-items: center; }
+
+    /* ─── BOTÕES ─── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 22px; border-radius: 10px; font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 700; letter-spacing: 0.5px;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s;
+      white-space: nowrap;
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    /* Botão principal de compra */
+    .btn-comprar {
+      background: var(--blue); color: #fff;
+      box-shadow: 0 6px 22px var(--blue-glow);
+      animation: mlFloat 2.8s ease-in-out infinite;
+    }
+    .btn-comprar:hover {
+      background: var(--blue-dark); box-shadow: 0 10px 30px var(--blue-glow);
+      animation-play-state: paused;
+    }
+    @keyframes mlFloat {
+      0%, 100% { transform: translateY(0); box-shadow: 0 6px 22px var(--blue-glow); }
+      50%      { transform: translateY(-7px); box-shadow: 0 16px 26px var(--blue-glow); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .btn-comprar { animation: none; }
+    }
+
+    .btn-wa {
+      background: var(--wa); color: #fff;
+      box-shadow: 0 6px 22px rgba(37,211,102,0.28);
+    }
+    .btn-wa:hover { box-shadow: 0 10px 30px rgba(37,211,102,0.4); }
+
+    .btn-blue {
+      background: transparent; color: var(--blue-dark);
+      border: 1.5px solid var(--blue);
+    }
+    .btn-blue:hover { background: rgba(52,131,250,0.08); }
+
+    .btn-outline {
+      background: transparent; color: var(--ink);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { background: #f7f7f7; }
+
+    .btn-lg { padding: 17px 30px; font-size: 18px; border-radius: 12px; }
+    .btn-full { width: 100%; }
+
+    /* ─── SEÇÃO BASE ─── */
+    .section { padding: 80px 0; scroll-margin-top: 80px; }
+    .section.alt { background: var(--bg-soft); }
+
+    .tag {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--blue-dark);
+      background: rgba(52,131,250,0.08);
+      border: 1px solid rgba(52,131,250,0.22);
+      padding: 4px 14px; border-radius: 50px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 900; line-height: 1.06;
+      text-transform: uppercase; letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+    .section-sub {
+      color: var(--muted); font-size: 17px; margin-top: 14px;
+      max-width: 620px;
+    }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 14px auto 0; }
+
+    /* Pílulas de confiança usadas em vários pontos da página */
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--yellow); color: var(--ink);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 12.5px; letter-spacing: 0.4px;
+      text-transform: uppercase;
+      padding: 7px 14px; border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .pill.pill-blue { background: rgba(52,131,250,0.1); color: var(--blue-dark); }
+    .pill.pill-green { background: var(--green-soft); color: var(--green); }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 64px 0 70px;
+      background:
+        radial-gradient(ellipse 70% 55% at 78% 25%, rgba(255,230,0,0.35) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 50% at 10% 85%, rgba(52,131,250,0.10) 0%, transparent 65%);
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+    }
+    .hero-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform: scale(1); }
+      50% { opacity:0.5; transform: scale(1.4); }
+    }
+    .hero-eyebrow-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--green);
+    }
+    .hero-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(40px, 6vw, 66px);
+      font-weight: 900; line-height: 1.02;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      color: var(--ink);
+    }
+    .hero-sub {
+      color: var(--muted); font-size: 18px; line-height: 1.6;
+      margin-bottom: 30px; max-width: 480px;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; }
+    .hero-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+    .badge {
+      display: flex; align-items: center; gap: 7px;
+      padding: 7px 14px; border-radius: 50px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-size: 13px; color: var(--muted);
+      box-shadow: var(--shadow-sm);
+    }
+    .badge i { color: var(--green); font-size: 12px; }
+
+    /* Carrossel Hero */
+    .hero-image { position: relative; }
+    .carousel { position: relative; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); }
+    .carousel-track { display: flex; transition: transform 0.5s cubic-bezier(.4,0,.2,1); }
+    .carousel-slide { min-width: 100%; }
+    .carousel-slide img { width: 100%; display: block; border-radius: 16px; }
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.08);
+      color: var(--ink); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 10; transition: background 0.2s, transform 0.2s;
+      font-size: 18px;
+    }
+    .carousel-btn:hover { background: var(--yellow); transform: translateY(-50%) scale(1.06); }
+    .carousel-btn.prev { left: 12px; }
+    .carousel-btn.next { right: 12px; }
+    .carousel-dots {
+      position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 7px;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.55); border: 1px solid rgba(0,0,0,0.1);
+      cursor: pointer; transition: background 0.3s, transform 0.3s;
+    }
+    .dot.active { background: var(--blue); transform: scale(1.3); border-color: var(--blue); }
+
+    .ml-corner-badge {
+      position: absolute; top: 14px; left: 14px; z-index: 11;
+      background: var(--yellow); color: var(--ink);
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 12.5px; letter-spacing: 0.4px; text-transform: uppercase;
+      padding: 7px 14px; border-radius: 50px;
+      box-shadow: var(--shadow-sm);
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ─── STRIP DE CONFIANÇA ─── */
+    .trust-strip {
+      background: var(--bg-soft);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    .trust-items { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
+    .trust-item {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 700; letter-spacing: 0.3px;
+      color: var(--ink);
+    }
+    .trust-item i { color: var(--green); font-size: 18px; }
+
+    /* ─── PREÇOS ─── */
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+    .price-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px;
+      position: relative; overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .price-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .price-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    }
+    .price-card.equip::before   { background: linear-gradient(90deg, var(--yellow), var(--yellow-deep)); }
+    .price-card.monthly::before { background: linear-gradient(90deg, var(--blue), var(--green)); }
+
+    .step-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12.5px; font-weight: 800; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #fff;
+      background: var(--blue); padding: 5px 14px; border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .price-card.equip .step-pill { background: var(--ink); }
+
+    .price-card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px; font-weight: 800; margin-bottom: 20px;
+    }
+    .price-card img {
+      width: 100%; max-width: 280px; display: block; margin: 0 auto 24px;
+    }
+
+    /* Preço estilo "vitrine brasileira": número grande + centavos sobrescritos */
+    .price-big {
+      display: flex; align-items: flex-start; gap: 2px;
+      font-family: 'Barlow Condensed', sans-serif;
+      line-height: 1; margin-bottom: 6px;
+    }
+    .price-big .moeda { font-size: 26px; font-weight: 800; margin-top: 6px; color: var(--ink); }
+    .price-big .inteiro {
+      font-size: 60px; font-weight: 900; color: var(--ink);
+      background: linear-gradient(180deg, transparent 60%, var(--yellow) 60%);
+      padding: 0 4px;
+    }
+    .price-card.monthly .price-big .inteiro {
+      background: none; color: var(--blue-dark);
+    }
+    .price-big .cents { font-size: 24px; font-weight: 800; margin-top: 6px; color: var(--ink); }
+    .price-card.monthly .price-big .cents { color: var(--blue-dark); }
+    .price-big .periodo { font-size: 18px; color: var(--muted); font-weight: 500; margin: auto 0 4px 4px; }
+
+    .price-note { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
+
+    .feature-list { list-style: none; margin: 22px 0; display: flex; flex-direction: column; gap: 10px; }
+    .feature-list li { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--ink); }
+    .feature-list li i { color: var(--green); font-size: 13px; flex-shrink: 0; }
+
+    .price-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; }
+
+    .combo-note {
+      background: var(--green-soft);
+      border: 1px solid rgba(0,166,80,0.25);
+      border-radius: 12px; padding: 16px 20px;
+      text-align: center; margin-top: 24px;
+      font-size: 15px; color: var(--ink);
+    }
+    .combo-note strong { color: var(--green); }
+
+    /* Instaladores (caixa dentro da seção de preços) */
+    .installer-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 36px; text-align: center; max-width: 700px; margin: 40px auto 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .installer-box h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 12px; }
+    .installer-box p { color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    .installer-note { font-size: 13px; color: var(--muted); margin-top: 20px; font-style: italic; line-height: 1.6; }
+
+    /* ─── COMO FUNCIONA ─── */
+    .steps-wrapper { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-top: 48px; }
+    .step-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px 24px;
+      position: relative; box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .step-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+    .step-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 64px; font-weight: 900;
+      line-height: 1; color: var(--border);
+      position: absolute; top: 12px; right: 16px;
+    }
+    .step-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 18px;
+    }
+    .step-card:nth-child(1) .step-icon { background: rgba(255,209,0,0.18); color: #b8860b; }
+    .step-card:nth-child(2) .step-icon { background: rgba(52,131,250,0.1); color: var(--blue); }
+    .step-card:nth-child(3) .step-icon { background: var(--green-soft); color: var(--green); }
+    .step-card:nth-child(4) .step-icon { background: rgba(168,85,247,0.1); color: #a855f7; }
+    .step-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+    .step-desc { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+    /* ─── APP DOWNLOAD ─── */
+    .app-section { padding: 40px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .app-inner { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .app-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 14px 24px; border-radius: 12px;
+      text-decoration: none; color: #fff; font-weight: 600; font-size: 15px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .app-btn:hover { transform: translateY(-2px); }
+    .app-btn i { font-size: 24px; }
+    .app-btn.android { background: var(--blue); box-shadow: 0 4px 20px var(--blue-glow); }
+    .app-btn.ios     { background: var(--ink); box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
+    .app-btn.pc      { background: #fff; color: var(--ink); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+
+    /* ─── BENEFÍCIOS ─── */
+    .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 48px; }
+    .feat-card {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .feat-card:hover { transform: translateY(-3px); border-color: rgba(52,131,250,0.3); }
+    .feat-icon {
+      width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(52,131,250,0.1); color: var(--blue);
+      font-size: 17px; margin-bottom: 0;
+    }
+    .feat-text { min-width: 0; }
+    .feat-title { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 800; margin-bottom: 3px; }
+    .feat-desc { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+
+    /* ─── CARROSSÉIS (recuperação / depoimentos) ─── */
+    .recovery-carousel, .depo-carousel { max-width: 760px; margin: 40px auto 0; }
+
+    /* ─── DEPOIMENTOS EM TEXTO ─── */
+    .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 40px; }
+    .testi-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; box-shadow: var(--shadow-sm);
+    }
+    .testi-text {
+      color: var(--ink); font-size: 15px; line-height: 1.65;
+      position: relative; padding-left: 20px; margin-bottom: 20px;
+    }
+    .testi-text::before {
+      content: '"'; position: absolute; left: 0; top: -8px;
+      font-size: 40px; color: var(--yellow-deep); line-height: 1;
+    }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(52,131,250,0.12); display: flex;
+      align-items: center; justify-content: center; color: var(--blue);
+    }
+    .testi-name { font-weight: 700; font-size: 15px; }
+    .testi-role { font-size: 13px; color: var(--muted); }
+
+    /* ─── FROTAS ─── */
+    .fleet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 48px; }
+    .fleet-item {
+      display: flex; gap: 16px; padding: 18px;
+      background: var(--card); border-radius: 12px;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--blue); margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s;
+    }
+    .fleet-item:hover { transform: translateX(3px); }
+    .fleet-item-icon {
+      width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(52,131,250,0.1); color: var(--blue); font-size: 18px;
+    }
+    .fleet-item-title { font-weight: 700; margin-bottom: 4px; font-size: 16px; }
+    .fleet-item-desc { color: var(--muted); font-size: 14px; }
+    .fleet-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; }
+    .fleet-stat {
+      background: var(--green-soft); border: 1px solid rgba(0,166,80,0.2);
+      border-radius: 12px; padding: 18px; text-align: center;
+    }
+    .fleet-stat-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 36px; font-weight: 900; color: var(--green);
+    }
+    .fleet-stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .fleet-gif { border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+    .fleet-gif img { width: 100%; display: block; }
+
+    /* ─── INSTALADORES ─── */
+    .pros-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 40px; }
+    .pro-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s, border-color 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .pro-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+    }
+    .pro-card:hover { transform: translateY(-4px); border-color: rgba(52,131,250,0.25); }
+    .pro-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(52,131,250,0.1); color: var(--blue);
+      font-size: 18px; margin-bottom: 14px;
+    }
+    .pro-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .pro-desc { color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
+    .pro-tip { font-size: 12px; color: var(--blue-dark); font-weight: 600; }
+
+    /* ─── FAQ ─── */
+    .faq-wrap { max-width: 780px; margin: 40px auto 0; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%; background: none; border: none; color: var(--ink);
+      font-family: 'Barlow', sans-serif; font-size: 16px; font-weight: 600;
+      padding: 20px 0; display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; gap: 16px; text-align: left;
+    }
+    .faq-q .icon {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(52,131,250,0.1); color: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; transition: transform 0.3s;
+    }
+    .faq-q.open .icon { transform: rotate(45deg); background: var(--blue); color: #fff; }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; color: var(--muted); font-size: 15px; line-height: 1.65; }
+    .faq-a-inner { padding-bottom: 20px; }
+
+    /* ─── EMPRESA ─── */
+    .company-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px; margin-top: 60px;
+      box-shadow: var(--shadow-sm);
+    }
+    .company-box h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 20px; }
+    .company-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .company-grid p { color: var(--muted); font-size: 15px; }
+    .company-grid strong { color: var(--ink); }
+
+    /* ─── VÍDEO ─── */
+    .video-wrap { max-width: 420px; margin: 40px auto 0; }
+    .video-inner {
+      position: relative; padding-top: 177.77%;
+      border-radius: 20px; overflow: hidden;
+      box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+    }
+    .video-inner iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+    /* ─── FOOTER (único contraste escuro da página) ─── */
+    .footer { background: #1a1a1a; color: #c7c9cc; padding: 60px 0 30px; }
+    .footer .brand { color: #fff; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-about p { color: #9a9da3; font-size: 14px; line-height: 1.65; margin-top: 14px; max-width: 280px; }
+    .footer-col-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 800; letter-spacing: 0.5px;
+      text-transform: uppercase; margin-bottom: 16px; color: var(--yellow);
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { color: #c7c9cc; text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--yellow); }
+    .footer-bottom {
+      border-top: 1px solid #333; padding-top: 24px;
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy { color: #87898e; font-size: 13px; }
+
+    /* ─── WHATSAPP FLUTUANTE ─── */
+    .wa-float {
+      position: fixed; bottom: 28px; right: 28px; z-index: 200;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: var(--wa); display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 26px rgba(37,211,102,0.45);
+      text-decoration: none; transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .wa-float:hover { transform: translateY(-3px) scale(1.07); box-shadow: 0 10px 34px rgba(37,211,102,0.6); }
+    .wa-float img { width: 30px; height: 30px; }
+
+    /* ─── MODAL ─── */
+    .modal {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(20,20,20,0.6); backdrop-filter: blur(6px);
+      overflow-y: auto;
+    }
+    .modal-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; max-width: 760px; width: 92%; margin: 5% auto;
+      padding: 36px; position: relative; box-shadow: var(--shadow-lg);
+    }
+    .modal-close {
+      position: absolute; top: 14px; right: 18px;
+      background: none; border: none; color: var(--muted);
+      font-size: 26px; cursor: pointer; transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--ink); }
+    .modal-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px; font-weight: 800; margin-bottom: 20px;
+      border-bottom: 1px solid var(--border); padding-bottom: 12px;
+    }
+    .modal-body { color: var(--muted); line-height: 1.65; max-height: 65vh; overflow-y: auto; }
+    .modal-body p { margin-bottom: 14px; }
+    .modal-body strong { color: var(--ink); }
+    .modal-body ul { padding-left: 18px; margin-bottom: 14px; }
+
+    /* ─── ANIMAÇÕES SCROLL ─── */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── RESPONSIVO ─── */
+    @media (max-width: 1024px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-content { text-align: center; }
+      .hero-btns { justify-content: center; }
+      .hero-badges { justify-content: center; }
+      .hero-sub { margin: 0 auto 30px; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .steps-wrapper { grid-template-columns: 1fr 1fr; }
+      .fleet-grid { grid-template-columns: 1fr; }
+      .testi-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .topbar-cta { display: none; }
+      .steps-wrapper { grid-template-columns: 1fr; }
+      .pros-grid { grid-template-columns: 1fr 1fr; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .company-grid { grid-template-columns: 1fr; }
+      .trust-items { gap: 20px; }
+      .section { padding: 60px 0; }
+      .price-big .inteiro { font-size: 48px; }
+    }
+    @media (max-width: 480px) {
+      .pros-grid { grid-template-columns: 1fr; }
+      .hero-btns .btn { width: 100%; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .fleet-stats { grid-template-columns: 1fr 1fr; }
+      .features-grid { gap: 10px; }
+      .feat-card { padding: 14px; gap: 10px; }
+      .feat-icon { width: 36px; height: 36px; font-size: 15px; border-radius: 9px; }
+      .feat-title { font-size: 14.5px; margin-bottom: 2px; }
+      .feat-desc { font-size: 12.5px; line-height: 1.42; }
+    }
+  
+    /* ── Renovar ──────────────────────────────────────────── */
+    .renov-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;width:min(900px,94vw);margin:0 auto;padding:48px 0 60px}
+    .renov-card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-md);display:flex;flex-direction:column;border:3px solid var(--yellow-deep)}
+    .renov-header{background:var(--yellow);padding:28px;text-align:center}
+    .renov-header i{font-size:42px;color:var(--ink);margin-bottom:10px;display:block}
+    .renov-nome{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;color:var(--ink)}
+    .renov-body{padding:28px;flex:1;display:flex;flex-direction:column}
+    .renov-periodo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+    .renov-periodo-btn{padding:12px 8px;border:2px solid var(--border);border-radius:12px;background:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;text-align:center}
+    .renov-periodo-btn.ativo{border-color:var(--yellow-deep);background:var(--yellow)}
+    .renov-preco-box{background:var(--bg-soft);border:1px solid var(--yellow-line);border-radius:14px;padding:18px;margin-bottom:20px}
+    .renov-preco-linha{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+    .renov-preco-linha:last-child{border-bottom:none}
+    .renov-preco-linha .lb{color:var(--muted)}
+    .renov-preco-linha .vl{font-weight:700}
+    .renov-total{display:flex;justify-content:space-between;align-items:center;padding-top:10px;font-weight:800;font-size:18px}
+    .renov-total-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;color:var(--green)}
+    .renov-qtd{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+    .renov-qtd-btn{width:40px;height:40px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .renov-qtd-btn:hover{border-color:var(--blue);color:var(--blue)}
+    .renov-qtd-input{width:60px;height:40px;text-align:center;font-size:16px;font-weight:700;border:1.5px solid var(--border);border-radius:10px;font-family:'Barlow',sans-serif}
+    .renov-btn{width:100%;height:54px;background:linear-gradient(90deg,#00a650,#0ea5e9);color:#fff;border:none;border-radius:14px;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 28px rgba(0,166,80,.3);transition:all .2s;text-decoration:none;margin-top:auto}
+    .renov-btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,166,80,.4)}
+    .renov-note{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);justify-content:center;margin-top:10px}
+    @media(max-width:768px){.renov-grid{grid-template-columns:1fr;padding:24px 16px 40px}}
   </style>
-</head>
 <body>
 
 <header class="topbar">
-  <div class="topbar-inner">
-    <a href="index.html" class="brand">
+  <div class="container topbar-inner">
+    <a class="brand" href="index.html">
       <img src="./assets/logo.png" alt="Rastreando GPS">
-      Rastreando GPS
+      <span>Rastreando GPS</span>
     </a>
-    <a href="index.html?aba=portateis" class="back-link"><i class="fas fa-arrow-left"></i> Voltar aos produtos</a>
+    <div class="topbar-cta">
+      <a href="portatil.html" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i> Portáteis
+      </a>
+      <a href="https://wa.me/5521980886087" class="btn btn-wa" target="_blank" rel="noopener">
+        <i class="fab fa-whatsapp"></i> WhatsApp
+      </a>
+    </div>
   </div>
 </header>
+<div style="background:var(--yellow);padding:40px 0 32px;text-align:center">
+  <div class="container">
+    <h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,5vw,44px);font-weight:900;margin-bottom:10px">
+      <i class="fas fa-sync-alt"></i> Renovação de Plano Anual
+    </h1>
+    <p style="font-size:16px;color:rgba(35,35,35,.75)">Mantenha seu rastreador ativo. Sem envio físico — ativação remota.</p>
+  </div>
+</div>
+<div style="background:#f5f5f5">
+<div class="renov-grid">
 
-<!-- Barra de progresso -->
-<div class="progress-wrap">
-  <div class="progress-inner">
-    <div class="steps">
-      <div class="step ativo" id="step-1">
-        <div class="step-circle"><i class="fas fa-user" style="font-size:13px"></i></div>
-        <div class="step-label">Seus Dados</div>
-      </div>
-      <div class="step-line" id="line-1"></div>
-      <div class="step" id="step-2">
-        <div class="step-circle"><i class="fas fa-map-marker-alt" style="font-size:13px"></i></div>
-        <div class="step-label">Endereço</div>
-      </div>
-      <div class="step-line" id="line-2"></div>
-      <div class="step" id="step-3">
-        <div class="step-circle"><i class="fas fa-credit-card" style="font-size:13px"></i></div>
-        <div class="step-label">Pagamento</div>
-      </div>
-      <div class="step-line" id="line-3"></div>
-      <div class="step" id="step-4">
-        <div class="step-circle"><i class="fas fa-check" style="font-size:13px"></i></div>
-        <div class="step-label">Confirmação</div>
-      </div>
+  <!-- Renovação Portátil -->
+  <div class="renov-card">
+    <div class="renov-header" style="padding:0;min-height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+      <img src="./assets/Renovacao%20chip.png" alt="Renovação Chip" style="width:100%;height:180px;object-fit:cover">
     </div>
-  </div>
-</div>
-
-<!-- Overlay -->
-<div id="overlay">
-  <div class="spinner-box">
-    <div class="spinner"></div>
-    <p id="overlay-msg">Processando…</p>
-  </div>
-</div>
-
-<!-- Tela sucesso Pix -->
-<div id="tela-sucesso">
-  <div class="sucesso-icon pix"><i class="fas fa-check-circle"></i></div>
-  <div class="sucesso-h2">Pedido gerado com sucesso!</div>
-  <p class="sucesso-p">Pague o Pix abaixo para confirmar seu pedido. Assim que o pagamento for identificado, entraremos em contato para combinar a entrega.</p>
-  <div class="qr-wrap">
-    <img id="qr-img" src="" alt="QR Code Pix">
-    <div class="qr-valor" id="qr-valor"></div>
-    <div class="qr-venc" id="qr-venc"></div>
-    <div class="copia-cola-box" id="pix-texto"></div>
-    <button class="btn-copiar" id="btn-copiar"><i class="fas fa-copy"></i> Copiar código Pix (Copia e Cola)</button>
-  </div>
-  <div class="proximo-passo">
-    <strong><i class="fas fa-truck" style="color:var(--blue);margin-right:6px"></i>Próximo passo</strong>
-    <p>Enviamos o rastreador em até 2 dias úteis após a identificação do Pix. Você receberá o código de rastreio pelo WhatsApp.</p>
-  </div>
-  <a id="wa-pedido-pix" href="#" class="wa-final" target="_blank"><i class="fab fa-whatsapp"></i> Avisar que paguei pelo WhatsApp</a>
-
-  <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:16px">
-    O Pix <strong>não cobra automaticamente</strong> — só é confirmado se você pagar.<br>
-    <a href="#" onclick="cancelarPix();return false;" style="color:var(--muted);font-size:12px;margin-top:6px;display:inline-block">
-      ← Escolher outra forma de pagamento
-    </a>
-  </p>
-</div>
-
-<!-- Tela sucesso Cartão -->
-<div id="tela-sucesso-cartao">
-  <div class="sucesso-icon cartao"><i class="fas fa-credit-card"></i></div>
-  <div class="sucesso-h2">Pagamento aprovado!</div>
-  <p class="sucesso-p" id="cartao-sucesso-msg">Seu pedido foi confirmado. Entraremos em contato pelo WhatsApp.</p>
-  <div class="proximo-passo">
-    <strong><i class="fas fa-truck" style="color:var(--blue);margin-right:6px"></i>Próximo passo</strong>
-    <p>Enviamos o rastreador em até 2 dias úteis. Você receberá o código de rastreio pelo WhatsApp.</p>
-  </div>
-  <a id="wa-pedido-cartao" href="#" class="wa-final" target="_blank"><i class="fab fa-whatsapp"></i> Confirmar pedido pelo WhatsApp</a>
-</div>
-
-<!-- Layout principal -->
-<div class="main sem-resumo" id="form-area">
-  <div>
-
-    <!-- ETAPA 1: Dados pessoais -->
-    <div class="etapa ativa" id="etapa-1">
-      <div class="etapa-titulo"><i class="fas fa-user"></i> Seus Dados</div>
-
-      <div class="form-row">
-        <div class="field">
-          <label>Nome completo <span class="req">*</span></label>
-          <input type="text" id="nome" placeholder="Ex: João Silva" autocomplete="name">
-          <span class="msg-erro">Preencha seu nome completo.</span>
-        </div>
-        <div class="field">
-          <label>CPF <span class="req">*</span></label>
-          <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" autocomplete="off">
-          <span class="msg-erro">CPF inválido.</span>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="field">
-          <label>E-mail <span class="req">*</span></label>
-          <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
-          <span class="msg-erro">E-mail inválido.</span>
-        </div>
-        <div class="field">
-          <label>Celular / WhatsApp <span class="req">*</span></label>
-          <input type="tel" id="telefone" placeholder="(21) 9 0000-0000" maxlength="16" autocomplete="tel">
-          <span class="msg-erro">Número inválido.</span>
-        </div>
-      </div>
-      <div class="form-row full">
-        <div class="field">
-          <label>Quantidade de equipamentos <span class="req">*</span></label>
-          <div class="qtd-wrap">
-            <button type="button" class="qtd-btn" id="btn-menos">−</button>
-            <input type="number" id="quantidade" value="1" min="1">
-            <button type="button" class="qtd-btn" id="btn-mais">+</button>
-            <span class="hint">unidade(s) — </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="nav-btns">
-        <button class="btn-avancar apenas" onclick="IS_RENOVACAO ? avancar(1, true) : avancar(1)">
-          Próximo — <span id="btn1-label">Endereço</span> <i class="fas fa-arrow-right"></i>
+    <div style="padding:16px 28px 0;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900">Portátil (Sincard)</div>
+    <div class="renov-body">
+      <!-- Seletor de período -->
+      <div class="renov-periodo">
+        <button class="renov-periodo-btn ativo" id="btn-anual-port" onclick="setPeriodo('port','anual')">
+          12 meses<br><strong style="font-size:18px;color:var(--green)">R$ 320,00</strong>
+        </button>
+        <button class="renov-periodo-btn" id="btn-semestral-port" onclick="setPeriodo('port','semestral')">
+          6 meses<br><strong style="font-size:18px;color:var(--green)">R$ 160,00</strong>
         </button>
       </div>
+      <div class="renov-preco-box">
+        <div class="renov-preco-linha"><span class="lb" id="label-port">Plano anual (12 meses)</span><span class="vl" id="preco-port">R$ 320,00</span></div>
+        <div class="renov-total"><span>Total</span><span class="renov-total-val" id="total-port">R$ 320,00</span></div>
+      </div>
+      <div class="renov-qtd">
+        <button class="renov-qtd-btn" onclick="alterarQtd('port',-1)">−</button>
+        <input class="renov-qtd-input" type="number" id="qtd-port" value=""  placeholder="0" min="1" onchange="recalcular('port')">
+        <button class="renov-qtd-btn" onclick="alterarQtd('port',1)">+</button>
+        <span style="font-size:13px;color:var(--muted)">renovação(ões)</span>
+      </div>
+      <button onclick="irParaCheckout('port')" class="renov-btn">
+        <i class="fas fa-qrcode"></i> Renovar Agora — Pix
+      </button>
+      <div id="erro-port" style="display:none;color:var(--red);font-size:13px;text-align:center;margin-top:6px;font-weight:600">
+        ⚠️ Informe a quantidade antes de continuar.
+      </div>
+      <p class="renov-note"><i class="fas fa-shield-alt"></i> Pagamento seguro via Pix</p>
     </div>
-
-    <!-- ETAPA 2: Endereço -->
-    <div class="etapa" id="etapa-2">
-      <div class="etapa-titulo"><i class="fas fa-map-marker-alt"></i> Endereço de Entrega</div>
-
-      <div class="form-row full">
-        <div class="field">
-          <label>CEP <span class="req">*</span></label>
-          <div style="position:relative">
-            <input type="text" id="cep" placeholder="00000-000" maxlength="9" autocomplete="postal-code" inputmode="numeric" style="padding-right:44px">
-            <span id="cep-status" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;display:none"></span>
-          </div>
-          <span class="hint" id="cep-hint">Preenchimento automático ao digitar o CEP completo.</span>
-          <span class="msg-erro">CEP inválido.</span>
-        </div>
-      </div>
-      <div class="form-row full">
-        <div class="field">
-          <label>Rua / Logradouro <span class="req">*</span></label>
-          <input type="text" id="endereco" placeholder="Ex: Rua das Flores" autocomplete="address-line1">
-          <span class="msg-erro">Preencha o endereço.</span>
-        </div>
-      </div>
-      <div class="form-row tri">
-        <div class="field">
-          <label>Número <span class="req">*</span></label>
-          <input type="text" id="numero" placeholder="Ex: 123" autocomplete="address-line2">
-          <span class="msg-erro">Informe o número.</span>
-        </div>
-        <div class="field">
-          <label>Complemento</label>
-          <input type="text" id="complemento" placeholder="Apto, bloco..." autocomplete="address-line3">
-        </div>
-        <div class="field">
-          <label>Bairro</label>
-          <input type="text" id="bairro" placeholder="Ex: Centro">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="field">
-          <label>Cidade <span class="req">*</span></label>
-          <input type="text" id="cidade" placeholder="Ex: Rio de Janeiro" autocomplete="address-level2">
-          <span class="msg-erro">Informe a cidade.</span>
-        </div>
-        <div class="field">
-          <label>Estado <span class="req">*</span></label>
-          <select id="estado" autocomplete="address-level1">
-            <option value="">Selecione…</option>
-            <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
-            <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
-            <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
-            <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
-            <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
-            <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
-            <option>SP</option><option>SE</option><option>TO</option>
-          </select>
-          <span class="msg-erro">Selecione o estado.</span>
-        </div>
-      </div>
-
-      <!-- Frete -->
-      <div id="secao-frete" style="display:none;margin-top:20px;border-top:1.5px dashed var(--border);padding-top:20px">
-        <div class="frete-titulo"><i class="fas fa-truck" style="color:var(--blue)"></i> Opções de Frete</div>
-        <div id="frete-conteudo"></div>
-      </div>
-
-      <div class="nav-btns">
-        <button class="btn-voltar" onclick="voltar(2)"><i class="fas fa-arrow-left"></i> Voltar</button>
-        <button class="btn-avancar" id="btn-avancar-2" onclick="avancar(2)">
-          Próximo — Pagamento <i class="fas fa-arrow-right"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- ETAPA 3: Pagamento -->
-    <div class="etapa" id="etapa-3">
-      <div class="etapa-titulo"><i class="fas fa-lock"></i> Forma de Pagamento</div>
-
-      <!-- Tabs Pix / Cartão -->
-      <div class="pagamento-tabs">
-        <div class="pagamento-tab ativo" id="tab-pix" onclick="selecionarPagamento('pix')">
-          <i class="fas fa-qrcode"></i>
-          <strong>Pix</strong>
-          <span>Aprovação imediata</span>
-        </div>
-        <div class="pagamento-tab" id="tab-cartao" onclick="selecionarPagamento('cartao')">
-          <i class="fas fa-credit-card"></i>
-          <strong>Cartão de Crédito</strong>
-          <span>Em até 2x</span>
-        </div>
-      </div>
-
-      <!-- Bloco Pix -->
-      <div id="bloco-pix">
-        <div style="background:var(--green-soft);border:1px solid var(--green);border-radius:12px;padding:14px 16px;font-size:14px;color:var(--green);margin-bottom:16px">
-          <i class="fas fa-qrcode"></i> <strong>Pagamento via Pix</strong><br>
-          <span id="badge-pix-texto" style="font-size:13px">Aprovação imediata após o pagamento.</span>
-        </div>
-        <p style="color:var(--muted);font-size:14px;line-height:1.6">Após confirmar, você receberá o QR Code e o código Copia e Cola na tela seguinte.</p>
-      </div>
-
-      <!-- Bloco Cartão -->
-      <div id="bloco-cartao" style="display:none">
-        <div class="parcelas-wrap" id="lista-parcelas"></div>
-        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:16px;font-size:14px;color:#0369a1;display:flex;gap:10px;align-items:flex-start;margin-top:8px">
-          <i class="fas fa-shield-alt" style="margin-top:2px;flex-shrink:0;font-size:18px"></i>
-          <div>
-            <strong>Dados do cartão 100% seguros</strong><br>
-            Você será redirecionado para a página de pagamento do <strong>Asaas</strong> — certificada PCI-DSS — para digitar os dados com total segurança.
-          </div>
-        </div>
-      </div>
-
-      <div class="msg-erro-global" id="msg-erro-pag">
-        <i class="fas fa-exclamation-circle" style="flex-shrink:0;margin-top:2px"></i>
-        <span id="msg-erro-pag-txt"></span>
-      </div>
-
-      <div class="nav-btns">
-        <button class="btn-voltar" onclick="IS_RENOVACAO ? voltar(3, true) : voltar(3)"><i class="fas fa-arrow-left"></i> Voltar</button>
-        <button class="btn-avancar" onclick="avancar(3)">
-          Revisar Pedido <i class="fas fa-arrow-right"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- ETAPA 4: Confirmação -->
-    <div class="etapa" id="etapa-4">
-      <div class="etapa-titulo"><i class="fas fa-clipboard-check"></i> Confirmar Pedido</div>
-
-      <!-- Dados pessoais -->
-      <div class="confirm-bloco">
-        <h4><i class="fas fa-user"></i> Seus Dados</h4>
-        <div class="confirm-linha"><span class="label">Nome</span><span class="valor" id="cf-nome"></span></div>
-        <div class="confirm-linha"><span class="label">CPF</span><span class="valor" id="cf-cpf"></span></div>
-        <div class="confirm-linha"><span class="label">E-mail</span><span class="valor" id="cf-email"></span></div>
-        <div class="confirm-linha"><span class="label">Telefone</span><span class="valor" id="cf-telefone"></span></div>
-        <div class="confirm-linha"><span class="label">Quantidade</span><span class="valor" id="cf-qtd"></span></div>
-      </div>
-
-      <!-- Endereço — oculto em renovações -->
-      <div class="confirm-bloco" id="bloco-endereco-confirm">
-        <h4><i class="fas fa-map-marker-alt"></i> Endereço de Entrega</h4>
-        <div class="confirm-linha"><span class="label">Endereço</span><span class="valor" id="cf-endereco"></span></div>
-        <div class="confirm-linha"><span class="label">Cidade/Estado</span><span class="valor" id="cf-cidade"></span></div>
-        <div class="confirm-linha"><span class="label">CEP</span><span class="valor" id="cf-cep"></span></div>
-        <div class="confirm-linha"><span class="label">Frete</span><span class="valor" id="cf-frete"></span></div>
-      </div>
-
-      <!-- Total -->
-      <div class="confirm-bloco">
-        <h4><i class="fas fa-receipt"></i> Resumo do Valor</h4>
-        <div class="confirm-linha"><span class="label">Equipamento(s)</span><span class="valor" id="cf-equip"></span></div>
-        <div class="confirm-linha"><span class="label">Frete</span><span class="valor" id="cf-frete2"></span></div>
-        <div class="confirm-linha"><span class="label">Forma de pagamento</span><span class="valor" id="cf-pagamento"></span></div>
-        <div class="confirm-total">
-          <span>Total</span>
-          <span class="preco" id="cf-total"></span>
-        </div>
-      </div>
-
-      <div class="msg-erro-global" id="msg-erro-final">
-        <i class="fas fa-exclamation-circle" style="flex-shrink:0;margin-top:2px"></i>
-        <span id="msg-erro-final-txt"></span>
-      </div>
-
-      <div class="nav-btns">
-        <button class="btn-voltar" onclick="voltar(4)"><i class="fas fa-arrow-left"></i> Voltar</button>
-        <button class="btn-avancar" id="btn-confirmar" onclick="confirmarPedido()">
-          <i class="fas fa-lock"></i> <span id="btn-confirmar-txt">Confirmar e Pagar</span>
-        </button>
-      </div>
-    </div>
-
   </div>
 
-  <!-- Resumo lateral -->
-  <aside class="resumo" id="resumo-lateral" style="display:none">
-    <div class="resumo-title">Resumo do Pedido</div>
-    <div class="resumo-prod">
-      <img src="./assets/ml%20po.jpg" id="resumo-produto-img" alt="Produto">
-      <div class="resumo-prod-info">
-        <strong id="resumo-produto-nome">Rastreador Portátil 4G</strong>
-        <span id="resumo-produto-sub">Equipamento + Plano Anual</span>
+  <!-- Renovação Tag -->
+  <div class="renov-card">
+    <div class="renov-header" style="padding:0;min-height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+      <img src="./assets/Renovacao%20Tag.png" alt="Renovação Tag" style="width:100%;height:180px;object-fit:cover">
+    </div>
+    <div style="padding:16px 28px 0;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900">Tag GPS (K-Tag)</div>
+    <div class="renov-body">
+      <div style="height:82px;margin-bottom:20px;background:var(--bg-soft);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted)">
+        Plano anual único
       </div>
+      <div class="renov-preco-box">
+        <div class="renov-preco-linha"><span class="lb">Plano anual (12 meses)</span><span class="vl">R$ 118,80</span></div>
+        <div class="renov-total"><span>Total</span><span class="renov-total-val" id="total-tag">R$ 118,80</span></div>
+      </div>
+      <div class="renov-qtd">
+        <button class="renov-qtd-btn" onclick="alterarQtd('tag',-1)">−</button>
+        <input class="renov-qtd-input" type="number" id="qtd-tag" value=""  placeholder="0" min="1" onchange="recalcular('tag')">
+        <button class="renov-qtd-btn" onclick="alterarQtd('tag',1)">+</button>
+        <span style="font-size:13px;color:var(--muted)">renovação(ões)</span>
+      </div>
+      <button onclick="irParaCheckout('tag')" class="renov-btn">
+        <i class="fas fa-qrcode"></i> Renovar Agora — Pix
+      </button>
+      <div id="erro-tag" style="display:none;color:var(--red);font-size:13px;text-align:center;margin-top:6px;font-weight:600">
+        ⚠️ Informe a quantidade antes de continuar.
+      </div>
+      <p class="renov-note"><i class="fas fa-shield-alt"></i> Pagamento seguro via Pix</p>
     </div>
-    <div class="resumo-linha">
-      <span>Qtd / Unitário</span>
-      <span id="resumo-qtd">1x R$ 640,00</span>
-    </div>
-    <div class="resumo-linha">
-      <span>Equipamento(s)</span>
-      <span id="resumo-equip">R$ 640,00</span>
-    </div>
-    <div class="resumo-linha" id="linha-frete-resumo">
-      <span>Frete</span>
-      <span id="resumo-frete" style="color:var(--muted)">Informe o CEP</span>
-    </div>
-    <div class="resumo-linha">
-      <span>Pagamento</span>
-      <span id="resumo-pagamento">Pix</span>
-    </div>
+  </div>
 
-    <div class="resumo-total">
-      <span>Total</span>
-      <span class="preco" id="resumo-total">R$ 127,92</span>
-    </div>
-
-    <ul class="trust-lista">
-      <li id="li-entrega"><i class="fas fa-check-circle"></i> Entrega pelos Correios com rastreio</li>
-      <li><i class="fas fa-check-circle"></i> Suporte pós-venda via WhatsApp</li>
-      <li><i class="fas fa-check-circle"></i> Garantia de 7 dias contra defeito</li>
-      <li><i class="fas fa-check-circle"></i> Ativação do plano feita por nós</li>
-      <li><i class="fas fa-check-circle"></i> CNPJ 29.488.621/0001-48</li>
-      <li><i class="fas fa-check-circle"></i> +6 anos de mercado</li>
-    </ul>
-  </aside>
+</div>
 </div>
 
-<footer>
-  <p>© <span id="ano"></span> Rastreando GPS — CNPJ 29.488.621/0001-48 — Duque de Caxias, RJ</p>
+<footer class="footer" id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <a class="brand" href="#hero">
+          <img src="./assets/logo.png" alt="Rastreando GPS">
+          <span>Rastreando GPS</span>
+        </a>
+        <p>Tecnologia em segurança veicular com instalação simples e controle total pelo aplicativo. Mais de 6 anos protegendo veículos no Rio de Janeiro.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Navegação</div>
+        <ul class="footer-links">
+          <li><a href="#pricing">Preços</a></li>
+          <li><a href="#how-it-works">Como Funciona</a></li>
+          <li><a href="#features">Benefícios</a></li>
+          <li><a href="#recovery">Recuperações</a></li>
+          <li><a href="#fleet">Para Empresas</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Contato</div>
+        <ul class="footer-links">
+          <li><a href="https://wa.me/5521980886087" target="_blank"><i class="fab fa-whatsapp"></i> (21) 9 8088-6087</a></li>
+          <li><a href="https://wa.me/5521969312625" target="_blank"><i class="fab fa-whatsapp"></i> (21) 9 6931-2625</a></li>
+          <li><a href="mailto:rastreandogpsbr@gmail.com"><i class="fas fa-envelope"></i> rastreandogpsbr@gmail.com</a></li>
+          <li><a href="#"><i class="fas fa-map-marker-alt"></i> Rio de Janeiro, RJ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#" id="terms-btn">Termos de Uso</a></li>
+          <li><a href="#">Política de Privacidade</a></li>
+          <li><a href="#">Trocas e Devoluções</a></li>
+          <li><a href="#">Garantia</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© <span id="year"></span> Rastreando GPS. Todos os direitos reservados.</p>
+      <p class="footer-copy">CNPJ: 29.488.621/0001-48</p>
+    </div>
+  </div>
 </footer>
 
 <script>
-const CHECKOUT_URL    = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSLlgqpNmKtDReupm0QsXcUj0Ulv-rlOR1iftSzirr3486rt7aBBtWM/exec';
-const _tkv = '22980b7b62d5a367e61c93b77646d23bccfbc2823ffece6a';
-
-// Produtos portáteis — carregados da URL
-const PRODUTOS = {
-  portatil:         { nome: 'Rastreador Portátil 4G',               equip: 320.00, plano: 320.00, img: './assets/ml%20po.jpg'           },
-  tag:              { nome: 'Tag GPS',                               equip:  99.00, plano: 118.80, img: './assets/k-tag.jpeg'            },
-  'renov-portatil': { nome: 'Renovação Plano Anual — Portátil',     equip:   0,    plano: 320.00, img: './assets/Renovacao%20chip.png'  },
-  'renov-tag':      { nome: 'Renovação Plano Anual — Tag GPS',      equip:   0,    plano: 118.80, img: './assets/Renovacao%20Tag.png'   },
-  'renov-semestral':{ nome: 'Renovação Plano Semestral — Portátil', equip:   0,    plano: 160.00, img: './assets/Renovacao%20chip.png'  },
-};
-const params      = new URLSearchParams(window.location.search);
-const PRODUTO_KEY = params.get('produto') || 'portatil';
-const PRODUTO     = PRODUTOS[PRODUTO_KEY] || PRODUTOS.portatil;
-const PRECO_UNIT     = PRODUTO.equip + PRODUTO.plano; // preço total por unidade
-const PRECO_UNIT_PIX = PRECO_UNIT; // sem desconto Pix
-const JUROS_MES      = 0.0299; // 2,99% ao mês para parcelamento
-const IS_RENOVACAO = PRODUTO_KEY.startsWith('renov-'); // renovação não tem frete
-
-let etapaAtual    = 1;
-let quantidade    = parseInt(params.get('qtd')) || 1;
-let freteValor    = 0;
-let freteSelecionado = null;
-let formaPagamento   = 'pix';
-
-
-
-document.getElementById('ano').textContent = new Date().getFullYear();
-
-// ── Helpers de preço ─────────────────────────────────────────
-const equipPix    = () => PRECO_UNIT_PIX * quantidade;
-const equipCartao = () => PRECO_UNIT     * quantidade;
-const totalPix    = () => equipPix() + (IS_RENOVACAO ? 0 : freteValor);
-const totalCart   = () => totalCartao;
-
-// ── Navegação entre etapas ────────────────────────────────────
-function avancar(de, pularEndereco) {
-  if (de === 1 && !validarEtapa1()) return;
-  if (de === 2 && !validarEtapa2()) return;
-  if (de === 3 && !validarEtapa3()) return;
-
-  // Renovação: pula direto da etapa 1 para etapa 3
-  let proxima = de + 1;
-  if (IS_RENOVACAO && de === 1) {
-    proxima = 3;
-    // Marca etapa 2 como concluída automaticamente
-    document.getElementById('step-2').classList.remove('ativo');
-    document.getElementById('step-2').classList.add('concluido');
-    document.getElementById('line-2').classList.add('concluido');
-  }
-
-  if (proxima === 4) preencherConfirmacao();
-
-  document.getElementById('etapa-' + de).classList.remove('ativa');
-  document.getElementById('etapa-' + proxima).classList.add('ativa');
-
-  document.getElementById('step-' + de).classList.remove('ativo');
-  document.getElementById('step-' + de).classList.add('concluido');
-  document.getElementById('line-' + de).classList.add('concluido');
-  document.getElementById('step-' + proxima).classList.add('ativo');
-
-  etapaAtual = proxima;
-
-  // Mostra resumo lateral só a partir da etapa 3
-  const resumo  = document.getElementById('resumo-lateral');
-  const mainEl  = document.getElementById('form-area');
-  if (etapaAtual >= 3) {
-    resumo.style.display = '';
-    mainEl.classList.remove('sem-resumo');
-  } else {
-    resumo.style.display = 'none';
-    mainEl.classList.add('sem-resumo');
-  }
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function voltar(de, pularEndereco) {
-  // Renovação na etapa 3 volta para etapa 1 (pula endereço)
-  let anterior = de - 1;
-  if (IS_RENOVACAO && de === 3) {
-    anterior = 1;
-    document.getElementById('step-2').classList.remove('concluido');
-    document.getElementById('line-2').classList.remove('concluido');
-  }
-
-  document.getElementById('etapa-' + de).classList.remove('ativa');
-  document.getElementById('etapa-' + anterior).classList.add('ativa');
-
-  document.getElementById('step-' + de).classList.remove('ativo');
-  document.getElementById('step-' + anterior).classList.remove('concluido');
-  document.getElementById('step-' + anterior).classList.add('ativo');
-  document.getElementById('line-' + anterior).classList.remove('concluido');
-
-  etapaAtual = anterior;
-
-  // Oculta resumo lateral nas etapas 1 e 2
-  const resumo = document.getElementById('resumo-lateral');
-  const mainEl = document.getElementById('form-area');
-  if (etapaAtual >= 3) {
-    resumo.style.display = '';
-    mainEl.classList.remove('sem-resumo');
-  } else {
-    resumo.style.display = 'none';
-    mainEl.classList.add('sem-resumo');
-  }
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ── Quantidade ────────────────────────────────────────────────
-document.getElementById('btn-menos').addEventListener('click', () => {
-  { quantidade--; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
-});
-document.getElementById('btn-mais').addEventListener('click', () => {
-  { quantidade++; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
-});
-document.getElementById('quantidade').addEventListener('change', function() {
-  quantidade = Math.max(1, parseInt(this.value) || 1);
-  this.value = quantidade; atualizarResumo();
-});
-
-
-
-// ── Seleciona pagamento ───────────────────────────────────────
-function selecionarPagamento(forma) {
-  formaPagamento = forma;
-  document.getElementById('tab-pix').classList.toggle('ativo', forma === 'pix');
-  document.getElementById('tab-cartao').classList.toggle('ativo', forma === 'cartao');
-  document.getElementById('bloco-pix').style.display    = forma === 'pix'    ? '' : 'none';
-  document.getElementById('bloco-cartao').style.display = forma === 'cartao' ? '' : 'none';
-  document.getElementById('resumo-pagamento').textContent = forma === 'pix' ? 'Pix' : 'Cartão de Crédito';
-  if (forma === 'cartao') gerarParcelas();
-  atualizarResumo();
-}
-
-// ── Parcelas (máx 2x) ─────────────────────────────────────────
-let _parcelasBase = null;
-function gerarParcelas() {
-  const base  = (equipPix() || PRECO_UNIT * quantidade) + (IS_RENOVACAO ? 0 : freteValor);
-  const lista = document.getElementById('lista-parcelas');
-  if (_parcelasBase === base && lista.children.length > 0) {
-    const n = parcelasSel;
-    totalCartao = n === 1 ? base : (base * JUROS_MES / (1 - Math.pow(1 + JUROS_MES, -n))) * n;
-    return;
-  }
-  _parcelasBase = base;
-  lista.innerHTML = '';
-  parcelasSel = 1;
-
-  for (let n = 1; n <= 2; n++) {
-    let valorParc, total;
-    if (n === 1) { valorParc = base; total = base; }
-    else {
-      valorParc = base * JUROS_MES / (1 - Math.pow(1 + JUROS_MES, -n));
-      total = valorParc * n;
-    }
-    if (n === 1) totalCartao = total;
-
-    const jurosTag = n === 1
-      ? '<small style="color:var(--green);font-size:11px"> sem juros</small>'
-      : '<small style="color:var(--muted);font-size:11px"> juros 2,99%/mês</small>';
-
-    const card = document.createElement('div');
-    card.className = 'parcela-card' + (n === 1 ? ' selecionado' : '');
-    card.innerHTML =
-      '<div class="parcela-bolinha"><div class="parcela-bolinha-inner"></div></div>' +
-      '<div class="parcela-info">' +
-        '<div class="parcela-label">' + n + 'x de R$ ' + valorParc.toFixed(2).replace('.',',') + jurosTag + '</div>' +
-        '<div class="parcela-total">Total: R$ ' + total.toFixed(2).replace('.',',') + '</div>' +
-      '</div>' +
-      '<div class="parcela-valor">R$ ' + valorParc.toFixed(2).replace('.',',') + '</div>';
-
-    (function(nLocal, totalLocal) {
-      card.addEventListener('click', function() {
-        lista.querySelectorAll('.parcela-card').forEach(function(c) { c.classList.remove('selecionado'); });
-        card.classList.add('selecionado');
-        parcelasSel = nLocal;
-        totalCartao = totalLocal;
-        atualizarResumo();
-      });
-    })(n, total);
-
-    lista.appendChild(card);
-  }
-}
-
-// ── Resumo lateral ────────────────────────────────────────────
-function atualizarResumo() {
-  const qtdEl   = document.getElementById('resumo-qtd');
-  const equipEl = document.getElementById('resumo-equip');
-  const freteEl = document.getElementById('resumo-frete');
-  const totalEl = document.getElementById('resumo-total');
-
-  qtdEl.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',');
-
-  if (formaPagamento === 'pix') {
-    equipEl.textContent = 'R$ ' + equipPix().toFixed(2).replace('.',',');
-    totalEl.textContent = 'R$ ' + totalPix().toFixed(2).replace('.',',');
-    const b = document.getElementById('badge-pix-texto');
-    if (b) {
-      if (freteValor > 0 && !IS_RENOVACAO)
-        b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + ' + frete R$ ' + freteValor.toFixed(2).replace('.',',') + ' = R$ ' + totalPix().toFixed(2).replace('.',',');
-      else
-        b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + (IS_RENOVACAO ? '' : ' + frete a calcular.');
-    }
-  } else {
-    gerarParcelas();
-    equipEl.textContent = 'R$ ' + (PRECO_UNIT * quantidade).toFixed(2).replace('.',',');
-    totalEl.textContent = 'R$ ' + totalCartao.toFixed(2).replace('.',',');
-  }
-
-  if (freteValor > 0) {
-    freteEl.style.color = 'var(--ink)';
-    freteEl.textContent = 'R$ ' + freteValor.toFixed(2).replace('.',',');
-  } else {
-    freteEl.style.color = 'var(--muted)';
-    freteEl.textContent = 'Informe o CEP';
-  }
-}
-
-// ── CEP ───────────────────────────────────────────────────────
-async function buscarCepAuto(cep) {
-  const statusEl = document.getElementById('cep-status');
-  const hintEl   = document.getElementById('cep-hint');
-  const cepEl    = document.getElementById('cep');
-
-  // Spinner
-  statusEl.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:var(--blue)"></i>';
-  statusEl.style.display = 'inline';
-  hintEl.textContent  = 'Buscando endereço…';
-  hintEl.style.color  = 'var(--muted)';
-  cepEl.style.borderColor = 'var(--blue)';
-
-  // ── Busca ViaCEP (isolado) ──────────────────────────────────
-  let dadosCep = null;
-  try {
-    const cepLimpo = cep.replace(/\D/g,'');
-  const r = await fetch('https://viacep.com.br/ws/'+cepLimpo+'/json/');
-    dadosCep  = await r.json();
-  } catch {
-    statusEl.innerHTML  = '<i class="fas fa-times-circle" style="color:var(--red)"></i>';
-    hintEl.textContent  = 'Erro de conexão ao buscar CEP.';
-    hintEl.style.color  = 'var(--red)';
-    cepEl.style.borderColor = 'var(--red)';
-    return;
-  }
-
-  if (!dadosCep || dadosCep.erro) {
-    statusEl.innerHTML  = '<i class="fas fa-times-circle" style="color:var(--red)"></i>';
-    hintEl.textContent  = 'CEP não encontrado. Verifique e tente novamente.';
-    hintEl.style.color  = 'var(--red)';
-    cepEl.style.borderColor = 'var(--red)';
-    return;
-  }
-
-  // Preenche os campos
-  document.getElementById('endereco').value = dadosCep.logradouro || '';
-  document.getElementById('bairro').value   = dadosCep.bairro     || '';
-  document.getElementById('cidade').value   = dadosCep.localidade || '';
-  const sel = document.getElementById('estado');
-  for (let o of sel.options) { if (o.value === dadosCep.uf) { sel.value = dadosCep.uf; break; } }
-
-  // Sucesso visual no CEP
-  statusEl.innerHTML  = '<i class="fas fa-check-circle" style="color:var(--green)"></i>';
-  hintEl.textContent  = (dadosCep.logradouro ? dadosCep.logradouro + ' — ' : '') + dadosCep.localidade + '/' + dadosCep.uf;
-  hintEl.style.color  = 'var(--green)';
-  cepEl.style.borderColor = 'var(--green)';
-
-  // Foca no número
-  document.getElementById('numero').focus();
-
-  // ── Calcula frete separado (erro não afeta o CEP) ───────────
-  calcularFrete(cep);
-}
-
-// ── Frete ─────────────────────────────────────────────────────
-async function calcularFrete(cepDestino) {
-  const secao    = document.getElementById('secao-frete');
-  const conteudo = document.getElementById('frete-conteudo');
-  secao.style.display = 'block';
-  conteudo.innerHTML = '<div class="frete-loading"><div class="frete-spinner"></div> Calculando fretes…</div>';
-  freteValor = 0; freteSelecionado = null; atualizarResumo();
-  try {
-    const prodKey = (typeof PRODUTO_KEY !== 'undefined') ? PRODUTO_KEY : '4g';
-    const resp = await fetch(CHECKOUT_URL + '?secret=' + _tkv + '&acao=frete&cep=' + cepDestino.replace(/\D/g,'') + '&produto=' + prodKey);
-    const res  = await resp.json();
-    if (!res.ok || !res.fretes || res.fretes.length === 0) {
-      conteudo.innerHTML = '<div class="frete-erro"><i class="fas fa-exclamation-triangle"></i> Não foi possível calcular o frete. Entre em contato pelo WhatsApp.</div>';
-      return;
-    }
-    conteudo.innerHTML = '<div class="frete-opcoes" id="lista-frete"></div>';
-    const listaFrete = document.getElementById('lista-frete');
-    res.fretes.forEach(function(s, i) {
-      const prazo   = s.prazo ? s.prazo + ' dias úteis' : 'Consulte o prazo';
-      const nomeFull = s.empresa + ' — ' + s.nome;
-      const card    = document.createElement('label');
-      card.className = 'frete-card' + (i === 0 ? ' selecionado' : '');
-      card.innerHTML =
-        '<input type="radio" name="frete" value="'+s.preco+'" data-nome="'+nomeFull+'" '+(i===0?'checked':'')+'>'+
-        '<div class="frete-info"><div class="frete-nome">'+nomeFull+'</div><div class="frete-prazo"><i class="fas fa-clock"></i> '+prazo+'</div></div>'+
-        '<div class="frete-preco">R$ '+s.preco.toFixed(2).replace('.',',')+'</div>';
-      listaFrete.appendChild(card);
-      card.querySelector('input').addEventListener('change', function() {
-        document.querySelectorAll('.frete-card').forEach(function(c) { c.classList.remove('selecionado'); });
-        card.classList.add('selecionado');
-        freteValor = parseFloat(this.value); freteSelecionado = this.dataset.nome; atualizarResumo();
-      });
-    });
-    freteValor = res.fretes[0].preco;
-    freteSelecionado = res.fretes[0].empresa + ' — ' + res.fretes[0].nome;
-    atualizarResumo();
-  } catch {
-    conteudo.innerHTML = '<div class="frete-erro"><i class="fas fa-exclamation-triangle"></i> Erro ao calcular frete.</div>';
-  }
-}
-
-// ── Máscaras ──────────────────────────────────────────────────
-document.getElementById('cpf').addEventListener('input', function() {
-  let v=this.value.replace(/\D/g,'').slice(0,11);
-  if(v.length>9)v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
-  else if(v.length>6)v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');
-  else if(v.length>3)v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2');
-  this.value=v;
-});
-document.getElementById('telefone').addEventListener('input', function() {
-  let v=this.value.replace(/\D/g,'').slice(0,11);
-  if(v.length>10)v=v.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/,'($1) $2 $3-$4');
-  else if(v.length>6)v=v.replace(/(\d{2})(\d{4})(\d{1,4})/,'($1) $2-$3');
-  else if(v.length>2)v=v.replace(/(\d{2})(\d{1,4})/,'($1) $2');
-  this.value=v;
-});
-function processarCep() {
-  const cepEl = document.getElementById('cep');
-  let v = cepEl.value.replace(/\D/g,'').slice(0,8);
-  if(v.length>5) v=v.replace(/(\d{5})(\d{1,3})/,'$1-$2');
-  cepEl.value = v;
-  const digitos = v.replace(/\D/g,'');
-  if(digitos.length===8) {
-    buscarCepAuto(digitos);
-  } else {
-    document.getElementById('cep-status').style.display='none';
-    const hintEl = document.getElementById('cep-hint');
-    hintEl.textContent='Preenchimento automático ao digitar o CEP completo.';
-    hintEl.style.color='var(--muted)';
-    cepEl.style.borderColor='';
-  }
-}
-
-document.getElementById('cep').addEventListener('input',  processarCep);
-document.getElementById('cep').addEventListener('change', processarCep);
-// Campos de cartão não existem no checkout portátil — ignorado
-
-// ── Validações ────────────────────────────────────────────────
-function cpfOk(cpf) {
-  const n=cpf.replace(/\D/g,'');
-  if(n.length!==11||/^(\d)\1{10}$/.test(n))return false;
-  let s=0;for(let i=0;i<9;i++)s+=parseInt(n[i])*(10-i);
-  let r=(s*10)%11;if(r===10||r===11)r=0;if(r!==parseInt(n[9]))return false;
-  s=0;for(let i=0;i<10;i++)s+=parseInt(n[i])*(11-i);
-  r=(s*10)%11;if(r===10||r===11)r=0;return r===parseInt(n[10]);
-}
-
-function marcarErro(id) {
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.classList.add('erro');
-  const msg=el.parentElement.querySelector('.msg-erro')||el.closest('.field')?.querySelector('.msg-erro');
-  if(msg)msg.style.display='block';
-  el.scrollIntoView({behavior:'smooth',block:'center'});
-  setTimeout(function(){el.focus();el.style.boxShadow='0 0 0 4px rgba(229,57,53,.25)';setTimeout(function(){el.style.boxShadow='';},2000);},400);
-}
-function limparErro(id) {
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.classList.remove('erro');
-  const msg=el.parentElement.querySelector('.msg-erro')||el.closest('.field')?.querySelector('.msg-erro');
-  if(msg)msg.style.display='none';
-}
-function checar(id,cond) {
-  const el=document.getElementById(id);
-  const ok=cond(el?el.value:'');
-  if(ok)limparErro(id);
-  return ok;
-}
-
-function validarEtapa1() {
-  const campos=[
-    ['nome',     function(v){return v.trim().split(' ').length>=2;}],
-    ['cpf',      function(v){return cpfOk(v);}],
-    ['email',    function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}],
-    ['telefone', function(v){return v.replace(/\D/g,'').length>=10;}],
-  ];
-  for(let i=0;i<campos.length;i++){
-    if(!checar(campos[i][0],campos[i][1])){marcarErro(campos[i][0]);return false;}
-  }
-  return true;
-}
-
-function validarEtapa2() {
-  if(!freteSelecionado){
-    alert('Por favor, busque o CEP e selecione uma opção de frete.');
-    document.getElementById('cep').focus();return false;
-  }
-  const campos=[
-    ['cep',      function(v){return v.replace(/\D/g,'').length===8;}],
-    ['endereco', function(v){return v.trim().length>3;}],
-    ['numero',   function(v){return v.trim().length>0;}],
-    ['cidade',   function(v){return v.trim().length>2;}],
-    ['estado',   function(v){return v.length===2;}],
-  ];
-  for(let i=0;i<campos.length;i++){
-    if(!checar(campos[i][0],campos[i][1])){marcarErro(campos[i][0]);return false;}
-  }
-  return true;
-}
-
-function validarEtapa3() {
-  document.getElementById('msg-erro-pag').classList.remove('ativo');
-  if(formaPagamento==='cartao'){
-    const campos=[
-      ['cartao-numero',   function(v){return v.replace(/\D/g,'').length>=15;}],
-      ['cartao-nome',     function(v){return v.trim().split(' ').length>=2;}],
-      ['cartao-cpf',      function(v){return cpfOk(v);}],
-      ['cartao-validade', function(v){return /^\d{2}\/\d{2}$/.test(v);}],
-      ['cartao-cvv',      function(v){return v.length>=3;}],
-    ];
-    for(let i=0;i<campos.length;i++){
-      if(!checar(campos[i][0],campos[i][1])){marcarErro(campos[i][0]);return false;}
-    }
-  }
-  return true;
-}
-
-// ── Preenche confirmação ──────────────────────────────────────
-function preencherConfirmacao() {
-  // Oculta bloco de endereço e frete em renovações
-  const blocoEnd = document.getElementById('bloco-endereco-confirm');
-  if (blocoEnd) blocoEnd.style.display = IS_RENOVACAO ? 'none' : '';
-  const linhaCfFrete = document.getElementById('linha-cf-frete2');
-  if (linhaCfFrete) linhaCfFrete.style.display = IS_RENOVACAO ? 'none' : '';
-
-  document.getElementById('cf-nome').textContent     = document.getElementById('nome').value;
-  document.getElementById('cf-cpf').textContent      = document.getElementById('cpf').value;
-  document.getElementById('cf-email').textContent    = document.getElementById('email').value;
-  document.getElementById('cf-telefone').textContent = document.getElementById('telefone').value;
-  document.getElementById('cf-qtd').textContent      = quantidade + ' unidade(s)';
-  const num  = document.getElementById('numero').value;
-  const comp = document.getElementById('complemento').value;
-  document.getElementById('cf-endereco').textContent =
-    document.getElementById('endereco').value + ', ' + num + (comp ? ' — ' + comp : '');
-  document.getElementById('cf-cidade').textContent =
-    document.getElementById('cidade').value + ' / ' + document.getElementById('estado').value;
-  document.getElementById('cf-cep').textContent    = document.getElementById('cep').value;
-  document.getElementById('cf-frete').textContent  = freteSelecionado + ' — R$ ' + freteValor.toFixed(2).replace('.',',');
-  document.getElementById('cf-frete2').textContent = 'R$ ' + freteValor.toFixed(2).replace('.',',');
-  // Portátil — apenas Pix, sem desconto
-  document.getElementById('cf-equip').textContent     = 'R$ ' + equipPix().toFixed(2).replace('.',',');
-  document.getElementById('cf-pagamento').textContent = 'Pix';
-  document.getElementById('cf-total').textContent     = 'R$ ' + totalPix().toFixed(2).replace('.',',');
-  document.getElementById('btn-confirmar-txt').textContent = 'Gerar Pix e Pagar';
-}
-
-// ── Confirmar pedido ──────────────────────────────────────────
-async function confirmarPedido() {
-  document.getElementById('msg-erro-final').classList.remove('ativo');
-  const btn = document.getElementById('btn-confirmar');
-  btn.disabled = true;
-  const dados = {
-    acao:'pedido',
-    produtoNome: PRODUTO.nome,
-    produtoKey:  PRODUTO_KEY,
-    nome:document.getElementById('nome').value.trim(),
-    cpf:document.getElementById('cpf').value,
-    email:document.getElementById('email').value.trim(),
-    telefone:document.getElementById('telefone').value,
-    cep:         IS_RENOVACAO ? '' : document.getElementById('cep').value,
-    endereco:    IS_RENOVACAO ? 'Ativação Remota' : document.getElementById('endereco').value.trim(),
-    numero:      IS_RENOVACAO ? 'S/N' : document.getElementById('numero').value.trim(),
-    complemento: IS_RENOVACAO ? '' : document.getElementById('complemento').value.trim(),
-    bairro:      IS_RENOVACAO ? '' : document.getElementById('bairro').value.trim(),
-    cidade:      IS_RENOVACAO ? 'Ativação Remota' : document.getElementById('cidade').value.trim(),
-    estado:      IS_RENOVACAO ? 'RJ' : document.getElementById('estado').value,
-    freteNome:   IS_RENOVACAO ? 'Sem frete' : freteSelecionado,
-    freteValor:  IS_RENOVACAO ? 0 : freteValor,
-    formaPagamento:formaPagamento,
-    quantidade:quantidade,
+  const PRECOS = {
+    port:      { anual: 320.00, semestral: 160.00 },
+    tag:       { anual: 118.80 },
   };
-  if (formaPagamento === 'pix') {
-    dados.valorEquipamento = equipPix();
-    dados.totalPedido      = totalPix();
-  } else {
-    dados.valorEquipamento = PRECO_UNIT * quantidade;
-    dados.parcelas         = parcelasSel;
-    dados.totalPedido      = totalCartao;
-  }
-  document.getElementById('overlay-msg').textContent = formaPagamento==='pix'?'Gerando seu Pix…':'Processando pagamento…';
-  document.getElementById('overlay').classList.add('ativo');
-  try {
-    // Tudo via GET — GAS não suporta CORS em POST
-    // Dados sensíveis do cartão são removidos e enviados separado
-    const dadosSemCartao = Object.assign({}, dados);
-    let cartaoEnc = '';
-    if (formaPagamento === 'cartao' && dados.cartao) {
-      // Codifica dados do cartão em Base64 separado
-      cartaoEnc = btoa(unescape(encodeURIComponent(JSON.stringify(dados.cartao))));
-      delete dadosSemCartao.cartao;
-    }
-    const dadosEnc = encodeURIComponent(JSON.stringify(dadosSemCartao));
-    let url = CHECKOUT_URL + '?secret=' + _tkv + '&acao=pedido&dados=' + dadosEnc;
-    if (cartaoEnc) url += '&cartao=' + encodeURIComponent(cartaoEnc);
-    const resp = await fetch(url);
-    const res  = await resp.json();
-    if(!res.ok)throw new Error(res.erro||'Erro desconhecido.');
-    const msg=encodeURIComponent(
-      'Olá! Fiz um pedido do Rastreador.\n'+
-      'Nome: '+dados.nome+'\nCPF: '+dados.cpf+
-      '\nPagamento: '+(formaPagamento==='pix'?'Pix':'Cartão '+parcelasSel+'x')+
-      '\nQtd: '+quantidade+
-      '\nID: '+res.cobrancaId+
-      '\nEndereço: '+dados.endereco+', '+dados.numero+' — '+dados.cidade+'/'+dados.estado
-    );
-    const waHref='https://wa.me/5521980886087?text='+msg;
-    if(formaPagamento==='pix'){
-      // Salva no sessionStorage para recuperar se a página for recarregada
-      try {
-        sessionStorage.setItem('pix_pendente', JSON.stringify({
-          qrCode:     res.pixQrCode,
-          copiaCola:  res.pixCopiaCola,
-          valor:      res.valor,
-          vencimento: res.vencimento,
-          cobrancaId: res.cobrancaId,
-          waHref:     waHref,
-          geradoEm:   Date.now(),
-        }));
-      } catch(e) {}
+  const periodos = { port: 'anual', tag: 'anual' };
 
-      document.getElementById('qr-img').src='data:image/png;base64,'+res.pixQrCode;
-      document.getElementById('qr-valor').textContent='R$ '+Number(res.valor).toFixed(2).replace('.',',');
-      document.getElementById('qr-venc').textContent='Válido até '+formatarData(res.vencimento);
-      document.getElementById('pix-texto').textContent=res.pixCopiaCola;
-      document.getElementById('wa-pedido-pix').href=waHref;
-      document.getElementById('form-area').style.display='none';
-      document.getElementById('tela-sucesso').classList.add('ativo');
-    } else {
-      document.getElementById('cartao-sucesso-msg').textContent=
-        'Pagamento de R$ '+Number(res.valor).toFixed(2).replace('.',',')+' em '+parcelasSel+'x aprovado!';
-      document.getElementById('wa-pedido-cartao').href=waHref;
-      document.getElementById('form-area').style.display='none';
-      document.getElementById('tela-sucesso-cartao').classList.add('ativo');
-    }
-    // Cartão — redireciona para página segura do Asaas
-    if (formaPagamento === 'cartao' && res.invoiceUrl) {
-      window.location.href = res.invoiceUrl;
+  function setPeriodo(p, periodo) {
+    periodos[p] = periodo;
+    const isAnual = periodo === 'anual';
+    document.getElementById('btn-anual-' + p).classList.toggle('ativo', isAnual);
+    document.getElementById('btn-semestral-' + p).classList.toggle('ativo', !isAnual);
+    document.getElementById('label-' + p).textContent = isAnual ? 'Plano anual (12 meses)' : 'Plano semestral (6 meses)';
+    document.getElementById('preco-' + p).textContent = 'R$ ' + (isAnual ? '320,00' : '160,00');
+    recalcular(p);
+  }
+
+  function alterarQtd(p, d) {
+    const el = document.getElementById('qtd-' + p);
+    el.value = Math.max(0, parseInt(el.value || 0) + d);
+    recalcular(p);
+  }
+
+  function recalcular(p) {
+    const qtd    = Math.max(0, parseInt(document.getElementById('qtd-' + p).value) || 0);
+    const pr     = PRECOS[p];
+    const periodo = periodos[p] || 'anual';
+    const valor  = (pr[periodo] || pr.anual) * qtd;
+    document.getElementById('total-' + p).textContent = 'R$ ' + valor.toFixed(2).replace('.', ',');
+
+    // Monta chave do produto
+    let chave;
+    if (p === 'port') chave = periodo === 'semestral' ? 'renov-semestral' : 'renov-portatil';
+    else              chave = 'renov-tag';
+  }
+
+  const anoEl = document.getElementById('ano'); if(anoEl) anoEl.textContent = new Date().getFullYear();
+
+  function irParaCheckout(p) {
+    const qtd = parseInt(document.getElementById('qtd-' + p).value) || 0;
+    const erroEl = document.getElementById('erro-' + p);
+    if (qtd < 1) {
+      erroEl.style.display = 'block';
+      document.getElementById('qtd-' + p).focus();
+      document.getElementById('qtd-' + p).style.borderColor = 'var(--red)';
       return;
     }
-    window.scrollTo(0,0);
-  } catch(err) {
-    const el=document.getElementById('msg-erro-final');
-    document.getElementById('msg-erro-final-txt').textContent=err.message||'Falha ao processar. Tente novamente ou fale pelo WhatsApp.';
-    el.classList.add('ativo');
-    el.scrollIntoView({behavior:'smooth',block:'center'});
-    btn.disabled=false;
-  } finally {
-    document.getElementById('overlay').classList.remove('ativo');
+    erroEl.style.display = 'none';
+    document.getElementById('qtd-' + p).style.borderColor = '';
+    // Monta a chave correta
+    let chave;
+    if (p === 'port') chave = periodos[p] === 'semestral' ? 'renov-semestral' : 'renov-portatil';
+    else              chave = 'renov-tag';
+    window.location.href = 'checkout-portatil.html?produto=' + chave + '&qtd=' + qtd;
   }
-}
-
-// ── Copiar Pix ────────────────────────────────────────────────
-// ── Cancela Pix e reinicia o checkout ────────────────────────
-function cancelarPix() {
-  if (!confirm('Tem certeza que deseja cancelar este Pix e fazer um novo pedido?')) return;
-  try { sessionStorage.removeItem('pix_pendente'); } catch(e) {}
-
-  // Esconde tela de sucesso e mostra formulário do zero
-  document.getElementById('tela-sucesso').classList.remove('ativo');
-  document.getElementById('form-area').style.display = '';
-
-  // Volta para etapa 1
-  document.querySelectorAll('.etapa').forEach(function(e) { e.classList.remove('ativa'); });
-  document.getElementById('etapa-1').classList.add('ativa');
-
-  // Reseta barra de progresso
-  for (let i = 1; i <= 4; i++) {
-    const step = document.getElementById('step-' + i);
-    if (step) { step.classList.remove('ativo', 'concluido'); }
-    const line = document.getElementById('line-' + i);
-    if (line) line.classList.remove('concluido');
-  }
-  document.getElementById('step-1').classList.add('ativo');
-
-  // Oculta resumo lateral
-  const resumo = document.getElementById('resumo-lateral');
-  const mainEl = document.getElementById('form-area');
-  if (resumo) resumo.style.display = 'none';
-  if (mainEl) mainEl.classList.add('sem-resumo');
-
-  // Reseta variáveis
-  freteValor = 0; freteSelecionado = null; etapaAtual = 1;
-  document.getElementById('secao-frete').style.display = 'none';
-  document.getElementById('frete-conteudo').innerHTML = '';
-
-  window.scrollTo(0, 0);
-}
-
-// Limpa Pix salvo quando cliente confirma pelo WhatsApp (pedido foi tratado)
-document.getElementById('wa-pedido-pix').addEventListener('click', function() {
-  try { sessionStorage.removeItem('pix_pendente'); } catch(e) {}
-});
-
-document.getElementById('btn-copiar').addEventListener('click', async function() {
-  const txt=document.getElementById('pix-texto').textContent;
-  try {
-    await navigator.clipboard.writeText(txt);
-    const btn=document.getElementById('btn-copiar');
-    btn.classList.add('copiado');btn.innerHTML='<i class="fas fa-check"></i> Copiado!';
-    setTimeout(function(){btn.classList.remove('copiado');btn.innerHTML='<i class="fas fa-copy"></i> Copiar código Pix (Copia e Cola)';},3000);
-  } catch { alert('Copie o código manualmente.'); }
-});
-
-function formatarData(iso) {
-  if(!iso)return '';
-  const partes=iso.split('-');
-  return partes[2]+'/'+partes[1]+'/'+partes[0];
-}
-
-// Inicializa produto
-document.getElementById('resumo-produto-nome').textContent = PRODUTO.nome;
-// Renovação — ajusta UI
-if (IS_RENOVACAO) {
-  document.getElementById('btn1-label').textContent = 'Pagamento';
-  // Oculta linha de frete no resumo
-  const freteEl = document.getElementById('resumo-frete');
-  if (freteEl) freteEl.closest('.resumo-linha').style.display = 'none';
-}
-document.getElementById('resumo-produto-sub').textContent  = 'Equipamento R$ ' + PRODUTO.equip.toFixed(2).replace('.',',') + ' + Plano Anual R$ ' + PRODUTO.plano.toFixed(2).replace('.',',');
-document.getElementById('resumo-produto-img').src = PRODUTO.img;
-document.getElementById('quantidade').value = quantidade;
-
-// Garante resumo lateral oculto na etapa 1
-document.getElementById('resumo-lateral').style.display = 'none';
-
-// Renovação — oculta elementos de frete/entrega
-if (IS_RENOVACAO) {
-  const linhaFrete = document.getElementById('linha-frete-resumo');
-  if (linhaFrete) linhaFrete.style.display = 'none';
-  const liEntrega = document.getElementById('li-entrega');
-  if (liEntrega) liEntrega.innerHTML = '<i class="fas fa-check-circle"></i> Ativação remota — sem envio físico';
-}
-document.getElementById('form-area').classList.add('sem-resumo');
-
-// Inicializa
-atualizarResumo();
-
-// ── Recupera Pix pendente se página foi recarregada ───────────
-(function() {
-  try {
-    const salvo = sessionStorage.getItem('pix_pendente');
-    if (!salvo) return;
-    const pix = JSON.parse(salvo);
-
-    // Considera válido se gerado há menos de 48h (2 dias = vencimento padrão)
-    const horas = (Date.now() - pix.geradoEm) / 1000 / 3600;
-    if (horas > 48) { sessionStorage.removeItem('pix_pendente'); return; }
-
-    // Restaura a tela de sucesso
-    document.getElementById('qr-img').src        = 'data:image/png;base64,' + pix.qrCode;
-    document.getElementById('qr-valor').textContent = 'R$ ' + Number(pix.valor).toFixed(2).replace('.',',');
-    document.getElementById('qr-venc').textContent  = 'Válido até ' + formatarData(pix.vencimento);
-    document.getElementById('pix-texto').textContent = pix.copiaCola;
-    document.getElementById('wa-pedido-pix').href    = pix.waHref || '#';
-    document.getElementById('form-area').style.display = 'none';
-    document.getElementById('tela-sucesso').classList.add('ativo');
-
-    // Avisa o cliente que o Pix foi recuperado
-    const aviso = document.createElement('div');
-    aviso.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px 16px;font-size:13px;color:#856404;margin-bottom:16px;display:flex;gap:8px;align-items:center';
-    aviso.innerHTML = '<i class="fas fa-info-circle"></i> <span>Seu Pix ainda está válido! Use o código abaixo para pagar.</span>';
-    const qrWrap = document.querySelector('.qr-wrap');
-    if (qrWrap) qrWrap.parentElement.insertBefore(aviso, qrWrap);
-
-  } catch(e) {}
-})();
 </script>
 </body>
 </html>

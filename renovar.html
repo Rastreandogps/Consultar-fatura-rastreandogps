@@ -700,7 +700,7 @@
 <div class="renov-grid">
 
   <!-- Renovação Portátil -->
-  <div class="renov-card">
+  <div class="renov-card" id="renov-portatil">
     <div class="renov-header" style="padding:0;min-height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden">
       <img src="./assets/Renovacao%20chip.png" alt="Renovação Chip" style="width:100%;height:180px;object-fit:cover">
     </div>
@@ -736,7 +736,7 @@
   </div>
 
   <!-- Renovação Tag -->
-  <div class="renov-card">
+  <div class="renov-card" id="renov-tag">
     <div class="renov-header" style="padding:0;min-height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden">
       <img src="./assets/Renovacao%20Tag.png" alt="Renovação Tag" style="width:100%;height:180px;object-fit:cover">
     </div>
@@ -849,6 +849,7 @@
     let chave;
     if (p === 'port') chave = periodo === 'semestral' ? 'renov-semestral' : 'renov-portatil';
     else              chave = 'renov-tag';
+    document.getElementById('btn-' + p).href = 'checkout-portatil.html?produto=' + chave + '&qtd=' + qtd;
   }
 
   const anoEl = document.getElementById('ano'); if(anoEl) anoEl.textContent = new Date().getFullYear();

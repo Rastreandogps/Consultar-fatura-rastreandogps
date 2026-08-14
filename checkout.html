@@ -1073,6 +1073,7 @@ async function confirmarPedido() {
     if (cartaoEnc) url += '&cartao=' + encodeURIComponent(cartaoEnc);
     const resp = await fetch(url);
     const res  = await resp.json();
+    console.log('GAS retornou:', JSON.stringify(res));
     if(!res.ok)throw new Error(res.erro||'Erro desconhecido.');
     const msg=encodeURIComponent(
       'Olá! Fiz um pedido do Rastreador.\n'+

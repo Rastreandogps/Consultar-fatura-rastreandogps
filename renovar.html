@@ -721,13 +721,16 @@
       </div>
       <div class="renov-qtd">
         <button class="renov-qtd-btn" onclick="alterarQtd('port',-1)">−</button>
-        <input class="renov-qtd-input" type="number" id="qtd-port" value="1" min="1" onchange="recalcular('port')">
+        <input class="renov-qtd-input" type="number" id="qtd-port" value=""  placeholder="0" min="1" onchange="recalcular('port')">
         <button class="renov-qtd-btn" onclick="alterarQtd('port',1)">+</button>
         <span style="font-size:13px;color:var(--muted)">renovação(ões)</span>
       </div>
-      <a id="btn-port" href="checkout-portatil.html?produto=renov-portatil&qtd=1" class="renov-btn">
+      <button onclick="irParaCheckout('port')" class="renov-btn">
         <i class="fas fa-qrcode"></i> Renovar Agora — Pix
-      </a>
+      </button>
+      <div id="erro-port" style="display:none;color:var(--red);font-size:13px;text-align:center;margin-top:6px;font-weight:600">
+        ⚠️ Informe a quantidade antes de continuar.
+      </div>
       <p class="renov-note"><i class="fas fa-shield-alt"></i> Pagamento seguro via Pix</p>
     </div>
   </div>
@@ -748,13 +751,16 @@
       </div>
       <div class="renov-qtd">
         <button class="renov-qtd-btn" onclick="alterarQtd('tag',-1)">−</button>
-        <input class="renov-qtd-input" type="number" id="qtd-tag" value="1" min="1" onchange="recalcular('tag')">
+        <input class="renov-qtd-input" type="number" id="qtd-tag" value=""  placeholder="0" min="1" onchange="recalcular('tag')">
         <button class="renov-qtd-btn" onclick="alterarQtd('tag',1)">+</button>
         <span style="font-size:13px;color:var(--muted)">renovação(ões)</span>
       </div>
-      <a id="btn-tag" href="checkout-portatil.html?produto=renov-tag&qtd=1" class="renov-btn">
+      <button onclick="irParaCheckout('tag')" class="renov-btn">
         <i class="fas fa-qrcode"></i> Renovar Agora — Pix
-      </a>
+      </button>
+      <div id="erro-tag" style="display:none;color:var(--red);font-size:13px;text-align:center;margin-top:6px;font-weight:600">
+        ⚠️ Informe a quantidade antes de continuar.
+      </div>
       <p class="renov-note"><i class="fas fa-shield-alt"></i> Pagamento seguro via Pix</p>
     </div>
   </div>
@@ -828,12 +834,12 @@
 
   function alterarQtd(p, d) {
     const el = document.getElementById('qtd-' + p);
-    el.value = Math.max(1, parseInt(el.value) + d);
+    el.value = Math.max(0, parseInt(el.value || 0) + d);
     recalcular(p);
   }
 
   function recalcular(p) {
-    const qtd    = Math.max(1, parseInt(document.getElementById('qtd-' + p).value) || 1);
+    const qtd    = Math.max(0, parseInt(document.getElementById('qtd-' + p).value) || 0);
     const pr     = PRECOS[p];
     const periodo = periodos[p] || 'anual';
     const valor  = (pr[periodo] || pr.anual) * qtd;
@@ -847,6 +853,24 @@
   }
 
   const anoEl = document.getElementById('ano'); if(anoEl) anoEl.textContent = new Date().getFullYear();
+
+  function irParaCheckout(p) {
+    const qtd = parseInt(document.getElementById('qtd-' + p).value) || 0;
+    const erroEl = document.getElementById('erro-' + p);
+    if (qtd < 1) {
+      erroEl.style.display = 'block';
+      document.getElementById('qtd-' + p).focus();
+      document.getElementById('qtd-' + p).style.borderColor = 'var(--red)';
+      return;
+    }
+    erroEl.style.display = 'none';
+    document.getElementById('qtd-' + p).style.borderColor = '';
+    // Monta a chave correta
+    let chave;
+    if (p === 'port') chave = periodos[p] === 'semestral' ? 'renov-semestral' : 'renov-portatil';
+    else              chave = 'renov-tag';
+    window.location.href = 'checkout-portatil.html?produto=' + chave + '&qtd=' + qtd;
+  }
 </script>
 </body>
 </html>

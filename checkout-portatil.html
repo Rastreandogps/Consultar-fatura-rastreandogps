@@ -340,8 +340,8 @@
       </div>
 
       <div class="nav-btns">
-        <button class="btn-avancar apenas" onclick="avancar(1)">
-          Próximo — Endereço <i class="fas fa-arrow-right"></i>
+        <button class="btn-avancar apenas" onclick="IS_RENOVACAO ? avancar(1, true) : avancar(1)">
+          Próximo — <span id="btn1-label">Endereço</span> <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
@@ -552,14 +552,18 @@ const CHECKOUT_URL    = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSL
 
 // Produtos portáteis — carregados da URL
 const PRODUTOS = {
-  portatil: { nome: 'Rastreador Portátil 4G',  equip: 320.00, plano: 320.00, img: './assets/ml%20po.jpg' },
-  tag:      { nome: 'Tag GPS',                  equip: 99.00,  plano: 118.80, img: './assets/k-tag.jpeg' },
+  portatil:         { nome: 'Rastreador Portátil 4G',               equip: 320.00, plano: 320.00, img: './assets/ml%20po.jpg' },
+  tag:              { nome: 'Tag GPS',                               equip:  99.00, plano: 118.80, img: './assets/k-tag.jpeg'  },
+  'renov-portatil': { nome: 'Renovação Plano Anual — Portátil',     equip:   0,    plano: 320.00, img: ''                     },
+  'renov-tag':      { nome: 'Renovação Plano Anual — Tag GPS',      equip:   0,    plano: 118.80, img: ''                     },
+  'renov-semestral':{ nome: 'Renovação Plano Semestral — Portátil', equip:   0,    plano: 160.00, img: ''                     },
 };
 const params      = new URLSearchParams(window.location.search);
 const PRODUTO_KEY = params.get('produto') || 'portatil';
 const PRODUTO     = PRODUTOS[PRODUTO_KEY] || PRODUTOS.portatil;
 const PRECO_UNIT  = PRODUTO.equip + PRODUTO.plano; // preço total por unidade
 const PRECO_UNIT_PIX = PRECO_UNIT; // sem desconto Pix
+const IS_RENOVACAO = PRODUTO_KEY.startsWith('renov-'); // renovação não tem frete
 
 let etapaAtual    = 1;
 let quantidade    = parseInt(params.get('qtd')) || 1;
@@ -574,27 +578,36 @@ document.getElementById('ano').textContent = new Date().getFullYear();
 // ── Helpers de preço ─────────────────────────────────────────
 const equipPix    = () => PRECO_UNIT_PIX * quantidade;
 const equipCartao = () => PRECO_UNIT     * quantidade;
-const totalPix    = () => equipPix()    + freteValor;
+const totalPix    = () => equipPix() + (IS_RENOVACAO ? 0 : freteValor);
 const totalCart   = () => totalCartao;
 
 // ── Navegação entre etapas ────────────────────────────────────
-function avancar(de) {
+function avancar(de, pularEndereco) {
   if (de === 1 && !validarEtapa1()) return;
   if (de === 2 && !validarEtapa2()) return;
   if (de === 3 && !validarEtapa3()) return;
 
-  if (de === 3) preencherConfirmacao();
+  // Renovação: pula direto da etapa 1 para etapa 3
+  let proxima = de + 1;
+  if (IS_RENOVACAO && de === 1) {
+    proxima = 3;
+    // Marca etapa 2 como concluída automaticamente
+    document.getElementById('step-2').classList.remove('ativo');
+    document.getElementById('step-2').classList.add('concluido');
+    document.getElementById('line-2').classList.add('concluido');
+  }
+
+  if (proxima === 4) preencherConfirmacao();
 
   document.getElementById('etapa-' + de).classList.remove('ativa');
-  document.getElementById('etapa-' + (de + 1)).classList.add('ativa');
+  document.getElementById('etapa-' + proxima).classList.add('ativa');
 
-  // Atualiza barra de progresso
   document.getElementById('step-' + de).classList.remove('ativo');
   document.getElementById('step-' + de).classList.add('concluido');
   document.getElementById('line-' + de).classList.add('concluido');
-  document.getElementById('step-' + (de + 1)).classList.add('ativo');
+  document.getElementById('step-' + proxima).classList.add('ativo');
 
-  etapaAtual = de + 1;
+  etapaAtual = proxima;
 
   // Mostra resumo lateral só a partir da etapa 3
   const resumo  = document.getElementById('resumo-lateral');
@@ -1125,6 +1138,13 @@ function formatarData(iso) {
 
 // Inicializa produto
 document.getElementById('resumo-produto-nome').textContent = PRODUTO.nome;
+// Renovação — ajusta UI
+if (IS_RENOVACAO) {
+  document.getElementById('btn1-label').textContent = 'Pagamento';
+  // Oculta linha de frete no resumo
+  const freteEl = document.getElementById('resumo-frete');
+  if (freteEl) freteEl.closest('.resumo-linha').style.display = 'none';
+}
 document.getElementById('resumo-produto-sub').textContent  = 'Equipamento R$ ' + PRODUTO.equip.toFixed(2).replace('.',',') + ' + Plano Anual R$ ' + PRODUTO.plano.toFixed(2).replace('.',',');
 document.getElementById('resumo-produto-img').src = PRODUTO.img;
 document.getElementById('quantidade').value = quantidade;

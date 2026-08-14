@@ -332,9 +332,9 @@
           <label>Quantidade de equipamentos <span class="req">*</span></label>
           <div class="qtd-wrap">
             <button type="button" class="qtd-btn" id="btn-menos">−</button>
-            <input type="number" id="quantidade" value="1" min="1" max="10">
+            <input type="number" id="quantidade" value="1" min="1">
             <button type="button" class="qtd-btn" id="btn-mais">+</button>
-            <span class="hint">unidade(s) — máx. 10</span>
+            <span class="hint">unidade(s) — </span>
           </div>
         </div>
       </div>
@@ -687,13 +687,13 @@ function voltar(de) {
 
 // ── Quantidade ────────────────────────────────────────────────
 document.getElementById('btn-menos').addEventListener('click', () => {
-  if (quantidade > 1) { quantidade--; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
+  { quantidade--; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
 });
 document.getElementById('btn-mais').addEventListener('click', () => {
-  if (quantidade < 10) { quantidade++; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
+  { quantidade++; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
 });
 document.getElementById('quantidade').addEventListener('change', function() {
-  quantidade = Math.max(1, Math.min(10, parseInt(this.value) || 1));
+  quantidade = Math.max(1, parseInt(this.value) || 1);
   this.value = quantidade; atualizarResumo();
 });
 

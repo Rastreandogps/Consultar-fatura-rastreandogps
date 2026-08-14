@@ -1048,13 +1048,7 @@ async function confirmarPedido() {
     dados.valorEquipamento=equipCartao();
     dados.parcelas=parcelasSel;
     dados.totalPedido=totalCartao;
-    dados.cartao={
-      numero:document.getElementById('cartao-numero').value.replace(/\D/g,''),
-      nome:document.getElementById('cartao-nome').value.trim(),
-      cpf:document.getElementById('cartao-cpf').value.replace(/\D/g,''),
-      validade:document.getElementById('cartao-validade').value,
-      cvv:document.getElementById('cartao-cvv').value,
-    };
+    // Cartão — dados digitados no Asaas, não precisamos capturar aqui
   }
   document.getElementById('overlay-msg').textContent = formaPagamento==='pix'?'Gerando seu Pix…':'Processando pagamento…';
   document.getElementById('overlay').classList.add('ativo');

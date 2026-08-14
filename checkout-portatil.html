@@ -748,7 +748,10 @@ function gerarParcelas() {
         card.classList.add('selecionado');
         parcelasSel = nLocal;
         totalCartao = totalLocal;
-        atualizarResumo();
+        // Atualiza só o total no resumo — sem chamar atualizarResumo/gerarParcelas
+        // para não destruir a seleção recém feita
+        var totalEl = document.getElementById('resumo-total');
+        if (totalEl) totalEl.textContent = 'R$ ' + totalLocal.toFixed(2).replace('.', ',');
       });
     })(n, total);
 

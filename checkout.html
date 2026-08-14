@@ -451,41 +451,14 @@
         <p style="color:var(--muted);font-size:14px;line-height:1.6">Após confirmar, você receberá o QR Code e o código Copia e Cola na tela seguinte.</p>
       </div>
 
-      <!-- Bloco Cartão -->
+      <!-- Bloco Cartão — dados digitados na página segura do Asaas -->
       <div id="bloco-cartao" style="display:none">
         <div class="parcelas-wrap" id="lista-parcelas"></div>
-        <div class="form-row full" style="margin-bottom:14px">
-          <div class="field">
-            <label>Número do cartão <span class="req">*</span></label>
-            <div class="cartao-numero-wrap">
-              <input type="text" id="cartao-numero" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="cc-number" inputmode="numeric">
-              <span class="cartao-bandeira" id="cartao-bandeira"><i class="fas fa-credit-card"></i></span>
-            </div>
-            <span class="msg-erro">Número do cartão inválido.</span>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="field">
-            <label>Nome no cartão <span class="req">*</span></label>
-            <input type="text" id="cartao-nome" placeholder="Ex: JOAO SILVA" autocomplete="cc-name" style="text-transform:uppercase">
-            <span class="msg-erro">Informe o nome.</span>
-          </div>
-          <div class="field">
-            <label>CPF do titular <span class="req">*</span></label>
-            <input type="text" id="cartao-cpf" placeholder="000.000.000-00" maxlength="14">
-            <span class="msg-erro">CPF inválido.</span>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="field">
-            <label>Validade <span class="req">*</span></label>
-            <input type="text" id="cartao-validade" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp" inputmode="numeric">
-            <span class="msg-erro">Validade inválida.</span>
-          </div>
-          <div class="field">
-            <label>CVV <span class="req">*</span></label>
-            <input type="text" id="cartao-cvv" placeholder="000" maxlength="4" autocomplete="cc-csc" inputmode="numeric">
-            <span class="msg-erro">CVV inválido.</span>
+        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:16px;font-size:14px;color:#0369a1;display:flex;gap:10px;align-items:flex-start;margin-top:8px">
+          <i class="fas fa-shield-alt" style="margin-top:2px;flex-shrink:0;font-size:18px"></i>
+          <div>
+            <strong>Dados do cartão 100% seguros</strong><br>
+            Ao confirmar, você será redirecionado para a página de pagamento do <strong>Asaas</strong> — certificada PCI-DSS — para digitar os dados do cartão com total segurança. Seus dados nunca passam pelo nosso servidor.
           </div>
         </div>
       </div>
@@ -943,31 +916,6 @@ function processarCep() {
 
 document.getElementById('cep').addEventListener('input',  processarCep);
 document.getElementById('cep').addEventListener('change', processarCep);
-document.getElementById('cartao-numero').addEventListener('input', function() {
-  let v=this.value.replace(/\D/g,'').slice(0,16);
-  v=v.replace(/(\d{4})(?=\d)/g,'$1 ');
-  this.value=v;
-  const n=this.value.replace(/\D/g,'');
-  const b=document.getElementById('cartao-bandeira');
-  if(/^4/.test(n))b.innerHTML='<i class="fab fa-cc-visa" style="color:#1a1f71"></i>';
-  else if(/^5[1-5]/.test(n))b.innerHTML='<i class="fab fa-cc-mastercard" style="color:#eb001b"></i>';
-  else if(/^3[47]/.test(n))b.innerHTML='<i class="fab fa-cc-amex" style="color:#007bc1"></i>';
-  else b.innerHTML='<i class="fas fa-credit-card"></i>';
-});
-document.getElementById('cartao-validade').addEventListener('input', function() {
-  let v=this.value.replace(/\D/g,'').slice(0,4);
-  if(v.length>2)v=v.replace(/(\d{2})(\d{1,2})/,'$1/$2');
-  this.value=v;
-});
-document.getElementById('cartao-cvv').addEventListener('input', function() { this.value=this.value.replace(/\D/g,'').slice(0,4); });
-document.getElementById('cartao-nome').addEventListener('input', function() { this.value=this.value.toUpperCase(); });
-document.getElementById('cartao-cpf').addEventListener('input', function() {
-  let v=this.value.replace(/\D/g,'').slice(0,11);
-  if(v.length>9)v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
-  else if(v.length>6)v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');
-  else if(v.length>3)v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2');
-  this.value=v;
-});
 
 // ── Validações ────────────────────────────────────────────────
 function cpfOk(cpf) {
@@ -1035,18 +983,7 @@ function validarEtapa2() {
 
 function validarEtapa3() {
   document.getElementById('msg-erro-pag').classList.remove('ativo');
-  if(formaPagamento==='cartao'){
-    const campos=[
-      ['cartao-numero',   function(v){return v.replace(/\D/g,'').length>=15;}],
-      ['cartao-nome',     function(v){return v.trim().split(' ').length>=2;}],
-      ['cartao-cpf',      function(v){return cpfOk(v);}],
-      ['cartao-validade', function(v){return /^\d{2}\/\d{2}$/.test(v);}],
-      ['cartao-cvv',      function(v){return v.length>=3;}],
-    ];
-    for(let i=0;i<campos.length;i++){
-      if(!checar(campos[i][0],campos[i][1])){marcarErro(campos[i][0]);return false;}
-    }
-  }
+  // Cartão — dados digitados no Asaas, sem validação local necessária
   return true;
 }
 
@@ -1168,11 +1105,16 @@ async function confirmarPedido() {
       document.getElementById('form-area').style.display='none';
       document.getElementById('tela-sucesso').classList.add('ativo');
     } else {
-      document.getElementById('cartao-sucesso-msg').textContent=
-        'Pagamento de R$ '+Number(res.valor).toFixed(2).replace('.',',')+' em '+parcelasSel+'x aprovado!';
-      document.getElementById('wa-pedido-cartao').href=waHref;
-      document.getElementById('form-area').style.display='none';
-      document.getElementById('tela-sucesso-cartao').classList.add('ativo');
+      // Redireciona para página segura do Asaas
+      if (res.invoiceUrl) {
+        window.location.href = res.invoiceUrl;
+      } else {
+        document.getElementById('cartao-sucesso-msg').textContent=
+          'Pedido criado! Você será redirecionado para finalizar o pagamento.';
+        document.getElementById('wa-pedido-cartao').href=waHref;
+        document.getElementById('form-area').style.display='none';
+        document.getElementById('tela-sucesso-cartao').classList.add('ativo');
+      }
     }
     window.scrollTo(0,0);
   } catch(err) {

@@ -285,66 +285,74 @@
     .trust-item i { color: var(--green); font-size: 18px; }
 
     /* ─── PREÇOS ─── */
-    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 48px; align-items: start; }
+
     .price-card {
       background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px; padding: 36px;
+      border: 1.5px solid var(--border);
+      border-radius: 24px; padding: 0;
       position: relative; overflow: hidden;
       box-shadow: var(--shadow-sm);
       transition: transform 0.3s, box-shadow 0.3s;
+      display: flex; flex-direction: column;
     }
-    .price-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-    .price-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    .price-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+
+    .price-card-header {
+      padding: 28px 28px 22px;
+      border-bottom: 1.5px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
     }
-    .price-card.equip::before   { background: linear-gradient(90deg, var(--yellow), var(--yellow-deep)); }
-    .price-card.monthly::before { background: linear-gradient(90deg, var(--blue), var(--green)); }
+    .price-card.equip .price-card-header   { background: var(--bg-soft); }
+    .price-card.monthly .price-card-header { background: linear-gradient(135deg, #eef4ff 0%, #f0fff7 100%); }
 
     .step-pill {
       display: inline-flex; align-items: center; gap: 6px;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 12.5px; font-weight: 800; letter-spacing: 1.5px;
+      font-size: 11px; font-weight: 800; letter-spacing: 1.8px;
       text-transform: uppercase; color: #fff;
       background: var(--blue); padding: 5px 14px; border-radius: 50px;
-      margin-bottom: 14px;
     }
     .price-card.equip .step-pill { background: var(--ink); }
 
     .price-card-title {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 24px; font-weight: 800; margin-bottom: 20px;
+      font-size: 19px; font-weight: 800;
+      text-align: center; color: var(--ink); line-height: 1.25;
     }
     .price-card img {
-      width: 100%; max-width: 280px; display: block; margin: 0 auto 24px;
+      width: 100%; max-width: 180px; display: block; margin: 6px auto 0;
+      border-radius: 12px;
     }
-
-    /* Preço estilo "vitrine brasileira": número grande + centavos sobrescritos */
     .price-big {
       display: flex; align-items: flex-start; gap: 2px;
       font-family: 'Barlow Condensed', sans-serif;
-      line-height: 1; margin-bottom: 6px;
+      line-height: 1; justify-content: center; margin-top: 8px;
     }
-    .price-big .moeda { font-size: 26px; font-weight: 800; margin-top: 6px; color: var(--ink); }
+    .price-big .moeda  { font-size: 22px; font-weight: 800; margin-top: 8px; color: var(--ink); }
     .price-big .inteiro {
-      font-size: 60px; font-weight: 900; color: var(--ink);
-      background: linear-gradient(180deg, transparent 60%, var(--yellow) 60%);
-      padding: 0 4px;
+      font-size: 64px; font-weight: 900; color: var(--ink);
+      background: linear-gradient(180deg, transparent 58%, var(--yellow) 58%);
+      padding: 0 4px; line-height: 1;
     }
-    .price-card.monthly .price-big .inteiro {
-      background: none; color: var(--blue-dark);
+    .price-card.monthly .price-big .inteiro { background: none; color: var(--blue-dark); }
+    .price-big .cents  { font-size: 22px; font-weight: 800; margin-top: 8px; color: var(--ink); }
+    .price-card.monthly .price-big .cents  { color: var(--blue-dark); }
+    .price-big .periodo { font-size: 15px; color: var(--muted); font-weight: 500; margin: auto 0 6px 3px; }
+    .price-note { font-size: 12px; color: var(--muted); margin-top: 6px; text-align: center; }
+
+    .price-card-body { padding: 22px 24px 26px; display: flex; flex-direction: column; flex: 1; }
+
+    .feature-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+    .feature-list li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink); font-weight: 500; }
+    .feature-list li .fi {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 11px;
     }
-    .price-big .cents { font-size: 24px; font-weight: 800; margin-top: 6px; color: var(--ink); }
-    .price-card.monthly .price-big .cents { color: var(--blue-dark); }
-    .price-big .periodo { font-size: 18px; color: var(--muted); font-weight: 500; margin: auto 0 4px 4px; }
+    .price-card.equip   .feature-list li .fi { background: rgba(255,230,0,.3); color: #7a5f00; }
+    .price-card.monthly .feature-list li .fi { background: var(--green-soft); color: var(--green); }
 
-    .price-note { font-size: 13px; color: var(--muted); margin-bottom: 22px; }
-
-    .feature-list { list-style: none; margin: 22px 0; display: flex; flex-direction: column; gap: 10px; }
-    .feature-list li { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--ink); }
-    .feature-list li i { color: var(--green); font-size: 13px; flex-shrink: 0; }
-
-    .price-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; }
+    .price-btns { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
 
     .combo-note {
       background: var(--green-soft);
@@ -754,62 +762,74 @@
 
 <!-- ─── PREÇOS ─── -->
 <section class="section alt pricing-section" id="pricing">
-  <div class="container text-center">
-    <div class="tag">Planos e Preços</div>
-    <h2 class="section-title">Simples, justo e<br><span class="grad">sem surpresas</span></h2>
-    <p class="section-sub">Adquira o equipamento diretamente conosco e ative a plataforma em minutos.</p>
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">Planos e Preços</div>
+      <h2 class="section-title">Simples, justo e<br><span class="grad">sem surpresas</span></h2>
+      <p class="section-sub">Adquira o equipamento diretamente conosco e ative a plataforma em minutos.</p>
+    </div>
 
     <div class="pricing-grid">
-      <!-- Equipamento -->
+
+      <!-- ── Card Equipamento ── -->
       <div class="price-card equip fade-up">
-        <span class="step-pill"><i class="fas fa-shopping-cart"></i> Equipamento</span>
-        <div class="price-card-title">Equipamento Rastreador 4G</div>
-        <img src="./assets/equipamento.png" alt="Equipamento Rastreador">
-        <div class="price-big">
-          <span class="moeda">R$</span><span class="inteiro">159</span><span class="cents">,90</span>
+        <div class="price-card-header">
+          <span class="step-pill"><i class="fas fa-shopping-cart"></i> Passo 1 — Equipamento</span>
+          <div class="price-card-title">Rastreador 4G com Bloqueio</div>
+          <img src="./assets/equipamento.png" alt="Equipamento Rastreador 4G">
+          <div class="price-big">
+            <span class="moeda">R$</span><span class="inteiro">159</span><span class="cents">,90</span>
+          </div>
+          <p class="price-note">Pagamento único · Pix com chip incluso</p>
         </div>
-        <p class="price-note">Pagamento único via Pix</p>
-        <ul class="feature-list">
-          <li><i class="fas fa-check-circle"></i> Aparelho rastreador 4G</li>
-          <li><i class="fas fa-check-circle"></i> Chicote de instalação completo</li>
-          <li><i class="fas fa-check-circle"></i> Relé 12V incluso</li>
-          <li><i class="fas fa-check-circle"></i> Chip M2M de telemetria</li>
-        </ul>
-        <div class="price-btns">
-          <a href="checkout.html" class="btn btn-comprar btn-full">
-            <i class="fas fa-shopping-cart"></i> Comprar Agora
-          </a>
-          <a href="https://wa.me/5521980886087?text=Quero+saber+mais+sobre+o+equipamento."
-             class="btn btn-wa btn-full" target="_blank" rel="noopener">
-            <i class="fab fa-whatsapp"></i> Tirar Dúvidas
-          </a>
+        <div class="price-card-body">
+          <ul class="feature-list">
+            <li><span class="fi"><i class="fas fa-satellite-dish"></i></span> Aparelho rastreador 4G</li>
+            <li><span class="fi"><i class="fas fa-plug"></i></span> Chicote de instalação completo</li>
+            <li><span class="fi"><i class="fas fa-bolt"></i></span> Relé 12V incluso</li>
+            <li><span class="fi"><i class="fas fa-sim-card"></i></span> Chip M2M de telemetria</li>
+          </ul>
+          <div class="price-btns">
+            <a href="checkout.html" class="btn btn-comprar btn-full">
+              <i class="fas fa-shopping-cart"></i> Comprar Agora
+            </a>
+            <a href="https://wa.me/5521980886087?text=Quero+saber+mais+sobre+o+equipamento."
+               class="btn btn-wa btn-full" target="_blank" rel="noopener">
+              <i class="fab fa-whatsapp"></i> Tirar Dúvidas
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- Mensalidade -->
+      <!-- ── Card Mensalidade ── -->
       <div class="price-card monthly fade-up">
-        <span class="step-pill"><i class="fas fa-headset"></i> Passo 2 — Ativação</span>
-        <div class="price-card-title">Recarga do Chip + Plataforma + Suporte</div>
-        <div class="price-big">
-          <span class="moeda">R$</span><span class="inteiro">39</span><span class="cents">,90</span><span class="periodo">/mês</span>
+        <div class="price-card-header">
+          <span class="step-pill"><i class="fas fa-headset"></i> Passo 2 — Ativação</span>
+          <div class="price-card-title">Plataforma + Suporte + Chip Vivo</div>
+          <div class="price-big">
+            <span class="moeda">R$</span><span class="inteiro">39</span><span class="cents">,90</span><span class="periodo">/mês</span>
+          </div>
+          <p class="price-note">Ativado após a compra do equipamento</p>
         </div>
-        <p class="price-note">Ativado após a compra do equipamento</p>
-        <ul class="feature-list">
-          <li><i class="fas fa-check-circle"></i> App Android e iOS ilimitado 24h</li>
-          <li><i class="fas fa-check-circle"></i> Suporte técnico especializado</li>
-          <li><i class="fas fa-check-circle"></i> Chip Vivo com créditos incluso</li>
-          <li><i class="fas fa-check-circle"></i> Atendimento humanizado</li>
-          <li><i class="fas fa-check-circle"></i> Bloqueio e desbloqueio remoto</li>
-          <li><i class="fas fa-check-circle"></i> Histórico de rotas e paradas</li>
-          <li><i class="fas fa-check-circle"></i> Login compartilhado (família/equipe)</li>
-        </ul>
-        <div class="price-btns">
-          <a href="https://wa.me/5521980886087?text=Quero+ativar+minha+mensalidade."
-             class="btn btn-wa btn-full" target="_blank" rel="noopener">
-            <i class="fab fa-whatsapp"></i> Ativar Plano via WhatsApp
-          </a>
+        <div class="price-card-body">
+          <ul class="feature-list">
+            <li><span class="fi"><i class="fas fa-mobile-alt"></i></span> App Android e iOS ilimitado 24h</li>
+            <li><span class="fi"><i class="fas fa-headset"></i></span> Suporte técnico especializado</li>
+            <li><span class="fi"><i class="fas fa-sim-card"></i></span> Chip Vivo com créditos incluso</li>
+            <li><span class="fi"><i class="fas fa-comments"></i></span> Atendimento humanizado</li>
+            <li><span class="fi"><i class="fas fa-lock"></i></span> Bloqueio e desbloqueio remoto</li>
+            <li><span class="fi"><i class="fas fa-route"></i></span> Histórico de rotas e paradas</li>
+            <li><span class="fi"><i class="fas fa-users"></i></span> Login compartilhado (família/equipe)</li>
+          </ul>
+          <div class="price-btns">
+            <a href="https://wa.me/5521980886087?text=Quero+ativar+minha+mensalidade."
+               class="btn btn-wa btn-full" target="_blank" rel="noopener">
+              <i class="fab fa-whatsapp"></i> Ativar Plano via WhatsApp
+            </a>
+          </div>
         </div>
       </div>
+
     </div>
 
     <div class="combo-note">

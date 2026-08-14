@@ -426,39 +426,84 @@
     .step-desc { color: var(--muted); font-size: 14px; line-height: 1.6; }
 
     /* ─── APP DOWNLOAD ─── */
-    .app-section { padding: 40px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .app-inner { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
-    .app-btn {
-      display: inline-flex; align-items: center; gap: 12px;
-      padding: 14px 24px; border-radius: 12px;
-      text-decoration: none; color: #fff; font-weight: 600; font-size: 15px;
-      transition: transform 0.2s, box-shadow 0.2s;
+    .app-section {
+      padding: 56px 0;
+      background: var(--ink);
+      position: relative; overflow: hidden;
     }
-    .app-btn:hover { transform: translateY(-2px); }
-    .app-btn i { font-size: 24px; }
-    .app-btn.android { background: var(--blue); box-shadow: 0 4px 20px var(--blue-glow); }
-    .app-btn.ios     { background: var(--ink); box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
-    .app-btn.pc      { background: #fff; color: var(--ink); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    .app-section::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(52,131,250,0.18) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 50%, rgba(255,230,0,0.10) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .app-inner { display: flex; flex-direction: column; align-items: center; gap: 28px; position: relative; }
+    .app-headline {
+      text-align: center;
+    }
+    .app-headline .tag-dark {
+      display: inline-block;
+      background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.7);
+      font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 800;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 50px; margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .app-headline h3 {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 900;
+      color: #fff; line-height: 1.15; margin: 0;
+    }
+    .app-headline h3 span { color: var(--yellow); }
+    .app-headline p { color: rgba(255,255,255,0.55); font-size: 14px; margin-top: 8px; }
+    .app-btns-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .app-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 13px 22px; border-radius: 14px;
+      text-decoration: none; font-weight: 700; font-size: 14px;
+      transition: transform 0.2s, box-shadow 0.2s; line-height: 1.2;
+    }
+    .app-btn:hover { transform: translateY(-3px); }
+    .app-btn i { font-size: 22px; flex-shrink: 0; }
+    .app-btn small { display: block; font-size: 10px; font-weight: 500; opacity: .75; }
+    .app-btn.android {
+      background: linear-gradient(135deg, var(--blue), #1a5fc8); color: #fff;
+      box-shadow: 0 6px 24px rgba(52,131,250,0.45);
+    }
+    .app-btn.ios {
+      background: linear-gradient(135deg, #444, #222); color: #fff;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+    }
+    .app-btn.pc {
+      background: rgba(255,255,255,0.08); color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(6px);
+    }
+    .app-btn.pc:hover { background: rgba(255,255,255,0.15); }
 
     /* ─── BENEFÍCIOS ─── */
-    .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 48px; }
+    .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 48px; }
     .feat-card {
       display: flex; align-items: flex-start; gap: 14px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 14px; padding: 18px 20px;
+      background: var(--card); border: 1.5px solid var(--border);
+      border-radius: 16px; padding: 20px;
       box-shadow: var(--shadow-sm);
-      transition: transform 0.3s, border-color 0.3s;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
     }
-    .feat-card:hover { transform: translateY(-3px); border-color: rgba(52,131,250,0.3); }
+    .feat-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--blue);
+      box-shadow: 0 8px 28px rgba(52,131,250,0.14);
+    }
     .feat-icon {
-      width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0;
+      width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(52,131,250,0.1); color: var(--blue);
-      font-size: 17px; margin-bottom: 0;
+      background: linear-gradient(135deg, rgba(52,131,250,0.12), rgba(52,131,250,0.06));
+      color: var(--blue); font-size: 18px;
+      border: 1px solid rgba(52,131,250,0.15);
     }
     .feat-text { min-width: 0; }
-    .feat-title { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 800; margin-bottom: 3px; }
-    .feat-desc { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+    .feat-title { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+    .feat-desc { color: var(--muted); font-size: 13px; line-height: 1.55; }
 
     /* ─── CARROSSÉIS (recuperação / depoimentos) ─── */
     .recovery-carousel, .depo-carousel { max-width: 760px; margin: 40px auto 0; }
@@ -938,22 +983,31 @@
 </section>
 
 <!-- ─── APP DOWNLOAD ─── -->
-<div class="app-section alt">
+<div class="app-section">
   <div class="container">
     <div class="app-inner">
-      <span style="font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; color:var(--ink); letter-spacing:1px; text-transform:uppercase;">Baixe o App:</span>
-      <a href="https://play.google.com/store/apps/details?id=com.rastreandogpsrastreamento.br"
-         class="app-btn android" target="_blank" rel="noopener">
-        <i class="fab fa-google-play"></i> Baixar para Android
-      </a>
-      <a href="https://apps.apple.com/br/app/rastreando-gps/id1642112039"
-         class="app-btn ios" target="_blank" rel="noopener">
-        <i class="fab fa-apple"></i> Baixar para iPhone
-      </a>
-      <a href="https://rastreamento.ong.br/index.php"
-         class="app-btn pc" target="_blank" rel="noopener">
-        <i class="fas fa-desktop"></i> Acessar pelo Computador
-      </a>
+      <div class="app-headline">
+        <div class="tag-dark">Disponível em todas as plataformas</div>
+        <h3>Monitore seu veículo de <span>onde estiver</span></h3>
+        <p>App gratuito para Android e iPhone — acesse também pelo computador</p>
+      </div>
+      <div class="app-btns-row">
+        <a href="https://play.google.com/store/apps/details?id=com.rastreandogpsrastreamento.br"
+           class="app-btn android" target="_blank" rel="noopener">
+          <i class="fab fa-google-play"></i>
+          <div><small>Disponível no</small> Google Play</div>
+        </a>
+        <a href="https://apps.apple.com/br/app/rastreando-gps/id1642112039"
+           class="app-btn ios" target="_blank" rel="noopener">
+          <i class="fab fa-apple"></i>
+          <div><small>Baixar na</small> App Store</div>
+        </a>
+        <a href="https://rastreamento.ong.br/index.php"
+           class="app-btn pc" target="_blank" rel="noopener">
+          <i class="fas fa-desktop"></i>
+          <div><small>Acesso via</small> Computador</div>
+        </a>
+      </div>
     </div>
   </div>
 </div>

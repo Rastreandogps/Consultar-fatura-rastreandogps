@@ -753,9 +753,9 @@
       </div>
       <div class="port-qtd">
         <button class="port-qtd-btn" onclick="portQtd('port',-1)">−</button>
-        <input class="port-qtd-input" type="number" id="qtd-port" value="1" min="1" max="10" onchange="portTotal('port')">
+        <input class="port-qtd-input" type="number" id="qtd-port" value="1" min="1" onchange="portTotal('port')">
         <button class="port-qtd-btn" onclick="portQtd('port',1)">+</button>
-        <span style="font-size:13px;color:var(--muted)">máx. 10</span>
+        <span style="font-size:13px;color:var(--muted)"></span>
       </div>
       <a id="btn-port" href="checkout-portatil.html?produto=portatil&qtd=1" class="port-btn">
         <i class="fas fa-qrcode"></i> Comprar Agora — Pix
@@ -787,9 +787,9 @@
       </div>
       <div class="port-qtd">
         <button class="port-qtd-btn" onclick="portQtd('tag',-1)">−</button>
-        <input class="port-qtd-input" type="number" id="qtd-tag" value="1" min="1" max="10" onchange="portTotal('tag')">
+        <input class="port-qtd-input" type="number" id="qtd-tag" value="1" min="1" onchange="portTotal('tag')">
         <button class="port-qtd-btn" onclick="portQtd('tag',1)">+</button>
-        <span style="font-size:13px;color:var(--muted)">máx. 10</span>
+        <span style="font-size:13px;color:var(--muted)"></span>
       </div>
       <a id="btn-tag" href="checkout-portatil.html?produto=tag&qtd=1" class="port-btn">
         <i class="fas fa-qrcode"></i> Comprar Agora — Pix
@@ -875,11 +875,11 @@
   };
   function portQtd(p, d) {
     const el = document.getElementById('qtd-' + p);
-    el.value = Math.max(1, Math.min(10, parseInt(el.value) + d));
+    el.value = Math.max(1, parseInt(el.value) + d);
     portTotal(p);
   }
   function portTotal(p) {
-    const qtd   = Math.max(1, Math.min(10, parseInt(document.getElementById('qtd-' + p).value) || 1));
+    const qtd   = Math.max(1, parseInt(document.getElementById('qtd-' + p).value) || 1);
     const pr    = PORT_PRECOS[p];
     const total = (pr.equip + pr.plano) * qtd;
     document.getElementById('total-' + p).textContent = 'R$ ' + total.toFixed(2).replace('.', ',');

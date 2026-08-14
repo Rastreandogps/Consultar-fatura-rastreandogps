@@ -518,7 +518,7 @@
       <span>Equipamento(s)</span>
       <span id="resumo-equip">R$ 640,00</span>
     </div>
-    <div class="resumo-linha">
+    <div class="resumo-linha" id="linha-frete-resumo">
       <span>Frete</span>
       <span id="resumo-frete" style="color:var(--muted)">Informe o CEP</span>
     </div>
@@ -533,7 +533,7 @@
     </div>
 
     <ul class="trust-lista">
-      <li><i class="fas fa-check-circle"></i> Entrega pelos Correios com rastreio</li>
+      <li id="li-entrega"><i class="fas fa-check-circle"></i> Entrega pelos Correios com rastreio</li>
       <li><i class="fas fa-check-circle"></i> Suporte pós-venda via WhatsApp</li>
       <li><i class="fas fa-check-circle"></i> Garantia de 7 dias contra defeito</li>
       <li><i class="fas fa-check-circle"></i> Ativação do plano feita por nós</li>
@@ -970,9 +970,11 @@ function validarEtapa3() {
 
 // ── Preenche confirmação ──────────────────────────────────────
 function preencherConfirmacao() {
-  // Oculta bloco de endereço em renovações
+  // Oculta bloco de endereço e frete em renovações
   const blocoEnd = document.getElementById('bloco-endereco-confirm');
   if (blocoEnd) blocoEnd.style.display = IS_RENOVACAO ? 'none' : '';
+  const linhaCfFrete = document.getElementById('linha-cf-frete2');
+  if (linhaCfFrete) linhaCfFrete.style.display = IS_RENOVACAO ? 'none' : '';
 
   document.getElementById('cf-nome').textContent     = document.getElementById('nome').value;
   document.getElementById('cf-cpf').textContent      = document.getElementById('cpf').value;
@@ -1163,6 +1165,14 @@ document.getElementById('quantidade').value = quantidade;
 
 // Garante resumo lateral oculto na etapa 1
 document.getElementById('resumo-lateral').style.display = 'none';
+
+// Renovação — oculta elementos de frete/entrega
+if (IS_RENOVACAO) {
+  const linhaFrete = document.getElementById('linha-frete-resumo');
+  if (linhaFrete) linhaFrete.style.display = 'none';
+  const liEntrega = document.getElementById('li-entrega');
+  if (liEntrega) liEntrega.innerHTML = '<i class="fas fa-check-circle"></i> Ativação remota — sem envio físico';
+}
 document.getElementById('form-area').classList.add('sem-resumo');
 
 // Inicializa

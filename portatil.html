@@ -800,117 +800,12 @@
 
 </div>
 
-<!-- Renovação de planos -->
-<div style="width:min(1100px,94vw);margin:0 auto;padding:0 0 20px">
-  <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;text-align:center;margin-bottom:24px">
-    Renovação de Plano Anual
-  </h2>
-  <div class="port-grid" style="padding:0 0 40px">
-
-    <!-- Renovação Portátil com seletor Anual/Semestral -->
-    <div class="port-card">
-      <div class="port-img" style="min-height:160px;background:linear-gradient(135deg,#fff9df,#ffe600)">
-        <div style="text-align:center">
-          <i class="fas fa-sync-alt" style="font-size:52px;color:var(--ink);margin-bottom:10px;display:block"></i>
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--ink)">RENOVAÇÃO</span>
-        </div>
-      </div>
-      <div class="port-body">
-        <div class="port-nome">Renovar Plano — Portátil</div>
-        <div class="port-sub">Renove o plano do seu Rastreador Portátil (Sincard)</div>
-        <ul class="port-features">
-          <li><i class="fas fa-check-circle"></i> Acesso ao app Android e iOS</li>
-          <li><i class="fas fa-check-circle"></i> Suporte via WhatsApp</li>
-          <li><i class="fas fa-check-circle"></i> Sem envio físico — ativação remota</li>
-        </ul>
-        <!-- Seletor Anual / Semestral -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
-          <button onclick="selecionarPeriodoPort('anual')" id="btn-periodo-anual"
-            style="padding:12px 8px;border:2px solid var(--yellow-deep);border-radius:12px;background:var(--yellow);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s">
-            <div>12 meses</div>
-            <div style="font-size:20px;color:var(--green)">R$ 320,00</div>
-          </button>
-          <button onclick="selecionarPeriodoPort('semestral')" id="btn-periodo-semestral"
-            style="padding:12px 8px;border:2px solid var(--border);border-radius:12px;background:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s">
-            <div>6 meses</div>
-            <div style="font-size:20px;color:var(--green)">R$ 160,00</div>
-          </button>
-        </div>
-        <div class="port-precos">
-          <div class="port-pl"><span class="lb" id="label-periodo-port">Plano anual (12 meses)</span><span class="vl" id="preco-periodo-port">R$ 320,00</span></div>
-          
-          <div class="port-total"><span>Total</span><span class="port-total-val" id="total-renov-port">R$ 320,00</span></div>
-        </div>
-        <div class="port-qtd">
-          <button class="port-qtd-btn" onclick="portQtd('renov-port',-1)">−</button>
-          <input class="port-qtd-input" type="number" id="qtd-renov-port" value="1" min="1" onchange="portTotal('renov-port')">
-          <button class="port-qtd-btn" onclick="portQtd('renov-port',1)">+</button>
-          <span style="font-size:13px;color:var(--muted)">renovação(ões)</span>
-        </div>
-        <a id="btn-renov-port" href="checkout-portatil.html?produto=renov-portatil&qtd=1" class="port-btn">
-          <i class="fas fa-qrcode"></i> Renovar Agora — Pix
-        </a>
-        <p class="port-pix-note"><i class="fas fa-shield-alt"></i> Pagamento seguro via Pix</p>
-      </div>
-    </div>
-
-        <!-- Renovação Tag -->
-    <div class="port-card">
-      <div class="port-img" style="min-height:160px;background:linear-gradient(135deg,#fff9df,#ffe600)">
-        <div style="text-align:center">
-          <i class="fas fa-sync-alt" style="font-size:52px;color:var(--ink);margin-bottom:10px;display:block"></i>
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--ink)">RENOVAÇÃO</span>
-        </div>
-      </div>
-      <div class="port-body">
-        <div class="port-nome">Renovar Plano — Tag GPS</div>
-        <div class="port-sub">Renove o plano anual da sua K-Tag GPS</div>
-        <ul class="port-features">
-          <li><i class="fas fa-check-circle"></i> 12 meses de plataforma ativa</li>
-          <li><i class="fas fa-check-circle"></i> Acesso ao app Android e iOS</li>
-          <li><i class="fas fa-check-circle"></i> Suporte via WhatsApp</li>
-          <li><i class="fas fa-check-circle"></i> Sem envio físico — ativação remota</li>
-        </ul>
-        <div class="port-precos">
-          <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl">R$ 118,80</span></div>
-          
-          <div class="port-total"><span>Total</span><span class="port-total-val" id="total-renov-tag">R$ 118,80</span></div>
-        </div>
-        <div class="port-qtd">
-          <button class="port-qtd-btn" onclick="portQtd('renov-tag',-1)">−</button>
-          <input class="port-qtd-input" type="number" id="qtd-renov-tag" value="1" min="1" onchange="portTotal('renov-tag')">
-          <button class="port-qtd-btn" onclick="portQtd('renov-tag',1)">+</button>
-          <span style="font-size:13px;color:var(--muted)">renovação(ões)</span>
-        </div>
-        <a id="btn-renov-tag" href="checkout-portatil.html?produto=renov-tag&qtd=1" class="port-btn">
-          <i class="fas fa-qrcode"></i> Renovar Agora — Pix
-        </a>
-        <p class="port-pix-note"><i class="fas fa-shield-alt"></i> Pagamento seguro via Pix</p>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- Comparativo -->
-<div class="comp-section">
-  <h2>Qual escolher?</h2>
-  <table class="comp-table">
-    <thead>
-      <tr>
-        <th>Característica</th>
-        <th>Rastreador Portátil 4G</th>
-        <th>Tag GPS</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>Tecnologia</td><td>4G</td><td>GPS + WiFi</td></tr>
-      <tr><td>Sem instalação</td><td><i class="fas fa-check-circle ci"></i></td><td><i class="fas fa-check-circle ci"></i></td></tr>
-      <tr><td>Ideal para veículos</td><td><i class="fas fa-check-circle ci"></i></td><td><i class="fas fa-times-circle cx"></i></td></tr>
-      <tr><td>Ideal para itens pessoais</td><td><i class="fas fa-check-circle ci"></i></td><td><i class="fas fa-check-circle ci"></i></td></tr>
-      <tr><td>Preço total</td><td><strong>R$ 640,00</strong></td><td><strong>R$ 217,80</strong></td></tr>
-    </tbody>
-  </table>
+<!-- Botão Renovar -->
+<div style="width:min(1100px,94vw);margin:0 auto;padding:0 0 40px;text-align:center">
+  <a href="renovar.html" style="display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border:2px solid var(--ink);border-radius:14px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--ink);text-decoration:none;transition:all .2s;background:#fff">
+    <i class="fas fa-sync-alt"></i> Renovar Plano Anual
+  </a>
+  <p style="font-size:13px;color:var(--muted);margin-top:10px">Já tem um rastreador? Renove seu plano aqui.</p>
 </div>
 
 <footer class="footer" id="contact">
@@ -962,50 +857,12 @@
 
 <script>
   const PORT_PRECOS = {
-    port:             { equip: 320.00, plano: 320.00 },
-    tag:              { equip:  99.00, plano: 118.80 },
-    'renov-port':     { equip:   0,    plano: 320.00 },
-    'renov-tag':      { equip:   0,    plano: 118.80 },
-    'renov-semestral':{ equip:   0,    plano: 160.00 },
+    port: { equip: 320.00, plano: 320.00 },
+    tag:  { equip:  99.00, plano: 118.80 },
   };
-  let periodoPort = 'anual'; // período selecionado no card de renovação
-
-  function portQtd(p, d) {
-    const el = document.getElementById('qtd-' + p);
-    el.value = Math.max(1, parseInt(el.value) + d);
-    portTotal(p);
-  }
-  function portTotal(p) {
-    const qtd = Math.max(1, parseInt(document.getElementById('qtd-' + p).value) || 1);
-    let pr, chave;
-
-    if (p === 'renov-port') {
-      // Usa período selecionado
-      const isAnual = periodoPort === 'anual';
-      pr    = isAnual ? PORT_PRECOS['renov-port'] : PORT_PRECOS['renov-semestral'];
-      chave = isAnual ? 'renov-portatil' : 'renov-semestral';
-    } else if (p === 'port')  { pr = PORT_PRECOS['port']; chave = 'portatil'; }
-    else if (p === 'tag')     { pr = PORT_PRECOS['tag'];  chave = 'tag'; }
-    else                      { pr = PORT_PRECOS[p];      chave = p; }
-
-    const total = (pr.equip + pr.plano) * qtd;
-    const totalEl = document.getElementById('total-' + p);
-    if (totalEl) totalEl.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
-    document.getElementById('btn-' + p).href = 'checkout-portatil.html?produto=' + chave + '&qtd=' + qtd;
-  }
-  const anoEl = document.getElementById('ano'); if(anoEl) anoEl.textContent = new Date().getFullYear();
-
-  function selecionarPeriodoPort(periodo) {
-    periodoPort = periodo;
-    const isAnual = periodo === 'anual';
-    document.getElementById('btn-periodo-anual').style.border     = isAnual ? '2px solid var(--yellow-deep)' : '2px solid var(--border)';
-    document.getElementById('btn-periodo-anual').style.background  = isAnual ? 'var(--yellow)' : '#fff';
-    document.getElementById('btn-periodo-semestral').style.border  = !isAnual ? '2px solid var(--yellow-deep)' : '2px solid var(--border)';
-    document.getElementById('btn-periodo-semestral').style.background = !isAnual ? 'var(--yellow)' : '#fff';
-    document.getElementById('label-periodo-port').textContent = isAnual ? 'Plano anual (12 meses)' : 'Plano semestral (6 meses)';
-    document.getElementById('preco-periodo-port').textContent = isAnual ? 'R$ 320,00' : 'R$ 160,00';
-    portTotal('renov-port');
-  }
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>

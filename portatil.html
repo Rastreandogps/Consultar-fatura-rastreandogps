@@ -747,9 +747,9 @@
         <li><i class="fas fa-check-circle"></i> Plano anual sem mensalidade surpresa</li>
       </ul>
       <div class="port-precos">
-        <div class="port-pl"><span class="lb">Equipamento</span><span class="vl">R$ 320,00</span></div>
-        <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl">R$ 320,00</span></div>
-        <div class="port-total"><span>Total</span><span class="port-total-val" id="total-port">R$ 640,00</span></div>
+        <div class="port-pl"><span class="lb">Equipamento</span><span class="vl" id="equip-val-port">R$ 320,00</span></div>
+        <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl" id="plano-val-port">R$ 320,00</span></div>
+        <div class="port-total"><span>Total</span><span class="port-total-val" id="total-val-port">R$ 640,00</span></div>
       </div>
       <div class="port-qtd">
         <button class="port-qtd-btn" onclick="portQtd('port',-1)">−</button>
@@ -783,9 +783,9 @@
         <li><i class="fas fa-check-circle"></i> Plano anual econômico</li>
       </ul>
       <div class="port-precos">
-        <div class="port-pl"><span class="lb">Equipamento</span><span class="vl">R$ 99,00</span></div>
-        <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl">R$ 118,80</span></div>
-        <div class="port-total"><span>Total</span><span class="port-total-val" id="total-tag">R$ 217,80</span></div>
+        <div class="port-pl"><span class="lb">Equipamento</span><span class="vl" id="equip-val-tag">R$ 99,00</span></div>
+        <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl" id="plano-val-tag">R$ 118,80</span></div>
+        <div class="port-total"><span>Total</span><span class="port-total-val" id="total-val-tag">R$ 217,80</span></div>
       </div>
       <div class="port-qtd">
         <button class="port-qtd-btn" onclick="portQtd('tag',-1)">−</button>
@@ -858,9 +858,32 @@
     port: { equip: 320.00, plano: 320.00 },
     tag:  { equip:  99.00, plano: 118.80 },
   };
+
+  function portQtd(prod, delta) {
+    const input = document.getElementById('qtd-' + prod);
+    let v = parseInt(input.value) || 1;
+    v = Math.max(1, v + delta);
+    input.value = v;
+    portTotal(prod);
+  }
+
+  function portTotal(prod) {
+    const input = document.getElementById('qtd-' + prod);
+    const qtd = Math.max(1, parseInt(input.value) || 1);
+    input.value = qtd;
+    const p = PORT_PRECOS[prod];
+    const equip = p.equip * qtd;
+    const plano = p.plano * qtd;
+    const total = equip + plano;
+    const fmt = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+    document.getElementById('equip-val-' + prod).textContent = fmt(equip);
+    document.getElementById('plano-val-' + prod).textContent = fmt(plano);
+    document.getElementById('total-val-' + prod).textContent = fmt(total);
+    // atualiza href do botão comprar
+    const btn = document.getElementById('btn-' + prod);
+    if (btn) btn.href = 'checkout-portatil.html?produto=' + prod + '&qtd=' + qtd;
+  }
 </script>
 </body>
 </html>
-</script>
-</body>
 </html>

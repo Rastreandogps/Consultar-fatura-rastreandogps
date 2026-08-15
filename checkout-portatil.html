@@ -681,10 +681,10 @@ function voltar(de, pularEndereco) {
 
 // ── Quantidade ────────────────────────────────────────────────
 document.getElementById('btn-menos').addEventListener('click', () => {
-  { quantidade--; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
+  if (quantidade > 1) { quantidade--; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
 });
 document.getElementById('btn-mais').addEventListener('click', () => {
-  { quantidade++; document.getElementById('quantidade').value = quantidade; atualizarResumo(); }
+  quantidade++; document.getElementById('quantidade').value = quantidade; atualizarResumo();
 });
 document.getElementById('quantidade').addEventListener('change', function() {
   quantidade = Math.max(1, parseInt(this.value) || 1);

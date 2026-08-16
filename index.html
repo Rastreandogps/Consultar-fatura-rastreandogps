@@ -189,8 +189,10 @@
       height: 120px;
       background: linear-gradient(to bottom, transparent, #ffffff);
       pointer-events: none;
+      z-index: 1;
     }
-    .hero-banner-wrap a { display: block; }
+    .hero-banner-wrap a { display: block; position: relative; z-index: 0; }
+    .hero-banner-img { position: relative; z-index: 0; }
     .hero-banner-img {
       width: 100%; height: auto; display: block;
     }

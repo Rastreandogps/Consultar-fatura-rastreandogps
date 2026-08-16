@@ -181,7 +181,15 @@
     /* ─── HERO ─── */
     /* ─── HERO BANNER ─── */
     .hero { padding: 0; background: #fff; }
-    .hero-banner-wrap { width: 100%; line-height: 0; }
+    .hero-banner-wrap { width: 100%; line-height: 0; position: relative; }
+    .hero-banner-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, #ffffff);
+      pointer-events: none;
+    }
     .hero-banner-wrap a { display: block; }
     .hero-banner-img {
       width: 100%; height: auto; display: block;
@@ -199,8 +207,21 @@
     .badge i { color: var(--green); font-size: 12px; }
     @media (max-width: 768px) {
       .hero-banner-img { max-height: none; }
-      .hero-banner-btns { flex-direction: column; padding: 20px 16px 28px; }
-      .hero-banner-btns .btn { width: 100%; justify-content: center; }
+      .hero-banner-btns {
+        flex-direction: row;
+        padding: 16px 16px 20px;
+        gap: 10px;
+      }
+      .hero-banner-btns .btn {
+        flex: 1;
+        justify-content: center;
+        font-size: 14px;
+        padding: 12px 10px;
+      }
+    }
+    @media (max-width: 480px) {
+      .hero-banner-btns { flex-direction: column; }
+      .hero-banner-btns .btn { width: 100%; }
     }
     .carousel { position: relative; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); }
     .carousel-track { display: flex; transition: transform 0.5s cubic-bezier(.4,0,.2,1); }

@@ -179,90 +179,18 @@
     .pill.pill-green { background: var(--green-soft); color: var(--green); }
 
     /* ─── HERO ─── */
-    .hero {
-      padding: 72px 0 80px;
-      background:
-        radial-gradient(ellipse 80% 60% at 90% 10%, rgba(255,230,0,0.28) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 5% 90%, rgba(52,131,250,0.10) 0%, transparent 60%),
-        linear-gradient(160deg, #fff 0%, #fafbff 100%);
-      position: relative; overflow: hidden;
+    /* ─── HERO BANNER ─── */
+    .hero { padding: 0; background: #fff; }
+    .hero-banner-wrap { width: 100%; line-height: 0; }
+    .hero-banner-wrap a { display: block; }
+    .hero-banner-img {
+      width: 100%; height: auto; display: block;
+      max-height: 600px; object-fit: cover; object-position: center top;
     }
-    .hero::after {
-      content: ''; position: absolute; right: -80px; top: -80px;
-      width: 420px; height: 420px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,230,0,0.18) 0%, transparent 70%);
-      pointer-events: none;
+    .hero-banner-btns {
+      display: flex; gap: 16px; justify-content: center;
+      flex-wrap: wrap; padding: 28px 16px 36px;
     }
-    .hero-grid {
-      display: grid; grid-template-columns: 1fr; gap: 0; align-items: center;
-      max-width: 780px; margin: 0 auto; text-align: center;
-    }
-    .hero-eyebrow { justify-content: center; }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25);
-      padding: 6px 16px; border-radius: 50px; margin-bottom: 24px;
-    }
-    .hero-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--green); box-shadow: 0 0 8px var(--green);
-      animation: pulse 2s infinite; flex-shrink: 0;
-    }
-    @keyframes pulse {
-      0%,100% { opacity:1; transform: scale(1); }
-      50% { opacity:0.5; transform: scale(1.4); }
-    }
-    .hero-eyebrow-text {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px; font-weight: 800; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--green);
-    }
-    .hero-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(36px, 5.5vw, 64px);
-      font-weight: 900; line-height: 1.08;
-      margin-bottom: 20px;
-      color: var(--ink);
-    }
-    .hero-title .line-normal {
-      display: block; text-transform: none;
-      font-size: clamp(16px, 2vw, 22px);
-      font-weight: 600; letter-spacing: 0.5px;
-      color: var(--muted); text-transform: uppercase;
-      font-family: 'Inter', sans-serif;
-      margin-bottom: 8px;
-    }
-    .hero-title .line-main {
-      display: block; text-transform: uppercase; line-height: 1.05;
-    }
-    .hero-title .line-accent {
-      display: inline;
-      background: linear-gradient(180deg, transparent 55%, var(--yellow) 55%);
-    }
-    .hero-sub {
-      font-size: 19px; line-height: 1.65;
-      margin: 0 auto 32px; max-width: 600px;
-      color: #444;
-    }
-    .hero-sub strong { color: var(--ink); }
-    .hero-proof {
-      display: flex; align-items: center; gap: 20px;
-      margin-bottom: 32px; flex-wrap: wrap; justify-content: center;
-    }
-    .hero-proof-item {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 14px; font-weight: 600; color: var(--ink);
-    }
-    .hero-proof-item .pi {
-      width: 32px; height: 32px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; flex-shrink: 0;
-    }
-    .hero-proof-item.pi-green .pi { background: rgba(34,197,94,0.12); color: var(--green); }
-    .hero-proof-item.pi-blue  .pi { background: rgba(52,131,250,0.12); color: var(--blue); }
-    .hero-proof-item.pi-yel   .pi { background: rgba(255,209,0,0.20);  color: #9a7a00; }
-    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; justify-content: center; }
-    .hero-badges { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
     .badge {
       display: flex; align-items: center; gap: 7px;
       padding: 7px 14px; border-radius: 50px;
@@ -270,7 +198,11 @@
       font-size: 13px; color: var(--muted); box-shadow: var(--shadow-sm);
     }
     .badge i { color: var(--green); font-size: 12px; }
-    .hero-image { position: relative; }
+    @media (max-width: 768px) {
+      .hero-banner-img { max-height: none; }
+      .hero-banner-btns { flex-direction: column; padding: 20px 16px 28px; }
+      .hero-banner-btns .btn { width: 100%; justify-content: center; }
+    }
     .carousel { position: relative; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); }
     .carousel-track { display: flex; transition: transform 0.5s cubic-bezier(.4,0,.2,1); }
     .carousel-slide { min-width: 100%; }
@@ -789,59 +721,19 @@
 
 <!-- ─── HERO ─── -->
 <section class="hero" id="hero">
-  <div class="container hero-grid">
-    <div class="hero-content">
-
-      <div class="hero-eyebrow">
-        <span class="hero-dot"></span>
-        <span class="hero-eyebrow-text">Rastreamento 4G • Chip Vivo Incluso • Bloqueio pelo celular</span>
-      </div>
-
-      <h1 class="hero-title">
-        <span class="line-normal">De onde você estiver —</span>
-        <span class="line-main">Você controla<br>o seu carro<br><span class="line-accent">pelo celular.</span></span>
-      </h1>
-
-      <p class="hero-sub">
-        Com o Rastreador 4G da Rastreando GPS, você <strong>vê onde o carro está, bloqueia o motor e desbloqueia</strong> — tudo pelo celular, em tempo real, de qualquer lugar do Brasil.
-      </p>
-
-      <div class="hero-proof">
-        <div class="hero-proof-item pi-green">
-          <span class="pi"><i class="fas fa-lock"></i></span>
-          Bloqueio remoto instantâneo
-        </div>
-        <div class="hero-proof-item pi-yel">
-          <span class="pi"><i class="fas fa-infinity"></i></span>
-          Sem limite de distância
-        </div>
-        <div class="hero-proof-item pi-blue">
-          <span class="pi"><i class="fas fa-map-marker-alt"></i></span>
-          Localização em tempo real
-        </div>
-        <div class="hero-proof-item pi-green">
-          <span class="pi"><i class="fas fa-mobile-alt"></i></span>
-          App Android e iOS grátis
-        </div>
-      </div>
-
-      <div class="hero-btns">
-        <a href="checkout.html" class="btn btn-comprar btn-lg">
-          <i class="fas fa-shopping-cart"></i> Comprar Agora
-        </a>
-        <a href="https://wa.me/5521980886087?text=Quero+saber+mais+sobre+o+rastreador."
-           class="btn btn-wa btn-lg" target="_blank" rel="noopener">
-          <i class="fab fa-whatsapp"></i> Falar com Atendimento
-        </a>
-      </div>
-
-      <div class="hero-badges">
-        <span class="badge"><i class="fas fa-shield-alt"></i> Compra 100% segura</span>
-        <span class="badge"><i class="fas fa-tools"></i> Instala em minutos</span>
-        <span class="badge"><i class="fas fa-headset"></i> Suporte humanizado</span>
-      </div>
-
-    </div>
+  <div class="hero-banner-wrap">
+    <a href="checkout.html">
+      <img src="./assets/hero_1.png" alt="Rastreador 4G com Bloqueio Remoto — Rastreando GPS" class="hero-banner-img">
+    </a>
+  </div>
+  <div class="container hero-banner-btns">
+    <a href="checkout.html" class="btn btn-comprar btn-lg">
+      <i class="fas fa-shopping-cart"></i> Comprar Agora
+    </a>
+    <a href="https://wa.me/5521980886087?text=Quero+saber+mais+sobre+o+rastreador."
+       class="btn btn-wa btn-lg" target="_blank" rel="noopener">
+      <i class="fab fa-whatsapp"></i> Falar com Atendimento
+    </a>
   </div>
 </section>
 

@@ -767,7 +767,12 @@ function atualizarResumo() {
     totalEl.textContent = 'R$ ' + totalPix().toFixed(2).replace('.',',');
     // Atualiza economia
     const econEl = document.getElementById('pix-economia');
-    if (econEl) econEl.textContent = 'R$ ' + economia.toFixed(2).replace('.',',');
+    if (econEl) {
+      const economiaPix   = equipCartao() - equipPix();
+      const economiaFrete = (quantidade >= 2 && window._freteOriginal) ? window._freteOriginal : 0;
+      const economiaTotal = economiaPix + economiaFrete;
+      econEl.textContent = 'R$ ' + economiaTotal.toFixed(2).replace('.',',');
+    }
     const b = document.getElementById('badge-pix-texto');
     if (b) {
       if (freteValor > 0)
@@ -785,7 +790,19 @@ function atualizarResumo() {
   const resumoEcon = document.getElementById('resumo-economia');
   if (linhaEcon) {
     linhaEcon.style.display = formaPagamento === 'pix' ? '' : 'none';
-    if (resumoEcon) resumoEcon.textContent = 'R$ ' + (equipCartao() - equipPix()).toFixed(2).replace('.',',');
+    const economiaPix   = equipCartao() - equipPix();
+    const economiaFrete = (quantidade >= 2 && window._freteOriginal) ? window._freteOriginal : 0;
+    const economiaTotal = economiaPix + economiaFrete;
+    if (resumoEcon) resumoEcon.textContent = 'R$ ' + economiaTotal.toFixed(2).replace('.',',');
+    // Atualiza texto da linha de economia
+    const linhaEconLabel = linhaEcon.querySelector('span:first-child');
+    if (linhaEconLabel) {
+      if (economiaFrete > 0) {
+        linhaEconLabel.innerHTML = '<i class="fas fa-tag"></i> Desconto Pix (20%) + Frete grátis';
+      } else {
+        linhaEconLabel.innerHTML = '<i class="fas fa-tag"></i> 20% de desconto aplicado no Pix!';
+      }
+    }
   }
 
   if (freteSelecionado && window._freteOriginal !== undefined && quantidade >= 2) {

@@ -366,7 +366,21 @@
     .equip-qtd-label {
       font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 14px;
     }
-    .frete-aviso-box {
+    .equip-frete-calc { margin-bottom: 14px; }
+    .equip-frete-cep-wrap { display: flex; gap: 8px; align-items: center; }
+    .equip-frete-cep-wrap input:focus { border-color: var(--blue); }
+    .equip-frete-opcao {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px;
+      margin-bottom: 6px; cursor: pointer; transition: border-color .2s, background .2s;
+      font-size: 13px;
+    }
+    .equip-frete-opcao.selecionado { border-color: var(--green); background: rgba(34,197,94,0.06); }
+    .equip-frete-opcao .fn { font-weight: 600; color: var(--ink); }
+    .equip-frete-opcao .fp { font-weight: 800; color: var(--ink); }
+    .equip-frete-opcao .fp.gratis { color: var(--green); }
+    .equip-frete-loading { text-align:center; color:var(--muted); font-size:13px; padding:10px; }
+    .price-btns { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
       display: flex; align-items: center; gap: 10px;
       border-radius: 12px; padding: 12px 16px; margin-top: 12px;
       font-size: 13px; font-weight: 600;
@@ -891,7 +905,24 @@
           <!-- Resumo de preço -->
           <div class="equip-resumo">
             <div class="equip-resumo-linha"><span>Equipamento(s)</span><span id="equip-val-idx">R$ 159,90</span></div>
+            <div class="equip-resumo-linha" id="equip-frete-linha">
+              <span>Frete</span>
+              <span id="equip-frete-idx" style="color:var(--muted);font-style:italic">calcule abaixo</span>
+            </div>
             <div class="equip-resumo-total"><span>Total</span><span id="equip-total-idx">R$ 159,90</span></div>
+          </div>
+
+          <!-- Calculador de frete -->
+          <div class="equip-frete-calc">
+            <div class="equip-frete-cep-wrap">
+              <input type="text" id="equip-cep-idx" placeholder="Digite seu CEP" maxlength="9"
+                style="flex:1;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Barlow',sans-serif;outline:none">
+              <button onclick="calcularFreteIdx()" id="equip-btn-cep"
+                style="padding:11px 18px;background:var(--ink);color:#fff;border:none;border-radius:10px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;transition:background .2s">
+                <i class="fas fa-search"></i> Calcular
+              </button>
+            </div>
+            <div id="equip-frete-opcoes" style="margin-top:10px"></div>
           </div>
 
           <!-- Seletor de quantidade -->
@@ -1480,22 +1511,62 @@
   document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 </script>
 <script>
-  const EQUIP_UNIT = 159.90;
+  const EQUIP_UNIT     = 159.90;
+  const GAS_URL        = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSLlgqpNmKtDReupm0QsXcUj0Ulv-rlOR1iftSzirr3486rt7aBBtWM/exec';
+  const GAS_TKV        = '22980b7b62d5a367e61c93b77646d23bccfbc2823ffece6a';
+  let   equip_frete_val  = 0;
+  let   equip_frete_nome = null;
+  let   equip_frete_orig = 0; // valor real antes do desconto
+
   function equipQtd(delta) {
     const input = document.getElementById('equip-qtd-idx');
     let v = Math.max(1, (parseInt(input.value) || 1) + delta);
     input.value = v;
     document.getElementById('equip-qtd-show').textContent = v;
     equipTotal();
+    // Recalcula frete se já foi calculado
+    if (equip_frete_nome) atualizarFreteIdx();
   }
+
+  function atualizarFreteIdx() {
+    const input = document.getElementById('equip-qtd-idx');
+    const qtd   = Math.max(1, parseInt(input.value) || 1);
+    const freteEl  = document.getElementById('equip-frete-idx');
+    const totalEl  = document.getElementById('equip-total-idx');
+    const fmt = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+    if (qtd >= 2) {
+      equip_frete_val = 0;
+      freteEl.style.fontStyle = 'normal';
+      freteEl.innerHTML = equip_frete_orig > 0
+        ? '<span style="text-decoration:line-through;color:var(--muted);font-size:11px;margin-right:4px">' + fmt(equip_frete_orig) + '</span><strong style="color:var(--green)">GRÁTIS</strong>'
+        : '<strong style="color:var(--green)">GRÁTIS</strong>';
+      // Atualiza cards de opção
+      document.querySelectorAll('.equip-frete-opcao .fp').forEach(function(el) {
+        el.classList.add('gratis');
+        el.innerHTML = equip_frete_orig > 0
+          ? '<span style="text-decoration:line-through;color:var(--muted);font-size:11px">' + el.dataset.orig + '</span> GRÁTIS'
+          : 'GRÁTIS';
+      });
+    } else {
+      equip_frete_val = equip_frete_orig;
+      freteEl.style.fontStyle = 'normal';
+      freteEl.textContent = equip_frete_orig > 0 ? fmt(equip_frete_orig) : 'calcule abaixo';
+      freteEl.style.color = equip_frete_orig > 0 ? 'var(--ink)' : 'var(--muted)';
+      document.querySelectorAll('.equip-frete-opcao .fp').forEach(function(el) {
+        el.classList.remove('gratis');
+        el.textContent = el.dataset.orig;
+      });
+    }
+    totalEl.textContent = fmt(EQUIP_UNIT * qtd + equip_frete_val);
+  }
+
   function equipTotal() {
     const input = document.getElementById('equip-qtd-idx');
-    const qtd = Math.max(1, parseInt(input.value) || 1);
+    const qtd   = Math.max(1, parseInt(input.value) || 1);
     input.value = qtd;
-    const total = EQUIP_UNIT * qtd;
     const fmt = v => 'R$ ' + v.toFixed(2).replace('.', ',');
-    document.getElementById('equip-val-idx').textContent = fmt(total);
-    document.getElementById('equip-total-idx').textContent = fmt(total);
+    document.getElementById('equip-val-idx').textContent = fmt(EQUIP_UNIT * qtd);
+    document.getElementById('equip-total-idx').textContent = fmt(EQUIP_UNIT * qtd + equip_frete_val);
     document.getElementById('btn-comprar-idx').href = 'checkout.html?qtd=' + qtd;
     const aviso = document.getElementById('frete-aviso-idx');
     if (qtd >= 2) {
@@ -1506,6 +1577,77 @@
       aviso.innerHTML = '<i class="fas fa-truck"></i><span>Frete grátis a partir de <strong>2 equipamentos</strong></span>';
     }
   }
+
+  // Máscara CEP
+  document.addEventListener('DOMContentLoaded', function() {
+    const cepEl = document.getElementById('equip-cep-idx');
+    if (cepEl) {
+      cepEl.addEventListener('input', function() {
+        let v = this.value.replace(/\D/g,'').slice(0,8);
+        this.value = v.length > 5 ? v.slice(0,5) + '-' + v.slice(5) : v;
+      });
+      cepEl.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') calcularFreteIdx();
+      });
+    }
+  });
+
+  async function calcularFreteIdx() {
+    const cepEl  = document.getElementById('equip-cep-idx');
+    const opcoes = document.getElementById('equip-frete-opcoes');
+    const btn    = document.getElementById('equip-btn-cep');
+    const cep    = cepEl.value.replace(/\D/g,'');
+    if (cep.length !== 8) { cepEl.style.borderColor='var(--red,#e53e3e)'; return; }
+    cepEl.style.borderColor = 'var(--border)';
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    opcoes.innerHTML = '<div class="equip-frete-loading"><i class="fas fa-spinner fa-spin"></i> Calculando...</div>';
+    try {
+      const resp = await fetch(GAS_URL + '?secret=' + GAS_TKV + '&acao=frete&cep=' + cep + '&produto=4g');
+      const res  = await resp.json();
+      if (!res.ok || !res.fretes || res.fretes.length === 0) {
+        opcoes.innerHTML = '<div style="color:var(--red,#e53e3e);font-size:13px;padding:8px">Não foi possível calcular. Tente no checkout.</div>';
+        return;
+      }
+      const input = document.getElementById('equip-qtd-idx');
+      const qtd   = Math.max(1, parseInt(input.value) || 1);
+      const fmt   = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+      // Define o primeiro como selecionado
+      equip_frete_orig = res.fretes[0].preco;
+      equip_frete_val  = qtd >= 2 ? 0 : equip_frete_orig;
+      equip_frete_nome = res.fretes[0].empresa + ' — ' + res.fretes[0].nome;
+      opcoes.innerHTML = '';
+      res.fretes.forEach(function(s, i) {
+        const nomeFull  = s.empresa + ' — ' + s.nome;
+        const prazo     = s.prazo ? s.prazo + ' dias úteis' : '';
+        const precoOrig = fmt(s.preco);
+        const isGratis  = qtd >= 2;
+        const precoHTML = isGratis
+          ? '<span class="fp gratis" data-orig="' + precoOrig + '"><span style="text-decoration:line-through;color:var(--muted);font-size:11px">' + precoOrig + '</span> GRÁTIS</span>'
+          : '<span class="fp" data-orig="' + precoOrig + '">' + precoOrig + '</span>';
+        const card = document.createElement('div');
+        card.className = 'equip-frete-opcao' + (i === 0 ? ' selecionado' : '');
+        card.innerHTML =
+          '<div><div class="fn">' + nomeFull + '</div>' +
+          (prazo ? '<div style="font-size:11px;color:var(--muted)"><i class="fas fa-clock"></i> ' + prazo + '</div>' : '') +
+          '</div>' + precoHTML;
+        card.addEventListener('click', function() {
+          document.querySelectorAll('.equip-frete-opcao').forEach(function(c) { c.classList.remove('selecionado'); });
+          card.classList.add('selecionado');
+          equip_frete_orig = s.preco;
+          equip_frete_val  = qtd >= 2 ? 0 : s.preco;
+          equip_frete_nome = nomeFull;
+          atualizarFreteIdx();
+        });
+        opcoes.appendChild(card);
+      });
+      atualizarFreteIdx();
+    } catch(e) {
+      opcoes.innerHTML = '<div style="color:var(--red,#e53e3e);font-size:13px;padding:8px">Erro ao calcular frete.</div>';
+    } finally {
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-search"></i> Calcular';
+    }
+  }
+
   equipTotal();
 </script>
 </body>

@@ -587,6 +587,17 @@ const JUROS_MES       = 0.0299;
 
 let etapaAtual    = 1;
 let quantidade    = 1;
+
+// Lê quantidade da URL se vier do index.html
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const qtdUrl = parseInt(params.get('qtd'));
+  if (qtdUrl && qtdUrl > 0) {
+    quantidade = qtdUrl;
+    const el = document.getElementById('quantidade');
+    if (el) el.value = qtdUrl;
+  }
+})();
 let freteValor    = 0;
 let freteSelecionado = null;
 let formaPagamento   = 'pix';
@@ -846,6 +857,19 @@ async function calcularFrete(cepDestino) {
   const secao    = document.getElementById('secao-frete');
   const conteudo = document.getElementById('frete-conteudo');
   secao.style.display = 'block';
+
+  // Frete grátis para 2 ou mais equipamentos
+  if (quantidade >= 2) {
+    freteValor = 0;
+    freteSelecionado = 'Frete Grátis';
+    conteudo.innerHTML =
+      '<div class="frete-card selecionado" style="background:rgba(34,197,94,0.08);border-color:var(--green)">' +
+      '<div class="frete-info"><div class="frete-nome" style="color:var(--green)"><i class="fas fa-gift"></i> Frete Grátis</div>' +
+      '<div class="frete-prazo"><i class="fas fa-clock"></i> Entrega pelos Correios</div></div>' +
+      '<div class="frete-preco" style="color:var(--green);font-weight:800">GRÁTIS</div></div>';
+    atualizarResumo();
+    return;
+  }
   conteudo.innerHTML = '<div class="frete-loading"><div class="frete-spinner"></div> Calculando fretes…</div>';
   freteValor = 0; freteSelecionado = null; atualizarResumo();
   try {

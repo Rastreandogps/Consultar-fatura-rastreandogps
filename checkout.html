@@ -788,9 +788,16 @@ function atualizarResumo() {
     if (resumoEcon) resumoEcon.textContent = 'R$ ' + (equipCartao() - equipPix()).toFixed(2).replace('.',',');
   }
 
-  if (freteValor > 0) {
+  if (freteSelecionado && window._freteOriginal !== undefined && quantidade >= 2) {
+    freteEl.style.color = 'var(--green)';
+    const orig = 'R$ ' + window._freteOriginal.toFixed(2).replace('.',',');
+    freteEl.innerHTML = '<span style="text-decoration:line-through;color:var(--muted);font-size:11px;margin-right:4px">'+orig+'</span><strong>GRÁTIS</strong>';
+  } else if (freteValor > 0) {
     freteEl.style.color = 'var(--ink)';
     freteEl.textContent = 'R$ ' + freteValor.toFixed(2).replace('.',',');
+  } else if (freteSelecionado) {
+    freteEl.style.color = 'var(--green)';
+    freteEl.textContent = 'GRÁTIS';
   } else {
     freteEl.style.color = 'var(--muted)';
     freteEl.textContent = 'Informe o CEP';
@@ -857,19 +864,6 @@ async function calcularFrete(cepDestino) {
   const secao    = document.getElementById('secao-frete');
   const conteudo = document.getElementById('frete-conteudo');
   secao.style.display = 'block';
-
-  // Frete grátis para 2 ou mais equipamentos
-  if (quantidade >= 2) {
-    freteValor = 0;
-    freteSelecionado = 'Frete Grátis';
-    conteudo.innerHTML =
-      '<div class="frete-card selecionado" style="background:rgba(34,197,94,0.08);border-color:var(--green)">' +
-      '<div class="frete-info"><div class="frete-nome" style="color:var(--green)"><i class="fas fa-gift"></i> Frete Grátis</div>' +
-      '<div class="frete-prazo"><i class="fas fa-clock"></i> Entrega pelos Correios</div></div>' +
-      '<div class="frete-preco" style="color:var(--green);font-weight:800">GRÁTIS</div></div>';
-    atualizarResumo();
-    return;
-  }
   conteudo.innerHTML = '<div class="frete-loading"><div class="frete-spinner"></div> Calculando fretes…</div>';
   freteValor = 0; freteSelecionado = null; atualizarResumo();
   try {
@@ -881,15 +875,21 @@ async function calcularFrete(cepDestino) {
     }
     conteudo.innerHTML = '<div class="frete-opcoes" id="lista-frete"></div>';
     const listaFrete = document.getElementById('lista-frete');
+    const freteGratis = quantidade >= 2;
     res.fretes.forEach(function(s, i) {
-      const prazo   = s.prazo ? s.prazo + ' dias úteis' : 'Consulte o prazo';
+      const prazo    = s.prazo ? s.prazo + ' dias úteis' : 'Consulte o prazo';
       const nomeFull = s.empresa + ' — ' + s.nome;
-      const card    = document.createElement('label');
+      const precoFmt = 'R$ ' + s.preco.toFixed(2).replace('.',',');
+      const precoHTML = freteGratis
+        ? '<div class="frete-preco"><span style="text-decoration:line-through;color:var(--muted);font-size:12px">' + precoFmt + '</span><br><span style="color:var(--green);font-weight:800">GRÁTIS</span></div>'
+        : '<div class="frete-preco">' + precoFmt + '</div>';
+      const card = document.createElement('label');
       card.className = 'frete-card' + (i === 0 ? ' selecionado' : '');
+      if (freteGratis) card.style.borderColor = 'var(--green)';
       card.innerHTML =
-        '<input type="radio" name="frete" value="'+s.preco+'" data-nome="'+nomeFull+'" '+(i===0?'checked':'')+'>'+
+        '<input type="radio" name="frete" value="'+(freteGratis ? 0 : s.preco)+'" data-nome="'+nomeFull+'" '+(i===0?'checked':'')+'>'+
         '<div class="frete-info"><div class="frete-nome">'+nomeFull+'</div><div class="frete-prazo"><i class="fas fa-clock"></i> '+prazo+'</div></div>'+
-        '<div class="frete-preco">R$ '+s.preco.toFixed(2).replace('.',',')+'</div>';
+        precoHTML;
       listaFrete.appendChild(card);
       card.querySelector('input').addEventListener('change', function() {
         document.querySelectorAll('.frete-card').forEach(function(c) { c.classList.remove('selecionado'); });
@@ -897,8 +897,10 @@ async function calcularFrete(cepDestino) {
         freteValor = parseFloat(this.value); freteSelecionado = this.dataset.nome; atualizarResumo();
       });
     });
-    freteValor = res.fretes[0].preco;
+    freteValor = freteGratis ? 0 : res.fretes[0].preco;
     freteSelecionado = res.fretes[0].empresa + ' — ' + res.fretes[0].nome;
+    // guarda preço original para mostrar no resumo
+    window._freteOriginal = res.fretes[0].preco;
     atualizarResumo();
   } catch {
     conteudo.innerHTML = '<div class="frete-erro"><i class="fas fa-exclamation-triangle"></i> Erro ao calcular frete.</div>';
@@ -1024,8 +1026,15 @@ function preencherConfirmacao() {
   document.getElementById('cf-cidade').textContent =
     document.getElementById('cidade').value + ' / ' + document.getElementById('estado').value;
   document.getElementById('cf-cep').textContent    = document.getElementById('cep').value;
-  document.getElementById('cf-frete').textContent  = freteSelecionado + ' — R$ ' + freteValor.toFixed(2).replace('.',',');
-  document.getElementById('cf-frete2').textContent = 'R$ ' + freteValor.toFixed(2).replace('.',',');
+  const freteGratisConf = quantidade >= 2 && window._freteOriginal !== undefined;
+  if (freteGratisConf) {
+    const orig = 'R$ ' + window._freteOriginal.toFixed(2).replace('.',',');
+    document.getElementById('cf-frete').innerHTML  = freteSelecionado + ' — <span style="text-decoration:line-through;color:var(--muted)">' + orig + '</span> <strong style="color:var(--green)">GRÁTIS</strong>';
+    document.getElementById('cf-frete2').innerHTML = '<span style="text-decoration:line-through;color:var(--muted);font-size:12px">' + orig + '</span> <strong style="color:var(--green)">GRÁTIS</strong>';
+  } else {
+    document.getElementById('cf-frete').textContent  = freteSelecionado + ' — R$ ' + freteValor.toFixed(2).replace('.',',');
+    document.getElementById('cf-frete2').textContent = 'R$ ' + freteValor.toFixed(2).replace('.',',');
+  }
   if(formaPagamento==='pix'){
     document.getElementById('cf-equip').innerHTML =
       '<s style="color:var(--muted);font-size:12px">R$\u00a0'+equipCartao().toFixed(2).replace('.',',')+'</s> <strong style="color:var(--green)">R$\u00a0'+equipPix().toFixed(2).replace('.',',')+'</strong> (Pix -20%)';

@@ -339,6 +339,11 @@
     .price-card.equip   .feature-list li .fi { background: rgba(255,230,0,.3); color: #7a5f00; }
     .price-card.monthly .feature-list li .fi { background: var(--green-soft); color: var(--green); }
 
+    .equip-resumo { background: var(--bg-soft); border-radius: 12px; padding: 14px 16px; margin: 16px 0 12px; border: 1px solid var(--border); }
+    .equip-resumo-linha { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .equip-resumo-total { display: flex; justify-content: space-between; font-weight: 800; font-size: 15px; color: var(--ink); padding-top: 8px; border-top: 1px solid var(--border); }
+    .equip-resumo-total span:last-child { color: var(--green); font-size: 18px; }
+    .equip-qtd-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; justify-content: center; }
     .price-btns { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
 
     .combo-note {
@@ -836,8 +841,23 @@
             <li><span class="fi"><i class="fas fa-bolt"></i></span> Relé 12V incluso</li>
             <li><span class="fi"><i class="fas fa-sim-card"></i></span> Chip M2M de telemetria</li>
           </ul>
+
+          <!-- Resumo de preço -->
+          <div class="equip-resumo">
+            <div class="equip-resumo-linha"><span>Equipamento(s)</span><span id="equip-val-idx">R$ 159,90</span></div>
+            <div class="equip-resumo-total"><span>Total</span><span id="equip-total-idx">R$ 159,90</span></div>
+          </div>
+
+          <!-- Seletor de quantidade -->
+          <div class="equip-qtd-wrap">
+            <button class="port-qtd-btn" onclick="equipQtd(-1)">−</button>
+            <input class="port-qtd-input" type="number" id="equip-qtd-idx" value="1" min="1" onchange="equipTotal()">
+            <button class="port-qtd-btn" onclick="equipQtd(1)">+</button>
+            <span style="font-size:13px;color:var(--muted)">unidade(s)</span>
+          </div>
+
           <div class="price-btns">
-            <a href="checkout.html" class="btn btn-comprar btn-full">
+            <a href="checkout.html?qtd=1" id="btn-comprar-idx" class="btn btn-comprar btn-full">
               <i class="fas fa-shopping-cart"></i> Comprar Agora
             </a>
             <a href="https://wa.me/5521980886087?text=Quero+saber+mais+sobre+o+equipamento."
@@ -845,6 +865,9 @@
               <i class="fab fa-whatsapp"></i> Tirar Dúvidas
             </a>
           </div>
+          <p id="frete-aviso-idx" style="text-align:center;font-size:13px;color:var(--muted);margin-top:10px">
+            🚚 Frete calculado no checkout
+          </p>
         </div>
       </div>
 
@@ -1406,6 +1429,32 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
   }, { threshold: 0.12 });
   document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+<script>
+  const EQUIP_UNIT = 159.90;
+  function equipQtd(delta) {
+    const input = document.getElementById('equip-qtd-idx');
+    let v = Math.max(1, (parseInt(input.value) || 1) + delta);
+    input.value = v;
+    equipTotal();
+  }
+  function equipTotal() {
+    const input = document.getElementById('equip-qtd-idx');
+    const qtd = Math.max(1, parseInt(input.value) || 1);
+    input.value = qtd;
+    const total = EQUIP_UNIT * qtd;
+    const fmt = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+    document.getElementById('equip-val-idx').textContent = fmt(total);
+    document.getElementById('equip-total-idx').textContent = fmt(total);
+    document.getElementById('btn-comprar-idx').href = 'checkout.html?qtd=' + qtd;
+    const aviso = document.getElementById('frete-aviso-idx');
+    if (qtd >= 2) {
+      aviso.innerHTML = '🎉 <strong style="color:var(--green)">Frete grátis</strong> para compras acima de 1 equipamento!';
+    } else {
+      aviso.innerHTML = '🚚 Frete grátis a partir de 2 equipamentos';
+    }
+  }
+  equipTotal();
 </script>
 </body>
 </html>

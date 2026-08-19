@@ -788,6 +788,9 @@
       .trust-badges { flex-direction: column !important; }
       .trust-badges > div { border-right: none !important; border-bottom: 1px solid var(--border); }
       .trust-badges > div:last-child { border-bottom: none; }
+      .trust-badges { flex-direction: column !important; max-width: 100% !important; }
+      .trust-badge-item { border-right: none !important; border-bottom: 1px solid var(--border); }
+      .trust-badge-item:last-child { border-bottom: none !important; }
     }
     @media (max-width: 480px) {
       .pros-grid { grid-template-columns: 1fr; }
@@ -923,32 +926,32 @@
     </div>
 
     <!-- Trust badges -->
-    <div style="display:flex;align-items:stretch;justify-content:center;gap:0;margin:28px auto 0;max-width:680px;background:var(--card);border-radius:16px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden">
-      <div style="flex:1;display:flex;align-items:center;gap:14px;padding:18px 20px;border-right:1px solid var(--border)">
-        <div style="width:44px;height:44px;background:rgba(255,209,0,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="fas fa-shopping-cart" style="color:var(--yellow-deep);font-size:18px"></i>
+    <div class="trust-badges" style="display:flex;align-items:stretch;justify-content:center;gap:0;margin:28px auto 0;max-width:680px;background:var(--card);border-radius:16px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden">
+      <div class="trust-badge-item" style="flex:1;display:flex;align-items:center;gap:12px;padding:16px;border-right:1px solid var(--border)">
+        <div style="width:40px;height:40px;min-width:40px;background:rgba(255,209,0,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center">
+          <i class="fas fa-shopping-cart" style="color:var(--yellow-deep);font-size:16px"></i>
         </div>
         <div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;color:var(--ink);text-transform:uppercase;letter-spacing:.5px">Compra 100% Segura</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px">Ambiente protegido para você.</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;line-height:1.2">Compra 100% Segura</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Ambiente protegido para você.</div>
         </div>
       </div>
-      <div style="flex:1;display:flex;align-items:center;gap:14px;padding:18px 20px;border-right:1px solid var(--border)">
-        <div style="width:44px;height:44px;background:rgba(255,209,0,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="fas fa-box" style="color:var(--yellow-deep);font-size:18px"></i>
+      <div class="trust-badge-item" style="flex:1;display:flex;align-items:center;gap:12px;padding:16px;border-right:1px solid var(--border)">
+        <div style="width:40px;height:40px;min-width:40px;background:rgba(255,209,0,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center">
+          <i class="fas fa-box" style="color:var(--yellow-deep);font-size:16px"></i>
         </div>
         <div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;color:var(--ink);text-transform:uppercase;letter-spacing:.5px">Receba em Casa</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px">Enviamos para todo o Brasil.</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;line-height:1.2">Receba em Casa</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Enviamos para todo o Brasil.</div>
         </div>
       </div>
-      <div style="flex:1;display:flex;align-items:center;gap:14px;padding:18px 20px">
-        <div style="width:44px;height:44px;background:rgba(255,209,0,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="fas fa-shipping-fast" style="color:var(--yellow-deep);font-size:18px"></i>
+      <div class="trust-badge-item" style="flex:1;display:flex;align-items:center;gap:12px;padding:16px">
+        <div style="width:40px;height:40px;min-width:40px;background:rgba(255,209,0,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center">
+          <i class="fas fa-shipping-fast" style="color:var(--yellow-deep);font-size:16px"></i>
         </div>
         <div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;color:var(--ink);text-transform:uppercase;letter-spacing:.5px">Envio em até 2 dias</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px">Postagem rápida e rastreada.</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;line-height:1.2">Envio em até 2 dias</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Postagem rápida e rastreada.</div>
         </div>
       </div>
     </div>

@@ -558,8 +558,23 @@
 
     /* ─── CARROSSÉIS (recuperação / depoimentos) ─── */
     .recovery-carousel, .depo-carousel { max-width: 760px; margin: 40px auto 0; }
-    @media (min-width: 769px) {
-      .recovery-carousel, .depo-carousel { max-width: 480px; }
+    /* Trust badges compactos */
+    .trust-badges {
+      display: flex; align-items: stretch; justify-content: center;
+      gap: 0; margin: 28px auto 0; max-width: 680px;
+      background: var(--card); border-radius: 16px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden;
+    }
+    .trust-badge-item {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center;
+      gap: 8px; padding: 16px 10px;
+      border-right: 1px solid var(--border);
+    }
+    .trust-badge-item:last-child { border-right: none; }
+    .trust-badge-item .tbi { font-size: 22px; color: var(--yellow-deep); }
+    .trust-badge-item .tbt { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 900; color: var(--ink); text-transform: uppercase; letter-spacing: .5px; line-height: 1.2; }
+    .trust-badge-item .tbs { font-size: 10px; color: var(--muted); }
     }
 
     /* ─── DEPOIMENTOS EM TEXTO ─── */
@@ -793,11 +808,6 @@
       .trust-items { gap: 20px; }
       .section { padding: 60px 0; }
       .price-big .inteiro { font-size: 48px; }
-      .trust-badges { flex-direction: column !important; }
-      .trust-badges > div { border-right: none !important; border-bottom: 1px solid var(--border); }
-      .trust-badges > div:last-child { border-bottom: none; }
-      .trust-badges { flex-direction: column !important; max-width: 100% !important; }
-      .trust-badge-item { border-right: none !important; border-bottom: 1px solid var(--border); }
       .trust-badge-item:last-child { border-bottom: none !important; }
       .passos-img { margin-left: -16px !important; margin-right: -16px !important; width: calc(100% + 32px) !important; max-width: none !important; }
     }
@@ -909,34 +919,19 @@
       <p class="section-sub">Adquira o equipamento diretamente conosco e ative a plataforma em minutos.</p>
     </div>
 
-    <!-- Trust badges -->
-    <div class="trust-badges" style="display:flex;align-items:stretch;justify-content:center;gap:0;margin:28px auto 0;max-width:680px;background:var(--card);border-radius:16px;border:1.5px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden">
-      <div class="trust-badge-item" style="flex:1;display:flex;align-items:center;gap:12px;padding:16px;border-right:1px solid var(--border)">
-        <div style="width:40px;height:40px;min-width:40px;background:rgba(255,209,0,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center">
-          <i class="fas fa-shopping-cart" style="color:var(--yellow-deep);font-size:16px"></i>
-        </div>
-        <div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;line-height:1.2">Compra 100% Segura</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Ambiente protegido para você.</div>
-        </div>
+    <!-- Trust badges compactos -->
+    <div class="trust-badges">
+      <div class="trust-badge-item">
+        <i class="fas fa-shopping-cart tbi"></i>
+        <div class="tbt">Compra<br>100% Segura</div>
       </div>
-      <div class="trust-badge-item" style="flex:1;display:flex;align-items:center;gap:12px;padding:16px;border-right:1px solid var(--border)">
-        <div style="width:40px;height:40px;min-width:40px;background:rgba(255,209,0,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center">
-          <i class="fas fa-box" style="color:var(--yellow-deep);font-size:16px"></i>
-        </div>
-        <div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;line-height:1.2">Receba em Casa</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Enviamos para todo o Brasil.</div>
-        </div>
+      <div class="trust-badge-item">
+        <i class="fas fa-box tbi"></i>
+        <div class="tbt">Receba<br>em Casa</div>
       </div>
-      <div class="trust-badge-item" style="flex:1;display:flex;align-items:center;gap:12px;padding:16px">
-        <div style="width:40px;height:40px;min-width:40px;background:rgba(255,209,0,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center">
-          <i class="fas fa-shipping-fast" style="color:var(--yellow-deep);font-size:16px"></i>
-        </div>
-        <div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;line-height:1.2">Envio em até 2 dias</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Postagem rápida e rastreada.</div>
-        </div>
+      <div class="trust-badge-item">
+        <i class="fas fa-shipping-fast tbi"></i>
+        <div class="tbt">Envio em<br>até 2 dias</div>
       </div>
     </div>
 

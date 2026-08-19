@@ -730,6 +730,35 @@
     .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
 
+    /* ─── DESKTOP (769px+) — não toca no mobile ─── */
+    @media (min-width: 769px) {
+      /* Pill + texto hero */
+      .hero-banner-btns { padding: 36px 0 40px; gap: 20px; }
+      .hero-banner-btns .btn { min-width: 220px; font-size: 17px; padding: 16px 28px; }
+
+      /* Pill e texto abaixo da hero */
+      #hero > div[style*="text-align:center"] p,
+      #hero > div[style*="text-align:center"] > p { font-size: 20px; }
+
+      /* Pricing grid — 2 colunas no desktop */
+      .pricing-grid { grid-template-columns: 1fr 1fr !important; gap: 32px; }
+
+      /* Carrossel — largura maior */
+      #hero-car { max-width: 640px !important; }
+
+      /* Carrossel de depoimentos */
+      .testi-track .testi-card { min-width: 380px; }
+
+      /* Features grid — 3 colunas */
+      .features-grid { grid-template-columns: repeat(3, 1fr) !important; }
+
+      /* Steps — 4 colunas */
+      .steps-wrapper { grid-template-columns: repeat(4, 1fr) !important; }
+
+      /* Seção de texto centralizado — mais largo */
+      .section-title { font-size: clamp(32px, 4vw, 52px); }
+    }
+
     /* ─── RESPONSIVO ─── */
     @media (max-width: 1024px) {
       .hero-grid { grid-template-columns: 1fr; }
@@ -737,7 +766,6 @@
       .hero-btns { justify-content: center; }
       .hero-badges { justify-content: center; }
       .hero-sub { margin: 0 auto 30px; }
-      .pricing-grid { grid-template-columns: 1fr; }
       .features-grid { grid-template-columns: 1fr 1fr; }
       .steps-wrapper { grid-template-columns: 1fr 1fr; }
       .fleet-grid { grid-template-columns: 1fr; }

@@ -743,8 +743,8 @@
       #hero > div[style*="text-align:center"] p,
       #hero > div[style*="text-align:center"] > p { font-size: 20px; }
 
-      /* Pricing grid — 2 colunas no desktop */
-      .pricing-grid { grid-template-columns: 1fr 1fr !important; gap: 32px; }
+      /* Pricing grid — 2 colunas apenas em telas grandes */
+      .pricing-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
 
       /* Carrossel — largura maior */
       #hero-car { max-width: 640px !important; }
@@ -777,6 +777,7 @@
     }
     @media (max-width: 768px) {
       .topbar-cta { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; }
       .steps-wrapper { grid-template-columns: 1fr; }
       .pros-grid { grid-template-columns: 1fr 1fr; }
       .testi-grid { grid-template-columns: 1fr; }

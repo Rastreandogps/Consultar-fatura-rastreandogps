@@ -107,6 +107,10 @@
       background: var(--blue-dark); box-shadow: 0 10px 30px var(--blue-glow);
       animation-play-state: paused;
     }
+    @keyframes piscaPill {
+      0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(255,209,0,0.5); }
+      50% { opacity:0.8; box-shadow: 0 0 16px 6px rgba(255,209,0,0.5); }
+    }
     @keyframes mlFloat {
       0%, 100% { transform: translateY(0); box-shadow: 0 6px 22px var(--blue-glow); }
       50%      { transform: translateY(-7px); box-shadow: 0 16px 26px var(--blue-glow); }
@@ -796,11 +800,11 @@
     </a>
   </div>
   <div class="container" style="text-align:center;padding-top:36px;padding-bottom:4px">
-    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(229,62,62,0.08);border:1.5px solid rgba(229,62,62,0.25);border-radius:50px;padding:6px 18px;margin-bottom:16px">
-      <span style="width:8px;height:8px;border-radius:50%;background:#e53e3e;box-shadow:0 0 8px #e53e3e;animation:pulse 2s infinite;flex-shrink:0;display:inline-block"></span>
-      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#e53e3e">Rastreador 4G com Bloqueio Remoto</span>
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,209,0,0.15);border:2px solid var(--yellow-deep);border-radius:50px;padding:8px 22px;margin-bottom:20px;animation:piscaPill 1.2s ease-in-out infinite">
+      <span style="width:9px;height:9px;border-radius:50%;background:var(--yellow-deep);box-shadow:0 0 10px var(--yellow);flex-shrink:0;display:inline-block"></span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--ink)">Bloqueio Remoto — Sem Limite de Distância</span>
     </div>
-    <p style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(22px,3.5vw,32px);font-weight:900;line-height:1.25;color:var(--ink);max-width:680px;margin:0 auto;text-transform:uppercase">
+    <p style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,4.5vw,42px);font-weight:900;line-height:1.2;color:var(--ink);max-width:720px;margin:0 auto;text-transform:uppercase">
       Bloqueie seu veículo<br>
       <span style="background:linear-gradient(180deg,transparent 55%,var(--yellow) 55%)">a qualquer distância —</span><br>
       mesmo em outro estado.

@@ -668,7 +668,10 @@
     .port-pl .vl{font-weight:700}
     .port-total{display:flex;justify-content:space-between;align-items:center;padding-top:10px;font-weight:800;font-size:18px}
     .port-total-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;color:var(--green)}
-    .port-qtd{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+    .port-plano-sel{display:flex;gap:0;margin-bottom:16px;border-radius:12px;overflow:hidden;border:2px solid var(--yellow-deep)}
+    .port-plano-btn{flex:1;padding:10px 8px;border:none;background:#fff;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .2s;text-align:center;line-height:1.2}
+    .port-plano-btn.ativo{background:var(--yellow);color:var(--ink)}
+    .port-plano-btn:first-child{border-right:1px solid var(--yellow-deep)}
     .port-qtd-btn{width:40px;height:40px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:20px;font-weight:700;cursor:pointer;color:var(--ink);transition:all .2s;display:flex;align-items:center;justify-content:center}
     .port-qtd-btn:hover{border-color:var(--blue);color:var(--blue)}
     .port-qtd-input{width:60px;height:40px;text-align:center;font-size:16px;font-weight:700;border:1.5px solid var(--border);border-radius:10px;font-family:'Barlow',sans-serif}
@@ -749,9 +752,18 @@
         <li><i class="fas fa-check-circle"></i> Histórico de rotas completo</li>
         <li><i class="fas fa-check-circle"></i> Plano anual sem mensalidade surpresa</li>
       </ul>
+      <!-- Seletor com/sem plano Portátil -->
+      <div class="port-plano-sel">
+        <button class="port-plano-btn" id="btn-sem-plano-port" onclick="setPlano('port', false)">
+          Só o Equipamento<br><small style="font-weight:400;font-size:11px">R$ 320,00</small>
+        </button>
+        <button class="port-plano-btn ativo" id="btn-com-plano-port" onclick="setPlano('port', true)">
+          Com Plano Anual<br><small style="font-weight:400;font-size:11px">R$ 640,00</small>
+        </button>
+      </div>
       <div class="port-precos">
         <div class="port-pl"><span class="lb">Equipamento</span><span class="vl" id="equip-val-port">R$ 320,00</span></div>
-        <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl" id="plano-val-port">R$ 320,00</span></div>
+        <div class="port-pl" id="linha-plano-port"><span class="lb">Plano anual (12 meses)</span><span class="vl" id="plano-val-port">R$ 320,00</span></div>
         <div class="port-pl"><span class="lb">Frete</span><span class="vl" id="frete-val-port" style="color:var(--muted);font-style:italic">calcule abaixo</span></div>
         <div class="port-total"><span>Total</span><span class="port-total-val" id="total-val-port">R$ 640,00</span></div>
       </div>
@@ -799,9 +811,18 @@
         <li><i class="fas fa-check-circle"></i> Alertas de zona segura</li>
         <li><i class="fas fa-check-circle"></i> Plano anual econômico</li>
       </ul>
+      <!-- Seletor com/sem plano Tag -->
+      <div class="port-plano-sel">
+        <button class="port-plano-btn" id="btn-sem-plano-tag" onclick="setPlano('tag', false)">
+          Só o Equipamento<br><small style="font-weight:400;font-size:11px">R$ 99,00</small>
+        </button>
+        <button class="port-plano-btn ativo" id="btn-com-plano-tag" onclick="setPlano('tag', true)">
+          Com Plano Anual<br><small style="font-weight:400;font-size:11px">R$ 217,80</small>
+        </button>
+      </div>
       <div class="port-precos">
         <div class="port-pl"><span class="lb">Equipamento</span><span class="vl" id="equip-val-tag">R$ 99,00</span></div>
-        <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl" id="plano-val-tag">R$ 118,80</span></div>
+        <div class="port-pl" id="linha-plano-tag"><span class="lb">Plano anual (12 meses)</span><span class="vl" id="plano-val-tag">R$ 118,80</span></div>
         <div class="port-pl"><span class="lb">Frete</span><span class="vl" id="frete-val-tag" style="color:var(--muted);font-style:italic">calcule abaixo</span></div>
         <div class="port-total"><span>Total</span><span class="port-total-val" id="total-val-tag">R$ 217,80</span></div>
       </div>
@@ -889,6 +910,21 @@
     port: { equip: 320.00, plano: 320.00 },
     tag:  { equip:  99.00, plano: 118.80 },
   };
+  const portComPlano = { port: true, tag: true };
+
+  function setPlano(prod, comPlano) {
+    portComPlano[prod] = comPlano;
+    // Atualiza botões
+    document.getElementById('btn-sem-plano-' + prod).classList.toggle('ativo', !comPlano);
+    document.getElementById('btn-com-plano-' + prod).classList.toggle('ativo', comPlano);
+    // Mostra/oculta linha do plano
+    document.getElementById('linha-plano-' + prod).style.display = comPlano ? '' : 'none';
+    // Atualiza URL do botão comprar
+    const param = comPlano ? 'produto=' + prod : 'produto=' + prod + '&sem_plano=1';
+    const qtd   = parseInt(document.getElementById('qtd-' + prod).value) || 1;
+    document.getElementById('btn-' + prod).href = 'checkout-portatil.html?' + param + '&qtd=' + qtd;
+    portTotal(prod);
+  }
 
   const PORT_GAS_URL = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSLlgqpNmKtDReupm0QsXcUj0Ulv-rlOR1iftSzirr3486rt7aBBtWM/exec';
   const PORT_TKV     = '22980b7b62d5a367e61c93b77646d23bccfbc2823ffece6a';
@@ -971,19 +1007,20 @@
 
   function portTotal(prod) {
     const input = document.getElementById('qtd-' + prod);
-    const qtd = Math.max(1, parseInt(input.value) || 1);
+    const qtd   = Math.max(1, parseInt(input.value) || 1);
     input.value = qtd;
-    const p = PORT_PRECOS[prod];
-    const equip = p.equip * qtd;
-    const plano = p.plano * qtd;
-    const total = equip + plano;
-    const fmt = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+    const p        = PORT_PRECOS[prod];
+    const comPlano = portComPlano[prod];
+    const equip    = p.equip * qtd;
+    const plano    = comPlano ? p.plano * qtd : 0;
+    const total    = equip + plano + (portFreteVal[prod] || 0);
+    const fmt      = v => 'R$ ' + v.toFixed(2).replace('.', ',');
     document.getElementById('equip-val-' + prod).textContent = fmt(equip);
-    document.getElementById('plano-val-' + prod).textContent = fmt(plano);
+    if (comPlano) document.getElementById('plano-val-' + prod).textContent = fmt(p.plano * qtd);
     document.getElementById('total-val-' + prod).textContent = fmt(total);
-    // atualiza href do botão comprar
-    const btn = document.getElementById('btn-' + prod);
-    if (btn) btn.href = 'checkout-portatil.html?produto=' + prod + '&qtd=' + qtd;
+    const param = comPlano ? 'produto=' + prod : 'produto=' + prod + '&sem_plano=1';
+    const btn   = document.getElementById('btn-' + prod);
+    if (btn) btn.href = 'checkout-portatil.html?' + param + '&qtd=' + qtd;
   }
 </script>
 </body>

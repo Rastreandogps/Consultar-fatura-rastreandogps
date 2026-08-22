@@ -574,7 +574,7 @@ const _tkv = '22980b7b62d5a367e61c93b77646d23bccfbc2823ffece6a';
 // Produtos portáteis — carregados da URL
 const PRODUTOS = {
   portatil:         { nome: 'Rastreador Portátil 4G',               equip: 320.00, plano: 320.00, img: './assets/ml%20po.jpg'           },
-  tag:              { nome: 'Tag GPS',                               equip:  99.00, plano: 118.80, img: './assets/k-tag.jpeg'            },
+  tag:              { nome: 'Tag GPS',                               equip:  99.00, plano: 118.80, img: './assets/k-tag.jpg'             },
   'renov-portatil': { nome: 'Renovação Plano Anual — Portátil',     equip:   0,    plano: 320.00, img: './assets/Renovacao%20chip.png'  },
   'renov-tag':      { nome: 'Renovação Plano Anual — Tag GPS',      equip:   0,    plano: 118.80, img: './assets/Renovacao%20Tag.png'   },
   'renov-semestral':{ nome: 'Renovação Plano Semestral — Portátil', equip:   0,    plano: 160.00, img: './assets/Renovacao%20chip.png'  },
@@ -631,10 +631,10 @@ function avancar(de, pularEndereco) {
 
   etapaAtual = proxima;
 
-  // Mostra resumo lateral só a partir da etapa 3
+  // Mostra resumo lateral só a partir da etapa 4
   const resumo  = document.getElementById('resumo-lateral');
   const mainEl  = document.getElementById('form-area');
-  if (etapaAtual >= 3) {
+  if (etapaAtual >= 4) {
     resumo.style.display = '';
     mainEl.classList.remove('sem-resumo');
   } else {
@@ -667,7 +667,7 @@ function voltar(de, pularEndereco) {
   // Oculta resumo lateral nas etapas 1 e 2
   const resumo = document.getElementById('resumo-lateral');
   const mainEl = document.getElementById('form-area');
-  if (etapaAtual >= 3) {
+  if (etapaAtual >= 4) {
     resumo.style.display = '';
     mainEl.classList.remove('sem-resumo');
   } else {

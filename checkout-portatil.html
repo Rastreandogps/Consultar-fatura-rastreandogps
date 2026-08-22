@@ -568,7 +568,7 @@
 </footer>
 
 <script>
-const CHECKOUT_URL    = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSLlgqpNmKtDReupm0QsXcUj0Ulv-rlOR1iftSzirr3486rt7aBBtWM/exec';
+const CHECKOUT_URL    = 'https://script.google.com/macros/s/AKfycby8uS6-rPHYA7bl9P6Ns8yXQ0bTursLqA6FMllboGH9gaARadcl5FHvO64-oPvrKBMs/exec';
 const _tkv = '22980b7b62d5a367e61c93b77646d23bccfbc2823ffece6a';
 
 // Produtos portáteis — carregados da URL
@@ -1045,14 +1045,15 @@ async function confirmarPedido() {
     cep:         IS_RENOVACAO ? '' : document.getElementById('cep').value,
     endereco:    IS_RENOVACAO ? 'Ativação Remota' : document.getElementById('endereco').value.trim(),
     numero:      IS_RENOVACAO ? 'S/N' : document.getElementById('numero').value.trim(),
-    complemento: IS_RENOVACAO ? '' : document.getElementById('complemento').value.trim(),
+    complemento: IS_RENOVACAO ? '' : (document.getElementById('complemento').value.trim() || ''),
     bairro:      IS_RENOVACAO ? '' : document.getElementById('bairro').value.trim(),
     cidade:      IS_RENOVACAO ? 'Ativação Remota' : document.getElementById('cidade').value.trim(),
     estado:      IS_RENOVACAO ? 'RJ' : document.getElementById('estado').value,
-    freteNome:   IS_RENOVACAO ? 'Sem frete' : freteSelecionado,
-    freteValor:  IS_RENOVACAO ? 0 : freteValor,
+    freteNome:   IS_RENOVACAO ? 'Sem frete' : (freteSelecionado || ''),
+    freteValor:  IS_RENOVACAO ? 0 : (freteValor || 0),
     formaPagamento:formaPagamento,
     quantidade:quantidade,
+    semPlano: urlParams.get('sem_plano') === '1' ? 1 : 0,
   };
   if (formaPagamento === 'pix') {
     dados.valorEquipamento = equipPix();

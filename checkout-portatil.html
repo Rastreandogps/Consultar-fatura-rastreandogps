@@ -1053,7 +1053,7 @@ async function confirmarPedido() {
     freteValor:  IS_RENOVACAO ? 0 : (freteValor || 0),
     formaPagamento:formaPagamento,
     quantidade:quantidade,
-    semPlano: urlParams.get('sem_plano') === '1' ? 1 : 0,
+    semPlano: params.get('sem_plano') === '1' ? 1 : 0,
   };
   if (formaPagamento === 'pix') {
     dados.valorEquipamento = equipPix();

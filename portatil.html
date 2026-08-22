@@ -756,7 +756,7 @@
       <!-- Seletor com/sem plano Portátil -->
       <div class="port-plano-sel">
         <button class="port-plano-btn" id="btn-sem-plano-port" onclick="setPlano('port', false)">
-          Só o Equipamento<br><small style="font-weight:400;font-size:11px">R$ 320,00</small>
+          Equipamento<br><small style="font-weight:400;font-size:11px">R$ 320,00</small>
         </button>
         <button class="port-plano-btn ativo" id="btn-com-plano-port" onclick="setPlano('port', true)">
           Com Plano Anual<br><small style="font-weight:400;font-size:11px">R$ 640,00</small>
@@ -815,7 +815,7 @@
       <!-- Seletor com/sem plano Tag -->
       <div class="port-plano-sel">
         <button class="port-plano-btn" id="btn-sem-plano-tag" onclick="setPlano('tag', false)">
-          Só o Equipamento<br><small style="font-weight:400;font-size:11px">R$ 99,00</small>
+          Equipamento<br><small style="font-weight:400;font-size:11px">R$ 99,00</small>
         </button>
         <button class="port-plano-btn ativo" id="btn-com-plano-tag" onclick="setPlano('tag', true)">
           Com Plano Anual<br><small style="font-weight:400;font-size:11px">R$ 217,80</small>
@@ -968,11 +968,11 @@
       res.fretes.forEach(function(s, i) {
         const nomeFull = s.empresa + ' — ' + s.nome;
         const card = document.createElement('div');
-        card.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1.5px solid '+(i===0?'var(--yellow-deep)':'var(--border)')+';border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:12px;background:'+(i===0?'rgba(255,209,0,0.08)':'#fff');
+        card.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1.5px solid '+(i===0?'var(--green)':'var(--border)')+';border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:12px;background:'+(i===0?'rgba(34,197,94,0.08)':'#fff');
         card.innerHTML = '<div><div style="font-weight:700">' + nomeFull + '</div>'+(s.prazo?'<div style="color:var(--muted);font-size:11px">'+s.prazo+' dias úteis</div>':'')+'</div><div style="font-weight:800">'+fmt(s.preco)+'</div>';
         card.addEventListener('click', function() {
           opcoes.querySelectorAll('div[data-frete]').forEach(function(c){ c.style.borderColor='var(--border)'; c.style.background='#fff'; });
-          card.style.borderColor='var(--yellow-deep)'; card.style.background='rgba(255,209,0,0.08)';
+          card.style.borderColor='var(--green)'; card.style.background='rgba(34,197,94,0.08)';
           portFreteVal[prod] = s.preco;
           atualizarTotalPort(prod);
         });

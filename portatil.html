@@ -752,6 +752,7 @@
       <div class="port-precos">
         <div class="port-pl"><span class="lb">Equipamento</span><span class="vl" id="equip-val-port">R$ 320,00</span></div>
         <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl" id="plano-val-port">R$ 320,00</span></div>
+        <div class="port-pl"><span class="lb">Frete</span><span class="vl" id="frete-val-port" style="color:var(--muted);font-style:italic">calcule abaixo</span></div>
         <div class="port-total"><span>Total</span><span class="port-total-val" id="total-val-port">R$ 640,00</span></div>
       </div>
       <div class="port-qtd">
@@ -759,6 +760,19 @@
         <input class="port-qtd-input" type="number" id="qtd-port" value="1" min="1" onchange="portTotal('port')">
         <button class="port-qtd-btn" onclick="portQtd('port',1)">+</button>
         <span style="font-size:13px;color:var(--muted)"></span>
+      </div>
+      <!-- Calculador de frete Portátil -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Calcular frete</div>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="cep-port" placeholder="00000-000" maxlength="9"
+            style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'Barlow',sans-serif;outline:none">
+          <button onclick="calcularFretePort('port')" id="btn-cep-port"
+            style="padding:10px 14px;background:var(--yellow);color:var(--ink);border:none;border-radius:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">
+            <i class="fas fa-truck"></i> Calcular
+          </button>
+        </div>
+        <div id="frete-opcoes-port" style="margin-top:8px"></div>
       </div>
       <a id="btn-port" href="checkout-portatil.html?produto=portatil&qtd=1" class="port-btn">
         <i class="fas fa-shopping-cart"></i> Comprar Agora
@@ -788,6 +802,7 @@
       <div class="port-precos">
         <div class="port-pl"><span class="lb">Equipamento</span><span class="vl" id="equip-val-tag">R$ 99,00</span></div>
         <div class="port-pl"><span class="lb">Plano anual (12 meses)</span><span class="vl" id="plano-val-tag">R$ 118,80</span></div>
+        <div class="port-pl"><span class="lb">Frete</span><span class="vl" id="frete-val-tag" style="color:var(--muted);font-style:italic">calcule abaixo</span></div>
         <div class="port-total"><span>Total</span><span class="port-total-val" id="total-val-tag">R$ 217,80</span></div>
       </div>
       <div class="port-qtd">
@@ -795,6 +810,19 @@
         <input class="port-qtd-input" type="number" id="qtd-tag" value="1" min="1" onchange="portTotal('tag')">
         <button class="port-qtd-btn" onclick="portQtd('tag',1)">+</button>
         <span style="font-size:13px;color:var(--muted)"></span>
+      </div>
+      <!-- Calculador de frete Tag -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Calcular frete</div>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="cep-tag" placeholder="00000-000" maxlength="9"
+            style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-family:'Barlow',sans-serif;outline:none">
+          <button onclick="calcularFretePort('tag')" id="btn-cep-tag"
+            style="padding:10px 14px;background:var(--yellow);color:var(--ink);border:none;border-radius:10px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap">
+            <i class="fas fa-truck"></i> Calcular
+          </button>
+        </div>
+        <div id="frete-opcoes-tag" style="margin-top:8px"></div>
       </div>
       <a id="btn-tag" href="checkout-portatil.html?produto=tag&qtd=1" class="port-btn">
         <i class="fas fa-shopping-cart"></i> Comprar Agora
@@ -861,6 +889,77 @@
     port: { equip: 320.00, plano: 320.00 },
     tag:  { equip:  99.00, plano: 118.80 },
   };
+
+  const PORT_GAS_URL = 'https://script.google.com/macros/s/AKfycby54q4m4x31jnSLlgqpNmKtDReupm0QsXcUj0Ulv-rlOR1iftSzirr3486rt7aBBtWM/exec';
+  const PORT_TKV     = '22980b7b62d5a367e61c93b77646d23bccfbc2823ffece6a';
+  const portFreteVal = { port: 0, tag: 0 };
+
+  // Máscaras CEP
+  document.addEventListener('DOMContentLoaded', function() {
+    ['cep-port','cep-tag'].forEach(function(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', function() {
+        let v = this.value.replace(/\D/g,'').slice(0,8);
+        this.value = v.length > 5 ? v.slice(0,5)+'-'+v.slice(5) : v;
+      });
+      el.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') calcularFretePort(id.replace('cep-',''));
+      });
+    });
+  });
+
+  async function calcularFretePort(prod) {
+    const cepEl  = document.getElementById('cep-' + prod);
+    const opcoes = document.getElementById('frete-opcoes-' + prod);
+    const btn    = document.getElementById('btn-cep-' + prod);
+    const cep    = cepEl.value.replace(/\D/g,'');
+    if (cep.length !== 8) { cepEl.style.borderColor='#e53e3e'; return; }
+    cepEl.style.borderColor = '';
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    opcoes.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:6px">Calculando...</div>';
+    try {
+      const resp = await fetch(PORT_GAS_URL + '?secret=' + PORT_TKV + '&acao=frete&cep=' + cep + '&produto=portatil');
+      const res  = await resp.json();
+      if (!res.ok || !res.fretes || res.fretes.length === 0) {
+        opcoes.innerHTML = '<div style="font-size:12px;color:#e53e3e;padding:6px">Não foi possível calcular. Tente no checkout.</div>';
+        return;
+      }
+      const fmt = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+      portFreteVal[prod] = res.fretes[0].preco;
+      opcoes.innerHTML = '';
+      res.fretes.forEach(function(s, i) {
+        const nomeFull = s.empresa + ' — ' + s.nome;
+        const card = document.createElement('div');
+        card.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1.5px solid '+(i===0?'var(--yellow-deep)':'var(--border)')+';border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:12px;background:'+(i===0?'rgba(255,209,0,0.08)':'#fff');
+        card.innerHTML = '<div><div style="font-weight:700">' + nomeFull + '</div>'+(s.prazo?'<div style="color:var(--muted);font-size:11px">'+s.prazo+' dias úteis</div>':'')+'</div><div style="font-weight:800">'+fmt(s.preco)+'</div>';
+        card.addEventListener('click', function() {
+          opcoes.querySelectorAll('div[data-frete]').forEach(function(c){ c.style.borderColor='var(--border)'; c.style.background='#fff'; });
+          card.style.borderColor='var(--yellow-deep)'; card.style.background='rgba(255,209,0,0.08)';
+          portFreteVal[prod] = s.preco;
+          atualizarTotalPort(prod);
+        });
+        card.setAttribute('data-frete', s.preco);
+        opcoes.appendChild(card);
+      });
+      atualizarTotalPort(prod);
+    } catch(e) {
+      opcoes.innerHTML = '<div style="font-size:12px;color:#e53e3e;padding:6px">Erro ao calcular frete.</div>';
+    } finally {
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-truck"></i> Calcular';
+    }
+  }
+
+  function atualizarTotalPort(prod) {
+    const qtd = parseInt(document.getElementById('qtd-' + prod).value) || 1;
+    const p   = PORT_PRECOS[prod];
+    const total = (p.equip + p.plano) * qtd + portFreteVal[prod];
+    const fmt = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+    document.getElementById('frete-val-' + prod).textContent = fmt(portFreteVal[prod]);
+    document.getElementById('frete-val-' + prod).style.fontStyle = 'normal';
+    document.getElementById('frete-val-' + prod).style.color = 'var(--ink)';
+    document.getElementById('total-val-' + prod).textContent = fmt(total);
+  }
 
   function portQtd(prod, delta) {
     const input = document.getElementById('qtd-' + prod);

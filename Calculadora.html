@@ -398,7 +398,7 @@
 
     <label for="daysLeft">Dias restantes</label>
     <input type="number" id="daysLeft" placeholder="Ex.: 30" min="1" step="1" inputmode="numeric">
-    <div class="helper">Informe a quantidade de dias restantes exibida no sistema.</div>
+    <div class="helper">Informe a quantidade de dias restantes exibida no sistema. Pode ultrapassar a duração de um único contrato quando o cliente tiver saldo acumulado de renovações anteriores.</div>
 
     <div id="errorBox" class="error-box"></div>
 
@@ -585,10 +585,11 @@
     if (days <= 0) {
       return "Informe uma quantidade de dias maior que zero.";
     }
-    var origin = PLANS[originKey];
-    if (days > origin.days) {
-      return "O plano selecionado possui duração máxima de " + origin.days + " dias.";
-    }
+    // Sem limite atrelado à duração de um único contrato: um cliente pode
+    // ter saldo acumulado de mais de uma renovação (ex.: pagou 2 ou 3 anos
+    // de TAG e usou pouco), então dias restantes podem ultrapassar 365/180.
+    // A única restrição de negócio é o piso de 180 dias do chip M2M,
+    // tratado separadamente em calculateTransfer().
     return null;
   }
 

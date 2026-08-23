@@ -586,10 +586,11 @@ const PRODUTOS = {
 const params      = new URLSearchParams(window.location.search);
 const PRODUTO_KEY = params.get('produto') || 'portatil';
 const PRODUTO     = PRODUTOS[PRODUTO_KEY] || PRODUTOS.portatil;
-const PRECO_UNIT     = PRODUTO.equip + PRODUTO.plano; // preço total por unidade
+const IS_RENOVACAO = PRODUTO_KEY.startsWith('renov-'); // renovação não tem frete
+const SEM_PLANO    = !IS_RENOVACAO && params.get('sem_plano') === '1'; // equipamento sem o plano anual
+const PRECO_UNIT     = PRODUTO.equip + (SEM_PLANO ? 0 : PRODUTO.plano); // preço total por unidade
 const PRECO_UNIT_PIX = PRECO_UNIT; // sem desconto Pix
 const JUROS_MES      = 0.0299; // 2,99% ao mês para parcelamento
-const IS_RENOVACAO = PRODUTO_KEY.startsWith('renov-'); // renovação não tem frete
 
 let etapaAtual    = 1;
 let quantidade    = parseInt(params.get('qtd')) || 1;
@@ -1240,7 +1241,9 @@ if (IS_RENOVACAO) {
   const freteEl = document.getElementById('resumo-frete');
   if (freteEl) freteEl.closest('.resumo-linha').style.display = 'none';
 }
-document.getElementById('resumo-produto-sub').textContent  = 'Equipamento R$ ' + PRODUTO.equip.toFixed(2).replace('.',',') + ' + Plano Anual R$ ' + PRODUTO.plano.toFixed(2).replace('.',',');
+document.getElementById('resumo-produto-sub').textContent  = SEM_PLANO
+  ? 'Somente equipamento (sem plano anual) — R$ ' + PRODUTO.equip.toFixed(2).replace('.',',')
+  : 'Equipamento R$ ' + PRODUTO.equip.toFixed(2).replace('.',',') + ' + Plano Anual R$ ' + PRODUTO.plano.toFixed(2).replace('.',',');
 document.getElementById('resumo-produto-img').src = PRODUTO.img;
 document.getElementById('quantidade').value = quantidade;
 

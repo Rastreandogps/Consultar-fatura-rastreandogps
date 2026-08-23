@@ -211,6 +211,11 @@
   .stat.highlight{
     background:var(--yellow);
   }
+  .stat.highlight-pay{
+    background:var(--black);
+    border:2px solid var(--yellow);
+    box-shadow:0 4px 14px rgba(0,0,0,0.25);
+  }
   .stat .label{
     font-size:0.74rem;
     font-weight:700;
@@ -220,11 +225,16 @@
     margin-bottom:4px;
   }
   .stat.highlight .label{color:var(--black);}
+  .stat.highlight-pay .label{color:var(--yellow);}
   .stat .value{
     font-size:1.5rem;
     font-weight:800;
     color:var(--black);
     line-height:1.15;
+  }
+  .stat.highlight-pay .value{
+    color:var(--yellow);
+    font-size:1.85rem;
   }
   .stat .value.small{font-size:1.1rem;}
 
@@ -412,6 +422,10 @@
     <div class="route-header" id="routeHeader"></div>
 
     <div class="stat-grid">
+      <div class="stat highlight-pay wide" id="statAmountDueWrap" style="display:none;">
+        <div class="label">Diferença a pagar (mínimo de 180 dias do chip M2M)</div>
+        <div class="value" id="statAmountDue">R$ 0,00</div>
+      </div>
       <div class="stat highlight wide">
         <div class="label">Crédito financeiro</div>
         <div class="value" id="statCredit">R$ 0,00</div>
@@ -529,15 +543,20 @@
 
     // ETAPA 4 — Regra do contrato mínimo do chip M2M
     // 180 dias é o mínimo de ativação do chip M2M, seja o destino o plano
-    // Anual ou o Semestral do Rastreador Portátil. Se o crédito da
-    // transferência não for suficiente para cobrir os 180 dias inteiros,
-    // não concedemos os dias parciais: calculamos a diferença financeira
-    // (na tarifa diária do destino escolhido) que falta para completar o
-    // mínimo. Após o pagamento dessa diferença, os 180 dias são creditados.
+    // Anual ou o Semestral do Rastreador Portátil — e esses 180 dias SÃO,
+    // por definição, o próprio plano Semestral (R$ 180,00 / 180 dias).
+    // Por isso, ao ficar abaixo do mínimo, o valor a completar usa SEMPRE
+    // a tarifa do plano Semestral — nunca a tarifa do destino selecionado
+    // (Anual ou Semestral). Isso garante que a diferença a pagar e os dias
+    // creditados sejam os mesmos independentemente de qual das duas opções
+    // de destino o funcionário escolheu, evitando que o cliente pague
+    // valores diferentes para chegar exatamente ao mesmo resultado (180
+    // dias de chip M2M ativo).
     var minimumNotice = null;
     if (M2M_CHIP_PLANS[destKey] && grantedDays < MIN_M2M_CONTRACT_DAYS) {
-      var minContractDays = MIN_M2M_CONTRACT_DAYS; // 180
-      var minContractValue = minContractDays * destDaily; // valor de 180 dias na tarifa do destino
+      var minPlan = PLANS.m2m_semestral; // contrato mínimo do chip M2M = o próprio plano Semestral
+      var minContractDays = minPlan.days; // 180
+      var minContractValue = minPlan.price; // R$ 180,00 (valor cheio do plano mínimo)
       var amountDue = round2(minContractValue - creditExact);
       if (amountDue < 0) amountDue = 0;
       minimumNotice = {
@@ -604,6 +623,8 @@
 
   var resultCard = document.getElementById("resultCard");
   var routeHeader = document.getElementById("routeHeader");
+  var statAmountDueWrap = document.getElementById("statAmountDueWrap");
+  var statAmountDue = document.getElementById("statAmountDue");
   var statCredit = document.getElementById("statCredit");
   var statDaysOrigin = document.getElementById("statDaysOrigin");
   var statDaysDest = document.getElementById("statDaysDest");
@@ -641,6 +662,13 @@
     var mn = r.minimumNotice;
     var finalGrantedDays = mn ? mn.daysAfterPayment : r.grantedDays;
 
+    if (mn) {
+      statAmountDue.textContent = formatBRL(mn.amountDue);
+      statAmountDueWrap.style.display = "block";
+    } else {
+      statAmountDueWrap.style.display = "none";
+    }
+
     statCredit.textContent = formatBRL(r.creditRounded);
     statDaysOrigin.textContent = formatDays(r.daysRemaining, (r.daysRemaining % 1 === 0) ? 0 : 2) + " dias";
     statDailyOrigin.textContent = formatBRL(r.originDaily, 4);
@@ -664,6 +692,8 @@
     if (mn) {
       mathText += "\n\n" +
         "Contrato mínimo do chip M2M: " + mn.minDays + " dias\n" +
+        "(valor fixo do plano Semestral, sempre o mesmo\n" +
+        "independente do destino escolhido)\n" +
         formatBRL(mn.minValue) + " &minus; " + formatBRL(r.creditRounded) + "\n" +
         "= <span class=\"hl\">" + formatBRL(mn.amountDue) + "</span> a pagar\n\n" +
         "Resultado:\n" +
@@ -681,7 +711,7 @@
         '<div class="mn-title">&#9888; Contrato mínimo — Rastreador Portátil + M2M</div>' +
         '<div class="mn-row"><span>O chip M2M não fica ativo por menos de</span><strong>' + mn.minDays + ' dias</strong></div>' +
         '<div class="mn-row"><span>Dias cobertos pelo crédito da transferência</span><strong>' + mn.creditCoversDays + ' dias</strong></div>' +
-        '<div class="mn-row"><span>Valor de ' + mn.minDays + ' dias na tarifa do destino</span><strong>' + formatBRL(mn.minValue) + '</strong></div>' +
+        '<div class="mn-row"><span>Valor do contrato mínimo (plano Semestral, fixo)</span><strong>' + formatBRL(mn.minValue) + '</strong></div>' +
         '<div class="mn-row mn-pay"><span>Diferença a pagar pelo cliente</span><strong>' + formatBRL(mn.amountDue) + '</strong></div>' +
         '<div class="mn-row mn-final"><span>Dias creditados após o pagamento</span><strong>' + mn.daysAfterPayment + ' dias</strong></div>';
       residualBox.style.display = "none";

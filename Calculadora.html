@@ -594,6 +594,9 @@
     if (originKey === destKey) {
       return "Selecione planos de origem e destino diferentes.";
     }
+    if (M2M_CHIP_PLANS[originKey] && M2M_CHIP_PLANS[destKey]) {
+      return "Transferência entre planos M2M (Anual e Semestral) não passa por cálculo financeiro nesta calculadora — some os dias restantes diretamente, sem conversão.";
+    }
     if (daysRawValue === "" || daysRawValue === null || daysRawValue === undefined) {
       return "Informe a quantidade de dias restantes.";
     }

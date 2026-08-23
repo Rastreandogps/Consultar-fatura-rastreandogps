@@ -402,9 +402,9 @@
     <select id="destination">
       <option value="">Selecione o plano de destino</option>
       <option value="tag_anual">TAG — Anual — R$ 118,80</option>
-      <option value="m2m_anual">Rastreador portátil + M2M — Anual — R$ 320,00</option>
-      <option value="m2m_semestral">Rastreador portátil + M2M — Semestral — R$ 180,00</option>
+      <option value="m2m_portatil">Rastreador portátil + M2M — R$ 1,00/dia (mín. 180 dias)</option>
     </select>
+    <div class="helper">O Rastreador Portátil + M2M é um destino único (tarifa fixa de R$ 1,00/dia) — não é possível escolher Anual ou Semestral aqui, pois o resultado em dias variaria dependendo da escolha, mesmo com o mesmo crédito. A distinção Anual/Semestral só existe no plano de origem, refletindo o que o cliente realmente pagou.</div>
 
     <label for="daysLeft">Dias restantes</label>
     <input type="number" id="daysLeft" placeholder="Ex.: 30" min="1" step="1" inputmode="numeric">
@@ -482,22 +482,30 @@
   // ---------------------------------------------------------------
   var PLANS = {
     tag_anual:      { key:"tag_anual",      name:"TAG — Anual",                                   short:"TAG Anual",       price:118.80, days:365 },
+    // Planos de ORIGEM do Rastreador Portátil + M2M — mantidos separados
+    // (Anual x Semestral) porque o crédito da transferência precisa
+    // refletir o que o cliente REALMENTE pagou por cada um.
     m2m_anual:      { key:"m2m_anual",      name:"Rastreador portátil + M2M — Anual",              short:"M2M Anual",       price:320.00, days:365 },
-    m2m_semestral:  { key:"m2m_semestral",  name:"Rastreador portátil + M2M — Semestral",          short:"M2M Semestral",   price:180.00, days:180 }
+    m2m_semestral:  { key:"m2m_semestral",  name:"Rastreador portátil + M2M — Semestral",          short:"M2M Semestral",   price:180.00, days:180 },
+    // Plano de DESTINO único do Rastreador Portátil + M2M. Não existe mais
+    // a escolha entre Anual/Semestral no destino: o mesmo crédito não pode
+    // resultar em quantidades de dias diferentes só porque o funcionário
+    // escolheu uma ou outra opção — por isso o destino usa sempre esta
+    // tarifa fixa (a mesma do plano Semestral, R$ 1,00/dia).
+    m2m_portatil:   { key:"m2m_portatil",   name:"Rastreador portátil + M2M",                      short:"M2M",             price:180.00, days:180 }
   };
 
   function dailyValue(plan){
     return plan.price / plan.days;
   }
 
-  // Regra de contrato mínimo: o chip M2M (presente tanto no plano Anual
-  // quanto no Semestral do Rastreador Portátil) nunca pode ficar ativo por
-  // menos de 180 dias (6 meses) — não importa qual das duas opções de
-  // destino foi escolhida. Planos podem ultrapassar 1 ano ou 6 meses sem
+  // Regra de contrato mínimo: o chip M2M nunca pode ficar ativo por menos
+  // de 180 dias (6 meses). Planos podem ultrapassar 1 ano ou 6 meses sem
   // problema (não há teto); o que não pode acontecer é ficar abaixo de
   // 180 dias com o chip M2M. Se o crédito não cobrir os 180 dias inteiros
   // no destino, o cliente precisa pagar a diferença para completar o mínimo.
-  var M2M_CHIP_PLANS = { m2m_anual: true, m2m_semestral: true };
+  var M2M_ORIGIN_PLANS = { m2m_anual: true, m2m_semestral: true };
+  var M2M_DESTINATION_KEY = "m2m_portatil";
   var MIN_M2M_CONTRACT_DAYS = 180;
 
   // ---------------------------------------------------------------
@@ -542,19 +550,13 @@
     residual = round2(residual);
 
     // ETAPA 4 — Regra do contrato mínimo do chip M2M
-    // 180 dias é o mínimo de ativação do chip M2M, seja o destino o plano
-    // Anual ou o Semestral do Rastreador Portátil — e esses 180 dias SÃO,
-    // por definição, o próprio plano Semestral (R$ 180,00 / 180 dias).
-    // Por isso, ao ficar abaixo do mínimo, o valor a completar usa SEMPRE
-    // a tarifa do plano Semestral — nunca a tarifa do destino selecionado
-    // (Anual ou Semestral). Isso garante que a diferença a pagar e os dias
-    // creditados sejam os mesmos independentemente de qual das duas opções
-    // de destino o funcionário escolheu, evitando que o cliente pague
-    // valores diferentes para chegar exatamente ao mesmo resultado (180
-    // dias de chip M2M ativo).
+    // 180 dias é o mínimo de ativação do chip M2M. O plano de destino
+    // Portátil + M2M é único (tarifa fixa de R$ 1,00/dia, igual ao antigo
+    // plano Semestral), então essa mesma tarifa já É o valor de 180 dias
+    // do contrato mínimo — sem depender de nenhuma escolha do funcionário.
     var minimumNotice = null;
-    if (M2M_CHIP_PLANS[destKey] && grantedDays < MIN_M2M_CONTRACT_DAYS) {
-      var minPlan = PLANS.m2m_semestral; // contrato mínimo do chip M2M = o próprio plano Semestral
+    if (destKey === M2M_DESTINATION_KEY && grantedDays < MIN_M2M_CONTRACT_DAYS) {
+      var minPlan = PLANS.m2m_portatil; // contrato mínimo do chip M2M = o próprio plano de destino
       var minContractDays = minPlan.days; // 180
       var minContractValue = minPlan.price; // R$ 180,00 (valor cheio do plano mínimo)
       var amountDue = round2(minContractValue - creditExact);
@@ -594,8 +596,8 @@
     if (originKey === destKey) {
       return "Selecione planos de origem e destino diferentes.";
     }
-    if (M2M_CHIP_PLANS[originKey] && M2M_CHIP_PLANS[destKey]) {
-      return "Transferência entre planos M2M (Anual e Semestral) não passa por cálculo financeiro nesta calculadora — some os dias restantes diretamente, sem conversão.";
+    if (M2M_ORIGIN_PLANS[originKey] && destKey === M2M_DESTINATION_KEY) {
+      return "Transferência de portátil M2M para portátil M2M não passa por cálculo financeiro nesta calculadora — some os dias restantes diretamente, sem conversão.";
     }
     if (daysRawValue === "" || daysRawValue === null || daysRawValue === undefined) {
       return "Informe a quantidade de dias restantes.";
@@ -644,6 +646,7 @@
   var clearHistoryBtn = document.getElementById("clearHistoryBtn");
 
   var HISTORY_KEY = "rgps_transfer_history_v1";
+  var HISTORY_MAX_ITEMS = 3; // só guarda os 3 últimos cálculos — o mais antigo é substituído
   var lastResult = null; // guarda o último cálculo para copiar/histórico
 
   function showError(message){
@@ -788,7 +791,7 @@
         residual: r.residual,
         amountDue: r.minimumNotice ? r.minimumNotice.amountDue : 0
       });
-      if (history.length > 50) history = history.slice(0, 50);
+      if (history.length > HISTORY_MAX_ITEMS) history = history.slice(0, HISTORY_MAX_ITEMS);
       localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
       renderHistory();
     } catch (e) {

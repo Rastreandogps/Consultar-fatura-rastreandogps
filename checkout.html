@@ -121,8 +121,12 @@
 
     /* Confirmação */
     .confirm-bloco{background:var(--bg-soft);border:1px solid var(--yellow-line);border-radius:14px;padding:20px;margin-bottom:16px}
-    .confirm-bloco h4{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--ink)}
+    .confirm-bloco h4{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--ink)}
     .confirm-bloco h4 i{color:var(--blue)}
+    .confirm-bloco-title{display:flex;align-items:center;gap:8px}
+    .btn-editar-bloco{display:flex;align-items:center;gap:5px;background:#fff;border:1.5px solid var(--blue);color:var(--blue-dark);font-family:'Barlow',sans-serif;font-size:12px;font-weight:700;text-transform:none;letter-spacing:0;padding:5px 12px;border-radius:20px;cursor:pointer;transition:all .2s;white-space:nowrap}
+    .btn-editar-bloco:hover{background:var(--blue);color:#fff}
+    .btn-editar-bloco i{color:inherit;font-size:11px}
     .confirm-linha{display:flex;justify-content:space-between;font-size:14px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06)}
     .confirm-linha:last-child{border-bottom:none}
     .confirm-linha .label{color:var(--muted)}
@@ -482,7 +486,7 @@
 
       <!-- Dados pessoais -->
       <div class="confirm-bloco">
-        <h4><i class="fas fa-user"></i> Seus Dados</h4>
+        <h4><span class="confirm-bloco-title"><i class="fas fa-user"></i> Seus Dados</span><button type="button" class="btn-editar-bloco" onclick="editarEtapa(1)"><i class="fas fa-pen"></i> Editar</button></h4>
         <div class="confirm-linha"><span class="label">Nome</span><span class="valor" id="cf-nome"></span></div>
         <div class="confirm-linha"><span class="label">CPF</span><span class="valor" id="cf-cpf"></span></div>
         <div class="confirm-linha"><span class="label">E-mail</span><span class="valor" id="cf-email"></span></div>
@@ -492,7 +496,7 @@
 
       <!-- Endereço -->
       <div class="confirm-bloco">
-        <h4><i class="fas fa-map-marker-alt"></i> Endereço de Entrega</h4>
+        <h4><span class="confirm-bloco-title"><i class="fas fa-map-marker-alt"></i> Endereço de Entrega</span><button type="button" class="btn-editar-bloco" onclick="editarEtapa(2)"><i class="fas fa-pen"></i> Editar</button></h4>
         <div class="confirm-linha"><span class="label">Endereço</span><span class="valor" id="cf-endereco"></span></div>
         <div class="confirm-linha"><span class="label">Cidade/Estado</span><span class="valor" id="cf-cidade"></span></div>
         <div class="confirm-linha"><span class="label">CEP</span><span class="valor" id="cf-cep"></span></div>
@@ -657,6 +661,40 @@ function voltar(de) {
   etapaAtual = de - 1;
 
   // Oculta resumo lateral nas etapas 1, 2 e 3
+  const resumo = document.getElementById('resumo-lateral');
+  const mainEl = document.getElementById('form-area');
+  if (etapaAtual >= 4) {
+    resumo.style.display = '';
+    mainEl.classList.remove('sem-resumo');
+  } else {
+    resumo.style.display = 'none';
+    mainEl.classList.add('sem-resumo');
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Editar um bloco específico a partir da Confirmação ─────────
+function editarEtapa(destino) {
+  document.getElementById('etapa-4').classList.remove('ativa');
+  document.getElementById('etapa-' + destino).classList.add('ativa');
+
+  for (let i = 1; i <= 4; i++) {
+    const step = document.getElementById('step-' + i);
+    const line = document.getElementById('line-' + i);
+    if (step) {
+      step.classList.remove('ativo', 'concluido');
+      if (i < destino) step.classList.add('concluido');
+      else if (i === destino) step.classList.add('ativo');
+    }
+    if (line) {
+      line.classList.remove('concluido');
+      if (i < destino) line.classList.add('concluido');
+    }
+  }
+
+  etapaAtual = destino;
+
   const resumo = document.getElementById('resumo-lateral');
   const mainEl = document.getElementById('form-area');
   if (etapaAtual >= 4) {

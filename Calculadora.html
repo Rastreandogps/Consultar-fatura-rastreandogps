@@ -270,7 +270,7 @@
     color:#155724;
   }
 
-  /* Aviso de contrato mínimo (M2M Semestral) */
+  /* Aviso de contrato mínimo (chip M2M) */
   .min-notice{
     display:none;
     background:var(--black);
@@ -394,8 +394,7 @@
     <select id="origin">
       <option value="">Selecione o plano de origem</option>
       <option value="tag_anual">TAG</option>
-      <option value="m2m_anual">Portátil + M2M — Anual</option>
-      <option value="m2m_semestral">Portátil + M2M — Semestral</option>
+      <option value="m2m_portatil">Portátil + M2M</option>
     </select>
 
     <label for="destination">Plano de destino</label>
@@ -479,19 +478,12 @@
   // ---------------------------------------------------------------
   // 1. DADOS DOS PLANOS
   // ---------------------------------------------------------------
+  // Apenas dois planos, cada um com uma única tarifa — sem distinção
+  // Anual/Semestral em lugar nenhum (nem origem, nem destino). O Portátil
+  // + M2M é tratado como um número único: R$ 1,00/dia, mínimo de 180 dias.
   var PLANS = {
-    tag_anual:      { key:"tag_anual",      name:"TAG — Anual",                                   short:"TAG Anual",       price:118.80, days:365 },
-    // Planos de ORIGEM do Rastreador Portátil + M2M — mantidos separados
-    // (Anual x Semestral) porque o crédito da transferência precisa
-    // refletir o que o cliente REALMENTE pagou por cada um.
-    m2m_anual:      { key:"m2m_anual",      name:"Rastreador portátil + M2M — Anual",              short:"M2M Anual",       price:320.00, days:365 },
-    m2m_semestral:  { key:"m2m_semestral",  name:"Rastreador portátil + M2M — Semestral",          short:"M2M Semestral",   price:180.00, days:180 },
-    // Plano de DESTINO único do Rastreador Portátil + M2M. Não existe mais
-    // a escolha entre Anual/Semestral no destino: o mesmo crédito não pode
-    // resultar em quantidades de dias diferentes só porque o funcionário
-    // escolheu uma ou outra opção — por isso o destino usa sempre esta
-    // tarifa fixa (a mesma do plano Semestral, R$ 1,00/dia).
-    m2m_portatil:   { key:"m2m_portatil",   name:"Rastreador portátil + M2M",                      short:"M2M",             price:180.00, days:180 }
+    tag_anual:     { key:"tag_anual",     name:"TAG — Anual",              short:"TAG",   price:118.80, days:365 },
+    m2m_portatil:  { key:"m2m_portatil",  name:"Rastreador portátil + M2M", short:"M2M",   price:180.00, days:180 }
   };
 
   function dailyValue(plan){
@@ -503,7 +495,6 @@
   // problema (não há teto); o que não pode acontecer é ficar abaixo de
   // 180 dias com o chip M2M. Se o crédito não cobrir os 180 dias inteiros
   // no destino, o cliente precisa pagar a diferença para completar o mínimo.
-  var M2M_ORIGIN_PLANS = { m2m_anual: true, m2m_semestral: true };
   var M2M_DESTINATION_KEY = "m2m_portatil";
   var MIN_M2M_CONTRACT_DAYS = 180;
 
@@ -593,10 +584,9 @@
       return "Selecione o plano de origem e o plano de destino.";
     }
     if (originKey === destKey) {
+      // Com apenas dois planos (TAG e Portátil + M2M), isso também cobre
+      // o caso de portátil para portátil — que não é calculado aqui.
       return "Selecione planos de origem e destino diferentes.";
-    }
-    if (M2M_ORIGIN_PLANS[originKey] && destKey === M2M_DESTINATION_KEY) {
-      return "Transferência de portátil M2M para portátil M2M não passa por cálculo financeiro nesta calculadora — some os dias restantes diretamente, sem conversão.";
     }
     if (daysRawValue === "" || daysRawValue === null || daysRawValue === undefined) {
       return "Informe a quantidade de dias restantes.";
@@ -697,8 +687,6 @@
     if (mn) {
       mathText += "\n\n" +
         "Contrato mínimo do chip M2M: " + mn.minDays + " dias\n" +
-        "(valor fixo do plano Semestral, sempre o mesmo\n" +
-        "independente do destino escolhido)\n" +
         formatBRL(mn.minValue) + " &minus; " + formatBRL(r.creditRounded) + "\n" +
         "= <span class=\"hl\">" + formatBRL(mn.amountDue) + "</span> a pagar\n\n" +
         "Resultado:\n" +
@@ -716,7 +704,7 @@
         '<div class="mn-title">&#9888; Contrato mínimo — Rastreador Portátil + M2M</div>' +
         '<div class="mn-row"><span>O chip M2M não fica ativo por menos de</span><strong>' + mn.minDays + ' dias</strong></div>' +
         '<div class="mn-row"><span>Dias cobertos pelo crédito da transferência</span><strong>' + mn.creditCoversDays + ' dias</strong></div>' +
-        '<div class="mn-row"><span>Valor do contrato mínimo (plano Semestral, fixo)</span><strong>' + formatBRL(mn.minValue) + '</strong></div>' +
+        '<div class="mn-row"><span>Valor do contrato mínimo (fixo)</span><strong>' + formatBRL(mn.minValue) + '</strong></div>' +
         '<div class="mn-row mn-pay"><span>Diferença a pagar pelo cliente</span><strong>' + formatBRL(mn.amountDue) + '</strong></div>' +
         '<div class="mn-row mn-final"><span>Dias creditados após o pagamento</span><strong>' + mn.daysAfterPayment + ' dias</strong></div>';
       residualBox.style.display = "none";

@@ -476,12 +476,15 @@
     return plan.price / plan.days;
   }
 
-  // Regra de contrato mínimo: o Rastreador Portátil + M2M não é vendido
-  // por menos de 180 dias (o próprio plano Semestral). Se uma transferência
-  // for feita PARA o plano Semestral e o crédito não cobrir os 180 dias
-  // inteiros, o cliente precisa pagar a diferença para completar o mínimo —
-  // nunca ativamos um contrato M2M com menos de 180 dias.
-  var MIN_CONTRACT_DESTINATION = "m2m_semestral";
+  // Regra de contrato mínimo: o chip M2M (presente tanto no plano Anual
+  // quanto no Semestral do Rastreador Portátil) nunca pode ficar ativo por
+  // menos de 180 dias (6 meses) — não importa qual das duas opções de
+  // destino foi escolhida. Planos podem ultrapassar 1 ano ou 6 meses sem
+  // problema (não há teto); o que não pode acontecer é ficar abaixo de
+  // 180 dias com o chip M2M. Se o crédito não cobrir os 180 dias inteiros
+  // no destino, o cliente precisa pagar a diferença para completar o mínimo.
+  var M2M_CHIP_PLANS = { m2m_anual: true, m2m_semestral: true };
+  var MIN_M2M_CONTRACT_DAYS = 180;
 
   // ---------------------------------------------------------------
   // 2. HELPERS DE FORMATAÇÃO
@@ -524,16 +527,17 @@
     if (residual < 0.005) residual = 0; // nunca gerar crédito artificial / evitar ruído de ponto flutuante
     residual = round2(residual);
 
-    // ETAPA 4 — Regra do contrato mínimo (M2M Semestral)
-    // O plano Semestral (180 dias) é o contrato mínimo do Rastreador
-    // Portátil + M2M. Se o crédito da transferência não for suficiente
-    // para cobrir os 180 dias inteiros, não concedemos os dias parciais:
-    // calculamos a diferença financeira que falta para completar o
+    // ETAPA 4 — Regra do contrato mínimo do chip M2M
+    // 180 dias é o mínimo de ativação do chip M2M, seja o destino o plano
+    // Anual ou o Semestral do Rastreador Portátil. Se o crédito da
+    // transferência não for suficiente para cobrir os 180 dias inteiros,
+    // não concedemos os dias parciais: calculamos a diferença financeira
+    // (na tarifa diária do destino escolhido) que falta para completar o
     // mínimo. Após o pagamento dessa diferença, os 180 dias são creditados.
     var minimumNotice = null;
-    if (destKey === MIN_CONTRACT_DESTINATION && grantedDays < destination.days) {
-      var minContractDays = destination.days; // 180
-      var minContractValue = minContractDays * destDaily; // valor cheio do plano mínimo
+    if (M2M_CHIP_PLANS[destKey] && grantedDays < MIN_M2M_CONTRACT_DAYS) {
+      var minContractDays = MIN_M2M_CONTRACT_DAYS; // 180
+      var minContractValue = minContractDays * destDaily; // valor de 180 dias na tarifa do destino
       var amountDue = round2(minContractValue - creditExact);
       if (amountDue < 0) amountDue = 0;
       minimumNotice = {
@@ -658,7 +662,7 @@
 
     if (mn) {
       mathText += "\n\n" +
-        "Contrato mínimo do M2M Semestral: " + mn.minDays + " dias\n" +
+        "Contrato mínimo do chip M2M: " + mn.minDays + " dias\n" +
         formatBRL(mn.minValue) + " &minus; " + formatBRL(r.creditRounded) + "\n" +
         "= <span class=\"hl\">" + formatBRL(mn.amountDue) + "</span> a pagar\n\n" +
         "Resultado:\n" +
@@ -674,9 +678,9 @@
       minNoticeBox.className = "min-notice show";
       minNoticeBox.innerHTML =
         '<div class="mn-title">&#9888; Contrato mínimo — Rastreador Portátil + M2M</div>' +
-        '<div class="mn-row"><span>O plano Semestral não é vendido por menos de</span><strong>' + mn.minDays + ' dias</strong></div>' +
+        '<div class="mn-row"><span>O chip M2M não fica ativo por menos de</span><strong>' + mn.minDays + ' dias</strong></div>' +
         '<div class="mn-row"><span>Dias cobertos pelo crédito da transferência</span><strong>' + mn.creditCoversDays + ' dias</strong></div>' +
-        '<div class="mn-row"><span>Valor do plano mínimo (' + mn.minDays + ' dias)</span><strong>' + formatBRL(mn.minValue) + '</strong></div>' +
+        '<div class="mn-row"><span>Valor de ' + mn.minDays + ' dias na tarifa do destino</span><strong>' + formatBRL(mn.minValue) + '</strong></div>' +
         '<div class="mn-row mn-pay"><span>Diferença a pagar pelo cliente</span><strong>' + formatBRL(mn.amountDue) + '</strong></div>' +
         '<div class="mn-row mn-final"><span>Dias creditados após o pagamento</span><strong>' + mn.daysAfterPayment + ' dias</strong></div>';
       residualBox.style.display = "none";
@@ -810,7 +814,7 @@
     if (mn) {
       lines.push(
         "",
-        "Contrato mínimo do plano (Semestral):",
+        "Contrato mínimo do chip M2M:",
         mn.minDays + " dias",
         "",
         "Diferença a pagar pelo cliente:",

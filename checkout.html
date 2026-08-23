@@ -631,10 +631,10 @@ function avancar(de) {
 
   etapaAtual = de + 1;
 
-  // Mostra resumo lateral só a partir da etapa 3
+  // Mostra resumo lateral só a partir da etapa 4 (confirmação)
   const resumo  = document.getElementById('resumo-lateral');
   const mainEl  = document.getElementById('form-area');
-  if (etapaAtual >= 3) {
+  if (etapaAtual >= 4) {
     resumo.style.display = '';
     mainEl.classList.remove('sem-resumo');
   } else {
@@ -656,10 +656,10 @@ function voltar(de) {
 
   etapaAtual = de - 1;
 
-  // Oculta resumo lateral nas etapas 1 e 2
+  // Oculta resumo lateral nas etapas 1, 2 e 3
   const resumo = document.getElementById('resumo-lateral');
   const mainEl = document.getElementById('form-area');
-  if (etapaAtual >= 3) {
+  if (etapaAtual >= 4) {
     resumo.style.display = '';
     mainEl.classList.remove('sem-resumo');
   } else {

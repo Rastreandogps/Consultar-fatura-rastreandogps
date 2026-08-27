@@ -9,6 +9,23 @@
   gtag('js', new Date());
   gtag('config', 'G-EHEJ6YMVJT');
 </script>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '451409487330519');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=451409487330519&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Finalizar Compra — Rastreando GPS</title>
@@ -643,6 +660,12 @@ function avancar(de) {
 
   etapaAtual = de + 1;
 
+  // Meta Pixel - InitiateCheckout (dispara 1x ao chegar na etapa de pagamento)
+  if (de === 2 && !window._icDisparado) {
+    window._icDisparado = true;
+    if (window.fbq) fbq('track', 'InitiateCheckout');
+  }
+
   // Mostra resumo lateral só a partir da etapa 4 (confirmação)
   const resumo  = document.getElementById('resumo-lateral');
   const mainEl  = document.getElementById('form-area');
@@ -1173,6 +1196,21 @@ async function confirmarPedido() {
     const res  = await resp.json();
     console.log('GAS retornou:', JSON.stringify(res));
     if(!res.ok)throw new Error(res.erro||'Erro desconhecido.');
+
+    // Meta Pixel - Purchase
+    if (window.fbq) {
+      fbq('track', 'Purchase', { value: res.valor, currency: 'BRL' });
+    }
+    // GA4 - purchase
+    if (window.gtag) {
+      gtag('event', 'purchase', {
+        transaction_id: String(res.cobrancaId),
+        value: res.valor,
+        currency: 'BRL',
+        payment_type: formaPagamento
+      });
+    }
+
     const msg=encodeURIComponent(
       'Olá! Fiz um pedido do Rastreador.\n'+
       'Nome: '+dados.nome+'\nCPF: '+dados.cpf+

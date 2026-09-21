@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHEJ6YMVJT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHEJ6YMVJT');
+</script>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '451409487330519');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=451409487330519&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reenvio de Linha (SIM Card) — Rastreando GPS</title>
+  <meta name="description" content="Solicite o reenvio da sua linha (chip). Você paga apenas a taxa fixa + frete, via Pix.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root{
+      --bg:#fff;--bg-soft:#fff9df;--card:#fff;--border:#ececec;--ink:#232323;--muted:#6b6f76;
+      --yellow:#ffe600;--yellow-deep:#ffd100;--yellow-line:#f0c400;
+      --blue:#3483fa;--blue-dark:#2968c8;
+      --green:#00a650;--green-soft:rgba(0,166,80,.10);
+      --red:#e53935;--wa:#25d366;
+      --shadow-sm:0 6px 18px rgba(35,35,35,.06);
+      --shadow-md:0 14px 40px rgba(35,35,35,.10);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Barlow',sans-serif;background:#f5f5f5;color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    .container{width:min(1200px,94vw);margin:0 auto}
+
+    .topbar{position:sticky;top:0;z-index:100;background:var(--yellow);border-bottom:1px solid var(--yellow-line);box-shadow:0 2px 14px rgba(0,0,0,.08);padding:12px 0}
+    .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:.5px}
+    .brand img{width:38px;height:38px;border-radius:8px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:10px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px;text-decoration:none;border:none;cursor:pointer;transition:transform .18s;white-space:nowrap}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-outline{background:transparent;color:var(--ink);border:1.5px solid var(--border)}
+    .btn-outline:hover{background:#f7f7f7}
+
+    .hero{background:var(--yellow);padding:40px 0 32px;text-align:center}
+    .hero h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,5vw,44px);font-weight:900;margin-bottom:10px}
+    .hero p{font-size:16px;color:rgba(35,35,35,.75);max-width:560px;margin:0 auto}
+
+    .wrap{background:#f5f5f5;padding:48px 24px 72px}
+    .reenvio-card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-md);display:flex;flex-direction:column;border:3px solid var(--yellow-deep);width:min(460px,94vw);margin:0 auto}
+    .reenvio-header{background:var(--yellow);min-height:220px;display:flex;align-items:center;justify-content:center}
+    .reenvio-header i{font-size:96px;color:var(--ink)}
+    .reenvio-body{padding:28px;display:flex;flex-direction:column}
+    .reenvio-nome{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;margin-bottom:6px}
+    .reenvio-sub{color:var(--muted);font-size:14px;line-height:1.55;margin-bottom:20px}
+    .reenvio-features{list-style:none;margin-bottom:20px;display:flex;flex-direction:column;gap:8px}
+    .reenvio-features li{display:flex;align-items:flex-start;gap:8px;font-size:14px}
+    .reenvio-features li i{color:var(--green);margin-top:3px;flex-shrink:0;width:16px}
+    .preco-box{background:var(--bg-soft);border:1px solid var(--yellow-line);border-radius:14px;padding:18px;margin-bottom:20px}
+    .preco-linha{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.06)}
+    .preco-linha:last-child{border-bottom:none}
+    .preco-linha .lb{color:var(--muted)}
+    .preco-linha .vl{font-weight:700}
+    .preco-total{display:flex;justify-content:space-between;align-items:center;padding-top:10px;font-weight:800;font-size:18px}
+    .preco-total-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;color:var(--green)}
+    .qtd{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+    .qtd-btn{width:44px;height:44px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:20px;font-weight:700;cursor:pointer;color:var(--ink);transition:all .2s;display:flex;align-items:center;justify-content:center}
+    .qtd-btn:hover{border-color:var(--blue);color:var(--blue)}
+    .qtd-input{width:70px;height:44px;text-align:center;font-size:18px;font-weight:700;border:1.5px solid var(--border);border-radius:10px;font-family:'Barlow',sans-serif}
+    .btn-go{width:100%;height:54px;background:linear-gradient(90deg,#00a650,#0ea5e9);color:#fff;border:none;border-radius:14px;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 28px rgba(0,166,80,.3);transition:all .2s;text-decoration:none}
+    .btn-go:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(0,166,80,.4)}
+    .nota{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);justify-content:center;margin-top:12px}
+
+    footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;font-size:13px;color:var(--muted);background:#fff}
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="index.html">
+      <img src="./assets/logo.png" alt="Rastreando GPS">
+      <span>Rastreando GPS</span>
+    </a>
+    <a href="renovar.html" class="btn btn-outline">
+      <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="container">
+    <h1><i class="fas fa-sim-card"></i> Reenvio de Linha</h1>
+    <p>Precisa de um novo chip (SIM card)? Seu plano continua ativo — você paga só a taxa fixa de envio + o frete.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="reenvio-card">
+    <div class="reenvio-header">
+      <i class="fas fa-sim-card"></i>
+    </div>
+    <div class="reenvio-body">
+      <div class="reenvio-nome">Reenvio de Linha (SIM Card)</div>
+      <div class="reenvio-sub">Ideal para quem perdeu, danificou ou precisa substituir o chip do rastreador — sem renovar o plano.</div>
+      <ul class="reenvio-features">
+        <li><i class="fas fa-check-circle"></i> Seu plano anual continua valendo normalmente</li>
+        <li><i class="fas fa-check-circle"></i> Taxa fixa de R$ 20,00 — vale para qualquer quantidade</li>
+        <li><i class="fas fa-check-circle"></i> Enviamos pelos Correios com código de rastreio</li>
+        <li><i class="fas fa-check-circle"></i> Pagamento via Pix</li>
+      </ul>
+      <div class="preco-box">
+        <div class="preco-linha"><span class="lb">Taxa de reenvio (fixa)</span><span class="vl">R$ 20,00</span></div>
+        <div class="preco-linha"><span class="lb">Frete</span><span class="vl" style="color:var(--muted);font-style:italic">calculado no próximo passo</span></div>
+        <div class="preco-total"><span>A partir de</span><span class="preco-total-val">R$ 20,00</span></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Quantas linhas você precisa?</div>
+      <div class="qtd">
+        <button class="qtd-btn" onclick="mudarQtd(-1)">−</button>
+        <input class="qtd-input" type="number" id="qtd" value="1" min="1">
+        <button class="qtd-btn" onclick="mudarQtd(1)">+</button>
+        <span style="font-size:13px;color:var(--muted)">linha(s)</span>
+      </div>
+      <a href="#" id="btn-continuar" class="btn-go" onclick="continuar();return false;">
+        <i class="fas fa-arrow-right"></i> Continuar
+      </a>
+      <p class="nota"><i class="fas fa-shield-alt" style="color:var(--green)"></i> Pagamento seguro via Pix — sem cartão</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© <span id="ano"></span> Rastreando GPS — CNPJ 29.488.621/0001-48 — Duque de Caxias, RJ</p>
+</footer>
+
+<script>
+  document.getElementById('ano').textContent = new Date().getFullYear();
+  function mudarQtd(d){
+    const el = document.getElementById('qtd');
+    el.value = Math.max(1, (parseInt(el.value) || 1) + d);
+  }
+  document.getElementById('qtd').addEventListener('change', function(){
+    this.value = Math.max(1, parseInt(this.value) || 1);
+  });
+  function continuar(){
+    const qtd = Math.max(1, parseInt(document.getElementById('qtd').value) || 1);
+    window.location.href = 'checkout-reenvio.html?qtd=' + qtd;
+  }
+</script>
+</body>
+</html>

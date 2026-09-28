@@ -29,7 +29,7 @@ src="https://www.facebook.com/tr?id=451409487330519&ev=PageView&noscript=1"
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Finalizar Compra — Rastreadores Portáteis</title>
-  <meta name="description" content="Compre seu rastreador 4G com bloqueio. Pix com 20% de desconto ou cartão em até 3x.">
+  <meta name="description" content="Compre seu rastreador portátil ou Tag GPS. Pagamento via Pix.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -266,7 +266,7 @@ src="https://www.facebook.com/tr?id=451409487330519&ev=PageView&noscript=1"
       </div>
       <div class="step-line" id="line-2"></div>
       <div class="step" id="step-3">
-        <div class="step-circle"><i class="fas fa-credit-card" style="font-size:13px"></i></div>
+        <div class="step-circle"><i class="fas fa-qrcode" style="font-size:13px"></i></div>
         <div class="step-label">Pagamento</div>
       </div>
       <div class="step-line" id="line-3"></div>
@@ -307,12 +307,12 @@ src="https://www.facebook.com/tr?id=451409487330519&ev=PageView&noscript=1"
   <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:16px">
     O Pix <strong>não cobra automaticamente</strong> — só é confirmado se você pagar.<br>
     <a href="#" onclick="cancelarPix();return false;" style="color:var(--muted);font-size:12px;margin-top:6px;display:inline-block">
-      ← Escolher outra forma de pagamento
+      ← Fazer um novo pedido
     </a>
   </p>
 </div>
 
-<!-- Tela sucesso Cartão -->
+<!-- Tela sucesso Cartão (não usada — checkout só Pix) -->
 <div id="tela-sucesso-cartao">
   <div class="sucesso-icon cartao"><i class="fas fa-credit-card"></i></div>
   <div class="sucesso-h2">Pagamento aprovado!</div>
@@ -452,18 +452,14 @@ src="https://www.facebook.com/tr?id=451409487330519&ev=PageView&noscript=1"
     <div class="etapa" id="etapa-3">
       <div class="etapa-titulo"><i class="fas fa-lock"></i> Forma de Pagamento</div>
 
-      <!-- Tabs Pix / Cartão -->
-      <div class="pagamento-tabs">
+      <!-- Somente Pix (opção de cartão desativada) -->
+      <div class="pagamento-tabs" style="grid-template-columns:1fr">
         <div class="pagamento-tab ativo" id="tab-pix" onclick="selecionarPagamento('pix')">
           <i class="fas fa-qrcode"></i>
           <strong>Pix</strong>
           <span>Aprovação imediata</span>
         </div>
-        <div class="pagamento-tab" id="tab-cartao" onclick="selecionarPagamento('cartao')">
-          <i class="fas fa-credit-card"></i>
-          <strong>Cartão de Crédito</strong>
-          <span>Em até 2x</span>
-        </div>
+        <div class="pagamento-tab" id="tab-cartao" style="display:none"></div>
       </div>
 
       <!-- Bloco Pix -->
@@ -475,16 +471,9 @@ src="https://www.facebook.com/tr?id=451409487330519&ev=PageView&noscript=1"
         <p style="color:var(--muted);font-size:14px;line-height:1.6">Após confirmar, você receberá o QR Code e o código Copia e Cola na tela seguinte.</p>
       </div>
 
-      <!-- Bloco Cartão -->
+      <!-- Bloco Cartão (desativado) -->
       <div id="bloco-cartao" style="display:none">
         <div class="parcelas-wrap" id="lista-parcelas"></div>
-        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:16px;font-size:14px;color:#0369a1;display:flex;gap:10px;align-items:flex-start;margin-top:8px">
-          <i class="fas fa-shield-alt" style="margin-top:2px;flex-shrink:0;font-size:18px"></i>
-          <div>
-            <strong>Dados do cartão 100% seguros</strong><br>
-            Você será redirecionado para a página de pagamento do <strong>Asaas</strong> — certificada PCI-DSS — para digitar os dados com total segurança.
-          </div>
-        </div>
       </div>
 
       <div class="msg-erro-global" id="msg-erro-pag">
@@ -621,7 +610,9 @@ let etapaAtual    = 1;
 let quantidade    = parseInt(params.get('qtd')) || 1;
 let freteValor    = 0;
 let freteSelecionado = null;
-let formaPagamento   = 'pix';
+let formaPagamento   = 'pix'; // checkout só aceita Pix
+let parcelasSel      = 1;
+let totalCartao      = 0;
 
 
 
@@ -762,70 +753,13 @@ document.getElementById('quantidade').addEventListener('change', function() {
 
 
 
-// ── Seleciona pagamento ───────────────────────────────────────
+// ── Seleciona pagamento (checkout aceita somente Pix) ─────────
 function selecionarPagamento(forma) {
-  formaPagamento = forma;
-  document.getElementById('tab-pix').classList.toggle('ativo', forma === 'pix');
-  document.getElementById('tab-cartao').classList.toggle('ativo', forma === 'cartao');
-  document.getElementById('bloco-pix').style.display    = forma === 'pix'    ? '' : 'none';
-  document.getElementById('bloco-cartao').style.display = forma === 'cartao' ? '' : 'none';
-  document.getElementById('resumo-pagamento').textContent = forma === 'pix' ? 'Pix' : 'Cartão de Crédito';
-  if (forma === 'cartao') gerarParcelas();
+  formaPagamento = 'pix';
+  document.getElementById('tab-pix').classList.add('ativo');
+  document.getElementById('bloco-pix').style.display = '';
+  document.getElementById('resumo-pagamento').textContent = 'Pix';
   atualizarResumo();
-}
-
-// ── Parcelas (máx 2x) ─────────────────────────────────────────
-let _parcelasBase = null;
-function gerarParcelas() {
-  const base  = (equipPix() || PRECO_UNIT * quantidade) + (IS_RENOVACAO ? 0 : freteValor);
-  const lista = document.getElementById('lista-parcelas');
-  if (_parcelasBase === base && lista.children.length > 0) {
-    const n = parcelasSel;
-    totalCartao = n === 1 ? base : (base * JUROS_MES / (1 - Math.pow(1 + JUROS_MES, -n))) * n;
-    return;
-  }
-  _parcelasBase = base;
-  lista.innerHTML = '';
-  parcelasSel = 1;
-
-  for (let n = 1; n <= 2; n++) {
-    let valorParc, total;
-    if (n === 1) { valorParc = base; total = base; }
-    else {
-      valorParc = base * JUROS_MES / (1 - Math.pow(1 + JUROS_MES, -n));
-      total = valorParc * n;
-    }
-    if (n === 1) totalCartao = total;
-
-    const jurosTag = n === 1
-      ? '<small style="color:var(--green);font-size:11px"> sem juros</small>'
-      : '<small style="color:var(--muted);font-size:11px"> juros 2,99%/mês</small>';
-
-    const card = document.createElement('div');
-    card.className = 'parcela-card' + (n === 1 ? ' selecionado' : '');
-    card.innerHTML =
-      '<div class="parcela-bolinha"><div class="parcela-bolinha-inner"></div></div>' +
-      '<div class="parcela-info">' +
-        '<div class="parcela-label">' + n + 'x de R$ ' + valorParc.toFixed(2).replace('.',',') + jurosTag + '</div>' +
-        '<div class="parcela-total">Total: R$ ' + total.toFixed(2).replace('.',',') + '</div>' +
-      '</div>' +
-      '<div class="parcela-valor">R$ ' + valorParc.toFixed(2).replace('.',',') + '</div>';
-
-    (function(nLocal, totalLocal) {
-      card.addEventListener('click', function() {
-        lista.querySelectorAll('.parcela-card').forEach(function(c) { c.classList.remove('selecionado'); });
-        card.classList.add('selecionado');
-        parcelasSel = nLocal;
-        totalCartao = totalLocal;
-        // Atualiza só o total no resumo — sem chamar atualizarResumo/gerarParcelas
-        // para não destruir a seleção recém feita
-        var totalEl = document.getElementById('resumo-total');
-        if (totalEl) totalEl.textContent = 'R$ ' + totalLocal.toFixed(2).replace('.', ',');
-      });
-    })(n, total);
-
-    lista.appendChild(card);
-  }
 }
 
 // ── Resumo lateral ────────────────────────────────────────────
@@ -837,20 +771,14 @@ function atualizarResumo() {
 
   qtdEl.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',');
 
-  if (formaPagamento === 'pix') {
-    equipEl.textContent = 'R$ ' + equipPix().toFixed(2).replace('.',',');
-    totalEl.textContent = 'R$ ' + totalPix().toFixed(2).replace('.',',');
-    const b = document.getElementById('badge-pix-texto');
-    if (b) {
-      if (freteValor > 0 && !IS_RENOVACAO)
-        b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + ' + frete R$ ' + freteValor.toFixed(2).replace('.',',') + ' = R$ ' + totalPix().toFixed(2).replace('.',',');
-      else
-        b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + (IS_RENOVACAO ? '' : ' + frete a calcular.');
-    }
-  } else {
-    gerarParcelas();
-    equipEl.textContent = 'R$ ' + (PRECO_UNIT * quantidade).toFixed(2).replace('.',',');
-    totalEl.textContent = 'R$ ' + totalCartao.toFixed(2).replace('.',',');
+  equipEl.textContent = 'R$ ' + equipPix().toFixed(2).replace('.',',');
+  totalEl.textContent = 'R$ ' + totalPix().toFixed(2).replace('.',',');
+  const b = document.getElementById('badge-pix-texto');
+  if (b) {
+    if (freteValor > 0 && !IS_RENOVACAO)
+      b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + ' + frete R$ ' + freteValor.toFixed(2).replace('.',',') + ' = R$ ' + totalPix().toFixed(2).replace('.',',');
+    else
+      b.textContent = quantidade + 'x R$ ' + PRECO_UNIT.toFixed(2).replace('.',',') + (IS_RENOVACAO ? '' : ' + frete a calcular.');
   }
 
   if (freteValor > 0) {
@@ -1001,7 +929,6 @@ function processarCep() {
 
 document.getElementById('cep').addEventListener('input',  processarCep);
 document.getElementById('cep').addEventListener('change', processarCep);
-// Campos de cartão não existem no checkout portátil — ignorado
 
 // ── Validações ────────────────────────────────────────────────
 function cpfOk(cpf) {
@@ -1069,7 +996,6 @@ function validarEtapa2() {
 
 function validarEtapa3() {
   document.getElementById('msg-erro-pag').classList.remove('ativo');
-  // Dados do cartão são digitados no Asaas — sem validação local necessária
   return true;
 }
 
@@ -1095,17 +1021,10 @@ function preencherConfirmacao() {
   document.getElementById('cf-cep').textContent    = document.getElementById('cep').value;
   document.getElementById('cf-frete').textContent  = freteSelecionado + ' — R$ ' + freteValor.toFixed(2).replace('.',',');
   document.getElementById('cf-frete2').textContent = 'R$ ' + freteValor.toFixed(2).replace('.',',');
-  if (formaPagamento === 'pix') {
-    document.getElementById('cf-equip').textContent     = 'R$ ' + equipPix().toFixed(2).replace('.',',');
-    document.getElementById('cf-pagamento').textContent = 'Pix';
-    document.getElementById('cf-total').textContent     = 'R$ ' + totalPix().toFixed(2).replace('.',',');
-    document.getElementById('btn-confirmar-txt').textContent = 'Gerar Pix e Pagar';
-  } else {
-    document.getElementById('cf-equip').textContent     = 'R$ ' + (PRECO_UNIT * quantidade).toFixed(2).replace('.',',');
-    document.getElementById('cf-pagamento').textContent = 'Cartão — ' + parcelasSel + 'x' + (parcelasSel > 1 ? ' (juros 2,99%/mês)' : ' sem juros');
-    document.getElementById('cf-total').textContent     = 'R$ ' + totalCartao.toFixed(2).replace('.',',');
-    document.getElementById('btn-confirmar-txt').textContent = 'Ir para Pagamento';
-  }
+  document.getElementById('cf-equip').textContent     = 'R$ ' + equipPix().toFixed(2).replace('.',',');
+  document.getElementById('cf-pagamento').textContent = 'Pix';
+  document.getElementById('cf-total').textContent     = 'R$ ' + totalPix().toFixed(2).replace('.',',');
+  document.getElementById('btn-confirmar-txt').textContent = 'Gerar Pix e Pagar';
 }
 
 // ── Confirmar pedido ──────────────────────────────────────────
@@ -1113,6 +1032,7 @@ async function confirmarPedido() {
   document.getElementById('msg-erro-final').classList.remove('ativo');
   const btn = document.getElementById('btn-confirmar');
   btn.disabled = true;
+  formaPagamento = 'pix'; // garante Pix
   const dados = {
     acao:'pedido',
     produtoNome: PRODUTO.nome,
@@ -1130,33 +1050,19 @@ async function confirmarPedido() {
     estado:      IS_RENOVACAO ? 'RJ' : document.getElementById('estado').value,
     freteNome:   IS_RENOVACAO ? 'Sem frete' : (freteSelecionado || ''),
     freteValor:  IS_RENOVACAO ? 0 : (freteValor || 0),
-    formaPagamento:formaPagamento,
+    formaPagamento: 'pix',
     quantidade:quantidade,
     semPlano: params.get('sem_plano') === '1' ? 1 : 0,
   };
-  if (formaPagamento === 'pix') {
-    dados.valorEquipamento = equipPix();
-    dados.totalPedido      = totalPix();
-  } else {
-    dados.valorEquipamento = PRECO_UNIT * quantidade;
-    dados.parcelas         = parcelasSel;
-    dados.totalPedido      = totalCartao;
-  }
-  document.getElementById('overlay-msg').textContent = formaPagamento==='pix'?'Gerando seu Pix…':'Preparando redirecionamento…';
+  dados.valorEquipamento = equipPix();
+  dados.totalPedido      = totalPix();
+
+  document.getElementById('overlay-msg').textContent = 'Gerando seu Pix…';
   document.getElementById('overlay').classList.add('ativo');
   try {
     // Tudo via GET — GAS não suporta CORS em POST
-    // Dados sensíveis do cartão são removidos e enviados separado
-    const dadosSemCartao = Object.assign({}, dados);
-    let cartaoEnc = '';
-    if (formaPagamento === 'cartao' && dados.cartao) {
-      // Codifica dados do cartão em Base64 separado
-      cartaoEnc = btoa(unescape(encodeURIComponent(JSON.stringify(dados.cartao))));
-      delete dadosSemCartao.cartao;
-    }
-    const dadosEnc = encodeURIComponent(JSON.stringify(dadosSemCartao));
-    let url = CHECKOUT_URL + '?secret=' + _tkv + '&acao=pedido&dados=' + dadosEnc;
-    if (cartaoEnc) url += '&cartao=' + encodeURIComponent(cartaoEnc);
+    const dadosEnc = encodeURIComponent(JSON.stringify(dados));
+    const url = CHECKOUT_URL + '?secret=' + _tkv + '&acao=pedido&dados=' + dadosEnc;
     const resp = await fetch(url);
     const res  = await resp.json();
     if(!res.ok)throw new Error(res.erro||'Erro desconhecido.');
@@ -1171,52 +1077,40 @@ async function confirmarPedido() {
         transaction_id: String(res.cobrancaId),
         value: res.valor,
         currency: 'BRL',
-        payment_type: formaPagamento
+        payment_type: 'pix'
       });
     }
 
     const msg=encodeURIComponent(
       'Olá! Fiz um pedido do Rastreador.\n'+
       'Nome: '+dados.nome+'\nCPF: '+dados.cpf+
-      '\nPagamento: '+(formaPagamento==='pix'?'Pix':'Cartão '+parcelasSel+'x')+
+      '\nPagamento: Pix'+
       '\nQtd: '+quantidade+
       '\nID: '+res.cobrancaId+
       '\nEndereço: '+dados.endereco+', '+dados.numero+' — '+dados.cidade+'/'+dados.estado
     );
     const waHref='https://wa.me/5521980886087?text='+msg;
-    if(formaPagamento==='pix'){
-      // Salva no sessionStorage para recuperar se a página for recarregada
-      try {
-        sessionStorage.setItem('pix_pendente', JSON.stringify({
-          qrCode:     res.pixQrCode,
-          copiaCola:  res.pixCopiaCola,
-          valor:      res.valor,
-          vencimento: res.vencimento,
-          cobrancaId: res.cobrancaId,
-          waHref:     waHref,
-          geradoEm:   Date.now(),
-        }));
-      } catch(e) {}
 
-      document.getElementById('qr-img').src='data:image/png;base64,'+res.pixQrCode;
-      document.getElementById('qr-valor').textContent='R$ '+Number(res.valor).toFixed(2).replace('.',',');
-      document.getElementById('qr-venc').textContent='Válido até '+formatarData(res.vencimento);
-      document.getElementById('pix-texto').textContent=res.pixCopiaCola;
-      document.getElementById('wa-pedido-pix').href=waHref;
-      document.getElementById('form-area').style.display='none';
-      document.getElementById('tela-sucesso').classList.add('ativo');
-    } else {
-      // Redireciona para página segura do Asaas
-      if (res.invoiceUrl) {
-        window.location.href = res.invoiceUrl;
-        return;
-      }
-      document.getElementById('cartao-sucesso-msg').textContent=
-        'Pedido criado! Você será redirecionado para finalizar o pagamento.';
-      document.getElementById('wa-pedido-cartao').href=waHref;
-      document.getElementById('form-area').style.display='none';
-      document.getElementById('tela-sucesso-cartao').classList.add('ativo');
-    }
+    // Salva no sessionStorage para recuperar se a página for recarregada
+    try {
+      sessionStorage.setItem('pix_pendente', JSON.stringify({
+        qrCode:     res.pixQrCode,
+        copiaCola:  res.pixCopiaCola,
+        valor:      res.valor,
+        vencimento: res.vencimento,
+        cobrancaId: res.cobrancaId,
+        waHref:     waHref,
+        geradoEm:   Date.now(),
+      }));
+    } catch(e) {}
+
+    document.getElementById('qr-img').src='data:image/png;base64,'+res.pixQrCode;
+    document.getElementById('qr-valor').textContent='R$ '+Number(res.valor).toFixed(2).replace('.',',');
+    document.getElementById('qr-venc').textContent='Válido até '+formatarData(res.vencimento);
+    document.getElementById('pix-texto').textContent=res.pixCopiaCola;
+    document.getElementById('wa-pedido-pix').href=waHref;
+    document.getElementById('form-area').style.display='none';
+    document.getElementById('tela-sucesso').classList.add('ativo');
     window.scrollTo(0,0);
   } catch(err) {
     const el=document.getElementById('msg-erro-final');
@@ -1229,7 +1123,6 @@ async function confirmarPedido() {
   }
 }
 
-// ── Copiar Pix ────────────────────────────────────────────────
 // ── Cancela Pix e reinicia o checkout ────────────────────────
 function cancelarPix() {
   if (!confirm('Tem certeza que deseja cancelar este Pix e fazer um novo pedido?')) return;
@@ -1262,6 +1155,7 @@ function cancelarPix() {
   freteValor = 0; freteSelecionado = null; etapaAtual = 1;
   document.getElementById('secao-frete').style.display = 'none';
   document.getElementById('frete-conteudo').innerHTML = '';
+  document.getElementById('btn-confirmar').disabled = false;
 
   window.scrollTo(0, 0);
 }

@@ -33,7 +33,7 @@ header p{font-size:12.5px;color:var(--mut);margin-top:2px}
 .barra input{flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:11px;padding:10px 12px;font-size:15px}
 .chip{background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:999px;padding:8px 12px;font-size:13px;font-weight:600;white-space:nowrap}
 .chip:active{transform:scale(.97)}
-.sec{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin:16px 4px 6px;font-weight:700}
+.sec{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--txt);margin:20px 4px 8px;font-weight:800;border-bottom:1px solid var(--line);padding-bottom:6px}
 .lista{display:flex;flex-direction:column;gap:6px}
 .it{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer}
 .it.sel{outline:2px solid #3b82f6;outline-offset:-1px}
@@ -194,8 +194,9 @@ function desenhar(){
   if(!it.length) h+='<div class="vazio">Nenhum aparelho no plano anual.</div>';
   else if(!vis.length) h+='<div class="vazio">Nada encontrado.</div>';
   else{
-    const g=[['Vencem em até 30 dias',x=>x.dias<=30],['De 31 a 90 dias',x=>x.dias>30&&x.dias<=90],['Mais de 90 dias',x=>x.dias>90]];
-    for(const [t,fn] of g){ const l=vis.filter(fn); if(!l.length) continue; h+='<div class="sec">'+t+' ('+l.length+')</div><div class="lista">'+l.map(linha).join('')+'</div>'; }
+    /* 10/11/2026 (dono): rastreadores em cima, TAGs embaixo; dentro de cada grupo, quem vence primeiro fica no topo */
+    const g=[['📡 Rastreadores',x=>x.tipo!=='tag'],['🏷️ TAGs',x=>x.tipo==='tag']];
+    for(const [t,fn] of g){ const l=vis.filter(fn); if(!l.length) continue; const p=l.filter(x=>x.dias<=30).length; h+='<div class="sec">'+t+' ('+l.length+')'+(p?' · <span style="color:var(--red2)">'+p+' vence'+(p>1?'m':'')+' em até 30 dias</span>':'')+'</div><div class="lista">'+l.map(linha).join('')+'</div>'; }
   }
   $('conteudo').innerHTML=h;
   const b=$('busca'); b.oninput=()=>{ filtro=b.value; const p=b.selectionStart; desenhar(); const nb=$('busca'); nb.focus(); try{ nb.setSelectionRange(p,p) }catch(e){} };

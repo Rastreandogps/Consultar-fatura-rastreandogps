@@ -88,7 +88,7 @@ header p{font-size:12.5px;color:var(--mut);margin-top:2px}
 .qr{display:block;width:230px;height:230px;margin:6px auto 10px;background:#fff;border-radius:12px;padding:8px}
 .cc{width:100%;font-size:12px;background:var(--bg);border:1px solid var(--line);color:var(--mut);border-radius:10px;padding:10px;word-break:break-all;margin-bottom:10px;max-height:72px;overflow:auto}
 .pagok{color:var(--ok);font-weight:800;font-size:18px;text-align:center;margin:10px 0}
-.ferr{color:var(--red2);font-size:13.5px;margin:0 0 8px;min-height:1em}
+.ferr{color:var(--red2);font-size:13.5px;margin:0 0 8px;min-height:1em;line-height:1.4}
 .espera{font-size:13px;color:var(--mut);text-align:center;margin:-2px 0 10px}
 .atual{font-size:11.5px;color:var(--mut);text-align:center;margin:14px 0 0}
 </style>
@@ -109,7 +109,7 @@ header p{font-size:12.5px;color:var(--mut);margin-top:2px}
     <div class="tot" id="notaRow" hidden><span class="nota" id="nota"></span></div>
     <div class="bts">
       <button class="bt sec2" id="btLimpar" type="button">Limpar</button>
-      <button class="bt can" id="btCancelar" type="button" disabled>Cancelar</button>
+      <button class="bt can" id="btCancelar" type="button" disabled style="font-size:13px;line-height:1.15;padding:8px 6px">Pedir<br>cancelamento</button>
       <button class="bt pagar" id="btPagar" type="button" disabled>Pagar PIX</button>
     </div>
   </div>
@@ -208,7 +208,8 @@ function rodape(){
   const pagaveis=s.filter(x=>x.podePagar), fora=s.length-pagaveis.length;
   $('nSel').textContent=s.length;
   $('vSel').textContent=brl(pagaveis.reduce((t,x)=>t+x.valor,0));
-  const nota=fora?fora+' marcado(s) vence(m) em mais de '+(dados.pagarAte||90)+' dias: ainda não entra(m) na renovação.':'';
+  const comPed=s.filter(x=>x.cancelamento).length, longe=fora-comPed;
+  const nota=[longe>0?longe+' marcado(s) vence(m) em mais de '+(dados.pagarAte||90)+' dias: ainda não entra(m) na renovação.':'', comPed?comPed+' com cancelamento pedido: não entra(m) no pagamento.':''].filter(Boolean).join(' ');
   $('notaRow').hidden=!nota; $('nota').textContent=nota;
   $('btCancelar').disabled=!s.length||s.every(x=>x.cancelamento);
   $('btPagar').disabled=!pagaveis.length;
@@ -273,6 +274,7 @@ $('pGerar').onclick=async()=>{
   b.disabled=true; b.textContent='Gerando…'; $('pErro').textContent='';
   try{
     const r=await api('anuaisPagar',Object.assign({ids:pagIds,cpf:doc},$('pNomeBox').hidden?{}:{nome}));
+    if(r.aguardaLiberacao){ $('pErro').innerHTML='🔐 É a primeira vez com esse CPF/CNPJ neste link. Já pedimos a liberação à Rastreando GPS: <b>tente de novo em alguns minutos</b>.'; return }
     if(r.semCadastro){ $('pNomeBox').hidden=false; $('pErro').textContent='Não achamos cadastro com esse CPF/CNPJ. Digite o nome para cadastrar.'; $('pNome').focus(); return }
     try{ localStorage.setItem('anu_doc',doc) }catch(e){}
     pagPedido=r.pedido;

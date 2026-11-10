@@ -70,11 +70,24 @@ header p{font-size:12.5px;color:var(--mut);margin-top:2px}
 .mbox li{border-bottom:1px solid var(--line);padding:4px 0}
 .carreg{text-align:center;color:var(--mut);padding:40px 0}
 .bt.pagar{background:#16a34a}
-.campo{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:13px 12px;font-size:17px;margin:4px 0 10px}
-.lbl{font-size:13px;color:var(--mut);display:block;margin-top:4px}
+.campo{width:100%;background:#fff;border:2px solid #cbd5e1;color:#0f172a;border-radius:14px;padding:14px 14px;font-size:19px;font-weight:600;letter-spacing:.04em;margin:6px 0 4px;outline:none;font-variant-numeric:tabular-nums}
+.campo::placeholder{color:#94a3b8;font-weight:500;letter-spacing:.02em}
+.campo:focus{border-color:#16a34a;box-shadow:0 0 0 4px rgba(22,163,74,.18)}
+.campo.ok{border-color:#16a34a}
+.campo.ruim{border-color:#e3262f}
+.lbl{font-size:14px;color:var(--txt);font-weight:700;display:flex;align-items:center;gap:7px;margin-top:6px}
+.lbl small{font-weight:500;color:var(--mut);font-size:12.5px}
+.dica{font-size:12.5px;color:var(--mut);margin:0 2px 10px;min-height:1.2em}
+.dica.ok{color:var(--ok)}
+.resumo2{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:4px 0 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.resumo2 .q{font-size:13.5px;color:var(--mut);line-height:1.45}
+.resumo2 .q b{color:var(--txt)}
+.resumo2 .v{text-align:right}
+.resumo2 .v b{display:block;font-size:22px;color:#4ade80}
+.resumo2 .v small{font-size:11.5px;color:var(--mut)}
 .qr{display:block;width:230px;height:230px;margin:6px auto 10px;background:#fff;border-radius:12px;padding:8px}
 .cc{width:100%;font-size:12px;background:var(--bg);border:1px solid var(--line);color:var(--mut);border-radius:10px;padding:10px;word-break:break-all;margin-bottom:10px;max-height:72px;overflow:auto}
-.ok{color:var(--ok);font-weight:800;font-size:18px;text-align:center;margin:10px 0}
+.pagok{color:var(--ok);font-weight:800;font-size:18px;text-align:center;margin:10px 0}
 .ferr{color:var(--red2);font-size:13.5px;margin:0 0 8px;min-height:1em}
 .espera{font-size:13px;color:var(--mut);text-align:center;margin:-2px 0 10px}
 .atual{font-size:11.5px;color:var(--mut);text-align:center;margin:14px 0 0}
@@ -116,10 +129,11 @@ header p{font-size:12.5px;color:var(--mut);margin-top:2px}
   <div class="mbox">
     <div id="pPasso1">
       <h2>Renovar por PIX</h2>
-      <p id="pResumo"></p>
-      <label class="lbl" for="pDoc">CPF ou CNPJ de quem vai pagar</label>
-      <input class="campo" id="pDoc" inputmode="numeric" autocomplete="off" placeholder="Só os números">
-      <div id="pNomeBox" hidden><label class="lbl" for="pNome">Nome completo (primeira vez com esse CPF/CNPJ)</label><input class="campo" id="pNome" autocomplete="name" placeholder="Nome ou razão social"></div>
+      <div class="resumo2" id="pResumo"></div>
+      <label class="lbl" for="pDoc">🪪 CPF ou CNPJ <small>de quem vai pagar</small></label>
+      <input class="campo" id="pDoc" type="text" inputmode="tel" autocomplete="off" maxlength="18" placeholder="000.000.000-00">
+      <div class="dica" id="pDocDica">Pode digitar com ou sem pontos.</div>
+      <div id="pNomeBox" hidden><label class="lbl" for="pNome">👤 Nome completo <small>ou razão social</small></label><input class="campo" id="pNome" type="text" autocomplete="name" placeholder="Nome de quem vai pagar" style="letter-spacing:0"><div class="dica">Primeira vez com esse CPF/CNPJ: precisamos do nome para o cadastro.</div></div>
       <div class="ferr" id="pErro"></div>
       <div class="bts"><button class="bt sec2" id="pVoltar" type="button">Voltar</button><button class="bt pagar" id="pGerar" type="button">Gerar PIX</button></div>
     </div>
@@ -131,7 +145,7 @@ header p{font-size:12.5px;color:var(--mut);margin-top:2px}
       <div class="bts"><button class="bt sec2" id="pFechar" type="button">Fechar</button><button class="bt pagar" id="pCopiar" type="button">Copiar código</button></div>
     </div>
     <div id="pPasso3" hidden>
-      <div class="ok">✅ Pagamento confirmado!</div>
+      <div class="pagok">✅ Pagamento confirmado!</div>
       <p id="pFeito" style="text-align:center">Os aparelhos foram renovados por mais 365 dias.</p>
       <div class="bts"><button class="bt pagar" id="pFim" type="button">Ver os dias novos</button></div>
     </div>
@@ -232,14 +246,29 @@ $('btPagar').onclick=()=>{
   const s=dados.itens.filter(x=>sel.has(x.id)&&x.podePagar);
   pagIds=s.map(x=>x.id);
   const r=s.filter(x=>x.tipo!=='tag').length, t=s.length-r, v=s.reduce((a,x)=>a+x.valor,0);
-  $('pResumo').innerHTML='<b>'+s.length+' aparelho(s)</b>'+(r?' · '+r+' rastreador(es)':'')+(t?' · '+t+' TAG(s)':'')+'<br>Total: <b>'+brl(v)+'</b> · cada um ganha +365 dias.';
+  $('pResumo').innerHTML='<div class="q"><b>'+s.length+' aparelho'+(s.length>1?'s':'')+'</b><br>'+[r?r+' rastreador'+(r>1?'es':''):'',t?t+' TAG'+(t>1?'s':''):''].filter(Boolean).join(' · ')+'<br>cada um ganha +365 dias</div><div class="v"><b>'+brl(v)+'</b><small>total no PIX</small></div>';
   $('pErro').textContent=''; $('pNomeBox').hidden=true; pagPasso(1); $('mPag').classList.add('show');
   try{ const d=localStorage.getItem('anu_doc'); if(d && !$('pDoc').value) $('pDoc').value=d }catch(e){}
+  docVer();
 };
 $('pVoltar').onclick=()=>$('mPag').classList.remove('show');
+/* CPF/CNPJ: aceita com ou sem pontos; a máscara se arruma sozinha e mostra se o número confere */
+function docMasc(d){ d=d.replace(/\D/g,'').slice(0,14);
+  if(d.length<=11) return d.replace(/^(\d{3})(\d)/,'$1.$2').replace(/^(\d{3})\.(\d{3})(\d)/,'$1.$2.$3').replace(/\.(\d{3})(\d{1,2})$/,'.$1-$2');
+  return d.replace(/^(\d{2})(\d)/,'$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3').replace(/\.(\d{3})(\d)/,'.$1/$2').replace(/(\d{4})(\d{1,2})$/,'$1-$2'); }
+function cpfOk(c){ if(c.length!==11||/^(\d)\1{10}$/.test(c)) return false; let s=0; for(let i=0;i<9;i++) s+=+c[i]*(10-i); let r=s*10%11%10; if(r!==+c[9]) return false; s=0; for(let i=0;i<10;i++) s+=+c[i]*(11-i); return s*10%11%10===+c[10] }
+function cnpjOk(c){ if(c.length!==14||/^(\d)\1{13}$/.test(c)) return false; const dv=n=>{ const p=n===12?[5,4,3,2,9,8,7,6,5,4,3,2]:[6,5,4,3,2,9,8,7,6,5,4,3,2]; let s=0; for(let i=0;i<n;i++) s+=+c[i]*p[i]; const r=s%11; return r<2?0:11-r }; return dv(12)===+c[12]&&dv(13)===+c[13] }
+function docVer(){ const el=$('pDoc'), d=el.value.replace(/\D/g,''), dc=$('pDocDica'); el.value=docMasc(d);
+  const ok=d.length===11?cpfOk(d):d.length===14?cnpjOk(d):false;
+  el.classList.toggle('ok',ok); el.classList.toggle('ruim',!ok&&d.length===14);
+  dc.classList.toggle('ok',ok);
+  dc.textContent=ok?(d.length===11?'✓ CPF válido':'✓ CNPJ válido'):(d.length===14?'CNPJ não confere: confira os números.':d.length===11?'Se for CPF, não confere. Se for CNPJ, continue digitando.':'Pode digitar com ou sem pontos.');
+  el.placeholder=d.length>11?'00.000.000/0000-00':'000.000.000-00';
+  return ok; }
+$('pDoc').addEventListener('input',docVer);
 $('pGerar').onclick=async()=>{
   const doc=$('pDoc').value.replace(/\D/g,''), nome=$('pNome').value.trim(), b=$('pGerar');
-  if(doc.length!==11&&doc.length!==14){ $('pErro').textContent='Digite o CPF (11 números) ou o CNPJ (14 números).'; return }
+  if(!docVer()){ $('pErro').textContent=doc.length===11||doc.length===14?'Esse CPF/CNPJ não confere. Confira os números.':'Digite o CPF (11 números) ou o CNPJ (14 números).'; $('pDoc').focus(); return }
   if(!$('pNomeBox').hidden && nome.length<3){ $('pErro').textContent='Digite o nome completo.'; return }
   b.disabled=true; b.textContent='Gerando…'; $('pErro').textContent='';
   try{

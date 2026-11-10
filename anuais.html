@@ -12,7 +12,7 @@
      Abre pelo link com código (?c=...), sem login. Mora FORA do endereço do app (gps.) para o celular não abrir dentro do app instalado (10/11/2026). Só mostra os aparelhos daquele cliente e os dias restantes de cada um.
      O cliente marca aparelhos: vê o valor da renovação (R$ 320 rastreador, R$ 118 TAG; renovar só para quem vence em até 90 dias)
      e pode PEDIR cancelamento (o dono recebe no Telegram, fixado; nada é cancelado sozinho).
-     Etapa 2 (depois): botão Pagar com PIX, que renova sozinho. Os dados vêm do servidor (rastreamentoDesbloqueio: anuaisVer / anuaisCancelar). -->
+     Etapa 2 (Publicação 148): botão Pagar PIX (CPF/CNPJ; sem cadastro no Asaas pede o nome), PIX 24 h, renova +365 sozinho. Os dados vêm do servidor (rastreamentoDesbloqueio: anuaisVer / anuaisCancelar). -->
 <style>
 :root{--bg:#0f1216;--card:#171b21;--card2:#1e232b;--line:#2a3039;--txt:#f2f4f7;--mut:#9aa3b2;--red:#e3262f;--red2:#ff5a61;--ok:#22c55e;--amb:#f5b83d}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -69,6 +69,14 @@ header p{font-size:12.5px;color:var(--mut);margin-top:2px}
 .mbox ul{list-style:none;margin:8px 0 14px;font-size:13.5px;line-height:1.6}
 .mbox li{border-bottom:1px solid var(--line);padding:4px 0}
 .carreg{text-align:center;color:var(--mut);padding:40px 0}
+.bt.pagar{background:#16a34a}
+.campo{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:13px 12px;font-size:17px;margin:4px 0 10px}
+.lbl{font-size:13px;color:var(--mut);display:block;margin-top:4px}
+.qr{display:block;width:230px;height:230px;margin:6px auto 10px;background:#fff;border-radius:12px;padding:8px}
+.cc{width:100%;font-size:12px;background:var(--bg);border:1px solid var(--line);color:var(--mut);border-radius:10px;padding:10px;word-break:break-all;margin-bottom:10px;max-height:72px;overflow:auto}
+.ok{color:var(--ok);font-weight:800;font-size:18px;text-align:center;margin:10px 0}
+.ferr{color:var(--red2);font-size:13.5px;margin:0 0 8px;min-height:1em}
+.espera{font-size:13px;color:var(--mut);text-align:center;margin:-2px 0 10px}
 .atual{font-size:11.5px;color:var(--mut);text-align:center;margin:14px 0 0}
 </style>
 </head>
@@ -88,7 +96,8 @@ header p{font-size:12.5px;color:var(--mut);margin-top:2px}
     <div class="tot" id="notaRow" hidden><span class="nota" id="nota"></span></div>
     <div class="bts">
       <button class="bt sec2" id="btLimpar" type="button">Limpar</button>
-      <button class="bt can" id="btCancelar" type="button" disabled>Pedir cancelamento</button>
+      <button class="bt can" id="btCancelar" type="button" disabled>Cancelar</button>
+      <button class="bt pagar" id="btPagar" type="button" disabled>Pagar PIX</button>
     </div>
   </div>
 </div>
@@ -100,6 +109,32 @@ header p{font-size:12.5px;color:var(--mut);margin-top:2px}
     <ul id="mLista"></ul>
     <p id="mDias"></p>
     <div class="bts"><button class="bt sec2" id="mVoltar" type="button">Voltar</button><button class="bt can" id="mOk" type="button">Enviar pedido</button></div>
+  </div>
+</div>
+
+<div class="modal" id="mPag">
+  <div class="mbox">
+    <div id="pPasso1">
+      <h2>Renovar por PIX</h2>
+      <p id="pResumo"></p>
+      <label class="lbl" for="pDoc">CPF ou CNPJ de quem vai pagar</label>
+      <input class="campo" id="pDoc" inputmode="numeric" autocomplete="off" placeholder="Só os números">
+      <div id="pNomeBox" hidden><label class="lbl" for="pNome">Nome completo (primeira vez com esse CPF/CNPJ)</label><input class="campo" id="pNome" autocomplete="name" placeholder="Nome ou razão social"></div>
+      <div class="ferr" id="pErro"></div>
+      <div class="bts"><button class="bt sec2" id="pVoltar" type="button">Voltar</button><button class="bt pagar" id="pGerar" type="button">Gerar PIX</button></div>
+    </div>
+    <div id="pPasso2" hidden>
+      <h2 id="pTit">PIX de R$ 0</h2>
+      <img class="qr" id="pQr" alt="QR Code do PIX">
+      <div class="cc" id="pCc"></div>
+      <p class="espera" id="pEspera">Assim que o pagamento cair, os dias entram sozinhos. Pode deixar esta tela aberta.</p>
+      <div class="bts"><button class="bt sec2" id="pFechar" type="button">Fechar</button><button class="bt pagar" id="pCopiar" type="button">Copiar código</button></div>
+    </div>
+    <div id="pPasso3" hidden>
+      <div class="ok">✅ Pagamento confirmado!</div>
+      <p id="pFeito" style="text-align:center">Os aparelhos foram renovados por mais 365 dias.</p>
+      <div class="bts"><button class="bt pagar" id="pFim" type="button">Ver os dias novos</button></div>
+    </div>
   </div>
 </div>
 
@@ -159,9 +194,10 @@ function rodape(){
   const pagaveis=s.filter(x=>x.podePagar), fora=s.length-pagaveis.length;
   $('nSel').textContent=s.length;
   $('vSel').textContent=brl(pagaveis.reduce((t,x)=>t+x.valor,0));
-  const nota=fora?fora+' marcado(s) vence(m) em mais de '+(dados.pagarAte||90)+' dias: ainda não entra(m) na renovação.':(pagaveis.length?'Pagamento por PIX direto por aqui: em breve.':'');
+  const nota=fora?fora+' marcado(s) vence(m) em mais de '+(dados.pagarAte||90)+' dias: ainda não entra(m) na renovação.':'';
   $('notaRow').hidden=!nota; $('nota').textContent=nota;
   $('btCancelar').disabled=!s.length||s.every(x=>x.cancelamento);
+  $('btPagar').disabled=!pagaveis.length;
 }
 document.addEventListener('change',e=>{
   const l=e.target.closest&&e.target.closest('.it'); if(!l) return;
@@ -189,6 +225,53 @@ $('mOk').onclick=async()=>{
   }catch(e){ alert(e.message||'Não consegui enviar agora. Tente de novo.') }
   finally{ b.disabled=false; b.textContent='Enviar pedido' }
 };
+/* ===== PIX (Publicação 148): só os marcados que vencem em até 90 dias; o valor vem do servidor ===== */
+let pagIds=[], pagPedido='', pagTimer=null;
+function pagPasso(n){ ['pPasso1','pPasso2','pPasso3'].forEach((id,i)=>$(id).hidden=(i!==n-1)) }
+$('btPagar').onclick=()=>{
+  const s=dados.itens.filter(x=>sel.has(x.id)&&x.podePagar);
+  pagIds=s.map(x=>x.id);
+  const r=s.filter(x=>x.tipo!=='tag').length, t=s.length-r, v=s.reduce((a,x)=>a+x.valor,0);
+  $('pResumo').innerHTML='<b>'+s.length+' aparelho(s)</b>'+(r?' · '+r+' rastreador(es)':'')+(t?' · '+t+' TAG(s)':'')+'<br>Total: <b>'+brl(v)+'</b> · cada um ganha +365 dias.';
+  $('pErro').textContent=''; $('pNomeBox').hidden=true; pagPasso(1); $('mPag').classList.add('show');
+  try{ const d=localStorage.getItem('anu_doc'); if(d && !$('pDoc').value) $('pDoc').value=d }catch(e){}
+};
+$('pVoltar').onclick=()=>$('mPag').classList.remove('show');
+$('pGerar').onclick=async()=>{
+  const doc=$('pDoc').value.replace(/\D/g,''), nome=$('pNome').value.trim(), b=$('pGerar');
+  if(doc.length!==11&&doc.length!==14){ $('pErro').textContent='Digite o CPF (11 números) ou o CNPJ (14 números).'; return }
+  if(!$('pNomeBox').hidden && nome.length<3){ $('pErro').textContent='Digite o nome completo.'; return }
+  b.disabled=true; b.textContent='Gerando…'; $('pErro').textContent='';
+  try{
+    const r=await api('anuaisPagar',Object.assign({ids:pagIds,cpf:doc},$('pNomeBox').hidden?{}:{nome}));
+    if(r.semCadastro){ $('pNomeBox').hidden=false; $('pErro').textContent='Não achamos cadastro com esse CPF/CNPJ. Digite o nome para cadastrar.'; $('pNome').focus(); return }
+    try{ localStorage.setItem('anu_doc',doc) }catch(e){}
+    pagPedido=r.pedido;
+    $('pTit').textContent='PIX de '+brl(r.valor);
+    $('pQr').src=r.imagem?'data:image/png;base64,'+r.imagem:'';
+    $('pQr').hidden=!r.imagem;
+    $('pCc').textContent=r.payload;
+    const ate=new Date(r.expiraEmMs).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    $('pEspera').textContent='Vale até '+ate+'. Assim que o pagamento cair, os dias entram sozinhos. Pode deixar esta tela aberta.';
+    pagPasso(2); vigiar();
+  }catch(e){ $('pErro').textContent=e.message||'Não consegui gerar o PIX agora.' }
+  finally{ b.disabled=false; b.textContent='Gerar PIX' }
+};
+$('pCopiar').onclick=async()=>{ const t=$('pCc').textContent; try{ await navigator.clipboard.writeText(t); $('pCopiar').textContent='Copiado ✓' }catch(e){ const r=document.createRange(); r.selectNodeContents($('pCc')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); $('pCopiar').textContent='Selecionado: copie' } setTimeout(()=>$('pCopiar').textContent='Copiar código',2500) };
+$('pFechar').onclick=()=>{ $('mPag').classList.remove('show') };
+$('pFim').onclick=()=>{ $('mPag').classList.remove('show'); sel.clear(); carregar() };
+function vigiar(){
+  clearInterval(pagTimer); let n=0;
+  pagTimer=setInterval(async()=>{
+    if(++n>360||!pagPedido){ clearInterval(pagTimer); return }
+    if(document.hidden) return;
+    try{
+      const r=await api('anuaisPagStatus',{pedido:pagPedido});
+      if(r.pago){ clearInterval(pagTimer); pagPedido=''; pagPasso(3); $('mPag').classList.add('show') }
+      else if(r.expirado){ clearInterval(pagTimer); pagPedido=''; $('pEspera').textContent='Este PIX venceu. Feche e gere outro.' }
+    }catch(e){}
+  },5000);
+}
 async function carregar(){
   if(!COD){ $('conteudo').innerHTML='<div class="erro">Link incompleto. Peça o link de novo à Rastreando GPS.</div>'; return }
   try{
